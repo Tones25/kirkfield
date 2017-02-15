@@ -52,6 +52,7 @@ export default class InventorySingle extends Component {
 					onClick={this.setEditMode.bind(this)}>					
 					Edit
 				</button>
+				<DateInput/>
 				<button className="btn-cancel"
 					onClick={this.deleteInventoryItem.bind(this)}>
 					&times; 

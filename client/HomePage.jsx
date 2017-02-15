@@ -11,7 +11,6 @@ export default class HomePage extends Component {
 			<div>
 				<h1>Home Page</h1>
 				<p>blaaaaaaaaaaaaaa</p>
-				
 			</div>
 			)
 	}

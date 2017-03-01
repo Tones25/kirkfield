@@ -10,7 +10,10 @@ export default class VehicleForm extends Component {
 		let vehicleModel = this.refs.vehicleModel.value.trim();
 		let vehicleModelYear = this.refs.vehicleModelYear.value.trim();
 		let licensePlate = this.refs.licensePlate.value.trim();
+		let color = this.refs.vehicleColor.value.trim();
+		let initialMileage = this.refs.initialMileage.value.trim();
 		let validInput = true;
+		
 		//add further input validation rules here
 		if(vehicleId) {
 			if (!parseInt(vehicleId)) {
@@ -23,7 +26,7 @@ export default class VehicleForm extends Component {
 			}
 		if (validInput) {
 			Meteor.call('addVehicle', vehicleId, vehicleName, vehicleMake,
-				vehicleModel, vehicleModelYear, licensePlate, (error, data) => {
+				vehicleModel, vehicleModelYear, licensePlate, color, initialMileage, (error, data) => {
 			if(error) {
 				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -32,6 +35,9 @@ export default class VehicleForm extends Component {
 			this.refs.vehicleMake.value = "";
 			this.refs.vehicleModel.value = "";
 			this.refs.vehicleModelYear.value = "";
+			this.refs.licensePlate = "";
+			this.refs.color = "";
+			this.refs.initialMileage = 50000;
 			this.refs.licensePlate.value = "";
 			}
 		});
@@ -66,9 +72,11 @@ export default class VehicleForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
+					
 					<label className="control-label col-sm-2" htmlFor="vehicleMake">Make:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-2">
 					<input 
 						className="form-control"
 						id="vehicleMake"
@@ -77,10 +85,9 @@ export default class VehicleForm extends Component {
 						placeholder="Make"
 					/>
 					</div>
-					</div>
-					<div className="form-group">
+					
 					<label className="control-label col-sm-2" htmlFor="vehicleModel">Model:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-2">
 					<input 
 						className="form-control"
 						id="vehicleModel"
@@ -89,22 +96,25 @@ export default class VehicleForm extends Component {
 						placeholder="Model"
 					/>
 					</div>
-					</div>
-					<div className="form-group">
+					
 					<label className="control-label col-sm-2" htmlFor="vehicleModelYear">Model Year:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-2">
 					<input 
 						className="form-control"
 						id="vehicleModelYear"
 						type="number" 
 						ref="vehicleModelYear"
 						placeholder="Model Year"
+						defaultValue={new Date().getFullYear()}
 					/>
 					</div>
+					
 					</div>
+					
 					<div className="form-group">
+					
 					<label className="control-label col-sm-2" htmlFor="licensePlate">License Plate:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-2">
 					<input 
 						className="form-control"
 						id="licensePlate"
@@ -113,6 +123,29 @@ export default class VehicleForm extends Component {
 						placeholder="License Plate"
 					/>
 					</div>
+					
+					<label className="control-label col-sm-2" htmlFor="vehicleColor">Color:</label>
+					<div className="col-sm-2">
+					<input
+						className="form-control"
+						id="vehicleColor"
+						type="text"
+						ref="vehicleColor"
+						placeholder="Color"
+					/>
+					</div>
+					
+					<label className="control-label col-sm-2" htmlFor="initialMileage">Mileage:</label>
+					<div className="col-sm-2">
+					<input
+						className="form-control"
+						id="initialMileage"
+						type="number"
+						ref="initialMileage"
+						defaultValue={50000}
+					/>
+					</div>
+					
 					</div>
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>

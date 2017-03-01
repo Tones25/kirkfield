@@ -91,6 +91,52 @@ Meteor.startup(() => {
 
 		
 	}
+	
+	if(Vehicles.find().count() === 0) {
+		Vehicles.insert({
+			vehicleId: 1,
+			vehicleName: 'Truck 1',
+			vehicleMake: 'Ford',
+			vehicleModel: 'F150',
+			vehicleModelYear: 2010,
+			licensePlate: 'ABC123',
+			color: 'Black',
+			initialMileage: 76230,
+			createdAt: new Date()
+		});
+		Vehicles.insert({
+			vehicleId: 2,
+			vehicleName: 'Truck 2',
+			vehicleMake: 'Ford',
+			vehicleModel: 'F150',
+			vehicleModelYear: 2015,
+			licensePlate: 'ABC456',
+			color: 'Blue',
+			initialMileage: 52553,
+			createdAt: new Date()
+		});
+		Vehicles.insert({
+			vehicleId: 3,
+			vehicleName: 'Truck 3',
+			vehicleMake: 'Ford',
+			vehicleModel: 'F250',
+			vehicleModelYear: 2010,
+			licensePlate: 'XYZ123',
+			color: 'Blue',
+			initialMileage: 60439,
+			createdAt: new Date()
+		});
+		Vehicles.insert({
+			vehicleId: 4,
+			vehicleName: 'Truck 4',
+			vehicleMake: 'Toyota',
+			vehicleModel: 'Tundra',
+			vehicleModelYear: 2013,
+			licensePlate: 'XYZ456',
+			color: 'White',
+			initialMileage: 14325,
+			createdAt: new Date()
+		});
+	}
 
-  
 });

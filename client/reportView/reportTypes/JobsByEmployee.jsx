@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import DateInputRange from '../../parameterInputComponents/DateInputRange.jsx';
 import Dropdown from '../../parameterInputComponents/Dropdown.jsx';
+import CheckboxGroup from '../../parameterInputComponents/CheckboxGroup.jsx';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
@@ -62,14 +63,25 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 		let jobTypes = this.state.jobTypes;
 		return Jobs.find({
 			"estimateEmployee": employeeNumber,
-			"jobTypeCode": { $in: jobType }
+			"jobTypeCode": { $in: jobTypes }
 		}).fetch();
 	}
 
 	render() {
 		let employees = Employees.find().fetch();
-		let jobTypes = Jobs.distinct("jobTypeCode");
-		console.log(jobTypes);
+		let jobTypes = [];
+		let jobTypesCursor = Jobs.find({}, {jobTypeCode: 1});
+		jobTypesCursor.map(
+			function(j) { 
+				if(this.includes(j.jobTypeCode))
+					return;
+				else 
+					this.push(j.jobTypeCode); },
+		jobTypes);
+		
+		for(var i = 0; i < jobTypes.length; i++) {
+			jobTypes[i] = { _id: jobTypes[i] };
+		}
 		return (
 			<div>
 			<Dropdown

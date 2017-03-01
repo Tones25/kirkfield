@@ -158,4 +158,5 @@ Meteor.methods({
 		Employees.remove(employee._id)
 	},
 	
+	
 });

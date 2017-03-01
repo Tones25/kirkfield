@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class Checkbox extends Component {
+export default class CheckboxGroup extends Component {
 
 	constructor(props) {
 		super(props);
@@ -18,11 +18,12 @@ export default class Checkbox extends Component {
 		return (
 			<div className="form-group">
 				{this.state.options.map( (option) => {
-					return <input
-							type="checkbox"
-							onChange={this.onSelectionChange}
-							key={option._id}
-							value={option._id}/>
+					return 	<div key={option._id}>
+								<input
+								type="checkbox"
+								onChange={this.onSelectionChange}
+								value={option._id}/>{option._id}
+							</div>
 				})}
 			</div>
 		)

@@ -14,12 +14,14 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
-			employee: Employees.findOne()._id
+			employee: Employees.findOne()._id,
+			jobTypes: []
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
 		this.handleEndDateChange = this.handleEndDateChange.bind(this);
 		this.handleEmployeeChange = this.handleEmployeeChange.bind(this);
+		this.handleJobTypesChange = this.handleJobTypesChange.bind(this);
 	}
 
 	handleEmployeeChange(employee) {
@@ -49,23 +51,34 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 			endDate: parsedDate,
 		});
 	}
-
+	
+	handleJobTypesChange(jobType) {
+	
+	}
+	
 	jobItems() {
-		console.log(this.state.employee);
 		
 		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
+		let jobTypes = this.state.jobTypes;
 		return Jobs.find({
-		"estimateEmployee": employeeNumber
+			"estimateEmployee": employeeNumber,
+			"jobTypeCode": { $in: jobType }
 		}).fetch();
 	}
 
 	render() {
 		let employees = Employees.find().fetch();
+		let jobTypes = Jobs.distinct("jobTypeCode");
+		console.log(jobTypes);
 		return (
 			<div>
 			<Dropdown
 				onSelectionChange={this.handleEmployeeChange}
 				options={Employees.find().fetch()}
+			/>
+			<CheckboxGroup
+				onSelectionChange={this.handleJobTypesChange}
+				options={jobTypes}
 			/>
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}

@@ -67,7 +67,7 @@ Meteor.methods({
 	},
 
 	addJob(invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installEmployee, vehicleId, mileage) {
+			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
 		}
@@ -90,6 +90,8 @@ Meteor.methods({
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
 				installParts: installParts,
+				installIds: installIds,
+				installQts: installQts,
 				installEmployee: parseInt(installEmployee),
 				vehicleId: vehicleId,
 				mileage: parseInt(mileage),
@@ -97,12 +99,23 @@ Meteor.methods({
 				createdAt: new Date(),
 				user: Meteor.userId()
 			})
+			//Decrease stock quantity of job's installed items
+			for (var i=0;i<installIds.length;i++) {
+				entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i])})
+				console.log(installQts[i])
+				let quant = installQts[i] || 1
+				console.log(quant)
+				newQuantity = entry.inventoryItemQuantity - quant
+				Inventory.update(
+					{_id: entry._id},
+					{$set: {inventoryItemQuantity: newQuantity}}
+					)
+			}
 		
 	},
 	
 	addVehicle(vehicleId, vehicleName, vehicleMake,
-		vehicleModel, vehicleModelYear, licensePlate,
-		color, initialMileage) {
+		vehicleModel, vehicleModelYear, licensePlate) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
 		}
@@ -114,10 +127,9 @@ Meteor.methods({
 			vehicleModel: vehicleModel,
 			vehicleModelYear: vehicleModelYear,
 			licensePlate: licensePlate,
-			color: color,
-			initialMileage: initialMileage,
 			createdAt: new Date(),
 			user: Meteor.userId()
+			//add model year, license plate, color, w/e
 		})
 	},
 	

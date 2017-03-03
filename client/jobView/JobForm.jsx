@@ -268,9 +268,9 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeName}
+										value={employee.employeeFirstName}
 									>
-									{employee.employeeName}
+									{employee.employeeFirstName}
 									</option>
 						})}
 					</select>
@@ -314,9 +314,9 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeName}
+										value={employee.employeeFirstName}
 									>
-									{employee.employeeName}
+									{employee.employeeFirstName}
 									</option>
 						})}
 					</select>
@@ -326,7 +326,6 @@ export default class JobForm extends Component {
 					{this.state.installItems.map( (installItem) => {
 					
 						let formElementId = 'installItem' + installItem.key;
-
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
 									<div className="col-sm-2">

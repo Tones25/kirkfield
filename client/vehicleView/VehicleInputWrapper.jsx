@@ -31,7 +31,7 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 		this.state.vehicles = this.vehicles();
 		let tableRowHeight = 50;
 		return(
-			<div>
+			<div className="row">
 				<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>Add Vehicle</h1>

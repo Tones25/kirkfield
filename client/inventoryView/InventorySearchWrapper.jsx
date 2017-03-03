@@ -55,7 +55,7 @@ export default class InventorySearchWrapper extends TrackerReact(React.Component
 	render() {
 		let tableRowHeight = 50;
 		return(
-			<div>
+			<div className="row">
 				<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>Search Inventory Items</h1>

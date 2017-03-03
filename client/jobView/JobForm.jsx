@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import {Inventory} from './../inventoryView/InventoryInputWrapper.jsx';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
 
@@ -60,17 +61,38 @@ export default class JobForm extends Component {
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
 		let mileage = this.refs.mileage.value.trim();
-		for(int i=0;i<this.state.installItems.length;i++) {			
-			console.log(this.refs.installItem + i.value);
-		}
-		console.log("installItems state length: " + this.state.installItems.length);
-		console.log(this.refs.installItem1.value);
-		
+		let tempCounter = 0;
+		//Create array of installItem Ids
+        var installIds = [];
+        const itemIds = {};
+		Object.keys(this.refs)
+    	.filter(key => key.substr(0,11) === 'installItem')
+    	.filter(key => key.length == 12)
+    	.forEach(key => {
+         	itemIds[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
+         	if (itemIds[key]!=null) {
+         	itemIds[key] = itemIds[key].split("#")[1];
+         	installIds[parseInt(key.substr(11))] = itemIds[key];
+         }
+        });
+		//Create array of installItem Quantities
+		var installQts = [];
+		const itemQts = {}; 
+		Object.keys(this.refs)
+    	.filter(key => key.substr(0,11) === 'installItem')
+    	.filter(key => key.substr(12) === 'quantity')
+    	.forEach(key => {
+         	itemQts[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
+         	if (itemQts[key]!=null) {
+         	//console.log(itemQts[key]);
+         	installQts[parseInt(key.substr(11))] = itemQts[key];
+         }
+        });
 
 		//add further input validation rules here
 		if(invoice) {
 			Meteor.call('addJob', invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installEmployee, vehicleId, mileage, (error, data) => {
+			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage, (error, data) => {
 			if(error) {
 				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -90,6 +112,12 @@ export default class JobForm extends Component {
 			this.refs.installEmployee.value = "";
 			this.refs.vehicleId.value = "";
 			this.refs.mileage.value = "";
+			const installValues = {}; 
+			Object.keys(this.refs)
+	    	.filter(key => key.substr(0,11) === 'installItem')
+	    	.forEach(key => {
+	         	ReactDOM.findDOMNode(this.refs[key]).value = "";
+	        });
 			}
 		});
 		}
@@ -298,8 +326,7 @@ export default class JobForm extends Component {
 					{this.state.installItems.map( (installItem) => {
 					
 						let formElementId = 'installItem' + installItem.key;
-						//console.log(this.refs.formElementId);
-						//console.log("INSTALLITEMKEY: " + document.getElementById(formElementId + 'name'));
+
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
 									<div className="col-sm-2">
@@ -329,13 +356,14 @@ export default class JobForm extends Component {
 											className="form-control"
 											id={formElementId + 'quantity'}
 											ref={formElementId + 'quantity'}
-											defaultValue='1'
+											placeholder='1'
 										/>
 									</div>
 								</div>
 					})}
 					
 					<button className="btn btn-primary"
+						type="button"
 						onClick={this.addInstallItem.bind(this)}>
 						Add Install Item <span className="glyphicon glyphicon-plus-sign"></span>
 					</button>

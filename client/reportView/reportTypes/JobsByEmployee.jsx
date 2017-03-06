@@ -69,20 +69,27 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 	
 	handleJobTypesChange(jobType) {
-		this.state.jobTypes.find(function(j) { return j._id === jobType;}).selected = !(this.state.jobTypes.find(function(j) { return j._id === jobType;}).selected);
-		console.log("handle job types change");
+	
+	this.setState((prevState, props) => {
+		let toggled = prevState.jobTypes.filter(function (j) { return j._id === jobType; });
+		toggled = toggled[0];
+		let toggledIndex = prevState.jobTypes.indexOf(toggled);
+		let newJobTypes = prevState.jobTypes;
+		newJobTypes.splice(toggledIndex, 1);
+		toggled.selected = !toggled.selected;
+		newJobTypes.splice(toggledIndex, 0, toggled);
+		return {jobTypes: newJobTypes}; 
+	});
 	}
 	
 	jobItems() {
 		
 		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
 		let jobTypes = this.state.jobTypes;
-		console.log(jobTypes);
 		let selectedJobTypes = [];
 		jobTypes.map(
 			function(j) { 
 				if (j.selected === true) {
-					console.log(this);
 					this.push(j._id);
 				}
 			}, selectedJobTypes
@@ -97,7 +104,6 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	render() {
 		let employees = Employees.find().fetch();
 		let jobTypes = this.state.jobTypes;
-		console.log(this.jobItems());
 		return (
 			<div>
 			<Dropdown

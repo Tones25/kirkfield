@@ -12,11 +12,26 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 
 	constructor(props) {
 		super(props);
+		
+		let jobTypes = [];
+		let jobTypesCursor = Jobs.find({}, {jobTypeCode: 1});
+		jobTypesCursor.map(
+			function(j) { 
+				if(this.includes(j.jobTypeCode))
+					return;
+				else 
+					this.push(j.jobTypeCode); },
+		jobTypes);
+		
+		for(var i = 0; i < jobTypes.length; i++) {
+			jobTypes[i] = { _id: jobTypes[i], selected: false };
+		}
+		
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
 			employee: Employees.findOne()._id,
-			jobTypes: []
+			jobTypes: jobTypes
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -54,34 +69,35 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 	
 	handleJobTypesChange(jobType) {
-	
+		this.state.jobTypes.find(function(j) { return j._id === jobType;}).selected = !(this.state.jobTypes.find(function(j) { return j._id === jobType;}).selected);
+		console.log("handle job types change");
 	}
 	
 	jobItems() {
 		
 		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
 		let jobTypes = this.state.jobTypes;
+		console.log(jobTypes);
+		let selectedJobTypes = [];
+		jobTypes.map(
+			function(j) { 
+				if (j.selected === true) {
+					console.log(this);
+					this.push(j._id);
+				}
+			}, selectedJobTypes
+		);
+		console.log(selectedJobTypes);
 		return Jobs.find({
 			"estimateEmployee": employeeNumber,
-			"jobTypeCode": { $in: jobTypes }
+			"jobTypeCode": { $in: selectedJobTypes }
 		}).fetch();
 	}
 
 	render() {
 		let employees = Employees.find().fetch();
-		let jobTypes = [];
-		let jobTypesCursor = Jobs.find({}, {jobTypeCode: 1});
-		jobTypesCursor.map(
-			function(j) { 
-				if(this.includes(j.jobTypeCode))
-					return;
-				else 
-					this.push(j.jobTypeCode); },
-		jobTypes);
-		
-		for(var i = 0; i < jobTypes.length; i++) {
-			jobTypes[i] = { _id: jobTypes[i] };
-		}
+		let jobTypes = this.state.jobTypes;
+		console.log(this.jobItems());
 		return (
 			<div>
 			<Dropdown

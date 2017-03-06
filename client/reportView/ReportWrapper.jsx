@@ -60,7 +60,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 	render() {
 		
 		return(
-			<div>
+			<div className="row">
 				<form onSubmit={this.handleSubmit}>
 					<label>
 						Chose report:

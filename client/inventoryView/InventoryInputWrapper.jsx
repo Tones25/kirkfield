@@ -36,7 +36,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 		this.state.recent = this.inventoryItems();
 		let tableRowHeight = 50;
 		return(
-			<div>
+			<div className="row">
 				<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>Add Inventory Item</h1>

@@ -30,7 +30,7 @@ export default class EmployeeInputWrapper extends TrackerReact(React.Component) 
 	render() {
 		
 		return(
-			<div>
+			<div className="row">
 				<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>Add Employee</h1>

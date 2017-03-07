@@ -4,7 +4,7 @@ import FieldRange from '../../parameterInputComponents/FieldRange.jsx';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
-
+import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
 
 export default class ReportA extends TrackerReact(React.Component) {

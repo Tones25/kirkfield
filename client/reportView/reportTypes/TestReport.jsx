@@ -3,7 +3,7 @@ import DateInputRange from '../../parameterInputComponents/DateInputRange.jsx';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
-
+import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
 
 export default class TestReport extends TrackerReact(React.Component) {

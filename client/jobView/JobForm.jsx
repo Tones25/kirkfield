@@ -14,11 +14,11 @@ export default class JobForm extends Component {
 				inventory: Meteor.subscribe("allInventory"),
 				employees: Meteor.subscribe("allEmployees")
 			},
-			installItems: [{key:'installItem' + 0}]
-
+			installItems: [{key:'installItem' + 0, quantity: 1}]
 		};
 		
 		this.changeInstallItem = this.changeInstallItem.bind(this);
+		this.changeInstallItemQuantity = this.changeInstallItemQuantity.bind(this);
 		this.inventoryItems = this.inventoryItems.bind(this);
 	}
 	
@@ -50,21 +50,41 @@ export default class JobForm extends Component {
 	}
 	
 	changeInstallItem(item) {
-		let newInstallItems = [];
+		
 		this.setState(function(prevState, props) {
+			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
-					if (i.key != item.list.id) {
-						this.push({key: i.key, item: i.value})
+					if (i.key === item.list.id) {
+						this.push({key: i.key, item: item.value, quantity: i.quantity});
+					} else {
+						this.push(i);
 					}
 				}
 			, newInstallItems);
+			return {installItems: newInstallItems};
 		});
-		newInstallItems.push({key: item.list.id, item: item.value});
-		this.setState({installItems: newInstallItems});
-		console.log(this.state.installItems);
 	}
 
+	changeInstallItemQuantity(event) {
+	
+		let id = event.target.id;
+		let value = event.target.value;
+		this.setState(function(prevState, props) {
+			let newInstallItems = [];
+			prevState.installItems.map( 
+				function(i) {
+					if (i.key + 'quantity' === id) {
+						this.push({key: i.key, item: i.item, quantity: value});
+					} else {
+						this.push(i);
+					}
+				}
+			, newInstallItems);
+			return {installItems: newInstallItems};
+		});
+	}
+	
 	addJob(event) {
 		event.preventDefault();
 		let invoice = this.refs.invoice.value.trim();
@@ -368,6 +388,7 @@ export default class JobForm extends Component {
 									</label>
 									<div className="col-sm-3">
 										<input
+											onChange={this.changeInstallItemQuantity}
 											type="number"
 											className="form-control"
 											id={formElementId + 'quantity'}

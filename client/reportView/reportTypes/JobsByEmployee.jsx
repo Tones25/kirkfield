@@ -6,7 +6,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
-
+import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
 export default class JobsByEmployee extends TrackerReact(React.Component) {
 

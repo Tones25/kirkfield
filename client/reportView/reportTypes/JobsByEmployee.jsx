@@ -23,10 +23,11 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 					this.push(j.jobTypeCode); },
 		jobTypes);
 		
+		/*
 		for(var i = 0; i < jobTypes.length; i++) {
 			jobTypes[i] = { _id: jobTypes[i], selected: false };
 		}
-		
+		*/
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),

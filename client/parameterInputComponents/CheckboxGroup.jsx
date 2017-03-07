@@ -11,7 +11,7 @@ export default class CheckboxGroup extends Component {
 	}
 	
 	onSelectionChange(event) {
-		this.props.onSelectionChange(event);
+		this.props.onSelectionChange(event.target.value);
 	}
 	
 	render() {

@@ -27,14 +27,15 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	constructor(props) {
 		super(props);
 		
-		jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
-		console.log(jobTypes);
+		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
+		let employees = this.findAllValuesOfCollectionAttribute(Employees, 'employeeFirstName');
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
-			employee: Employees.findOne()._id,
+			employees: employees,
 			jobTypes: jobTypes,
-			selectedJobTypes: []
+			selectedJobTypes: [],
+			selectedEmployees: []
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -44,9 +45,8 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	}
 
 	handleEmployeeChange(employee) {
-		this.setState({
-			employee: employee,
-		});
+		let newSelectedEmployees = this.toggleMembership(employee, this.state.selectedEmployees);
+		this.setState({selectedEmployees: newSelectedEmployees});
 	}
 
 	handleStartDateChange(startDate) {
@@ -81,31 +81,31 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		return alreadySelected;
 	}
 
-	handleJobTypesChange(event) {
-		let toggled = event.target.value;
-		let newSelectedJobTypes = this.toggleMembership(toggled, this.state.selectedJobTypes);
+	handleJobTypesChange(jobType) {
+		let newSelectedJobTypes = this.toggleMembership(jobType, this.state.selectedJobTypes);
 		this.setState({selectedJobTypes: newSelectedJobTypes});
 	}
 	
 	jobItems() {
 		
-		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
+		let selectedEmployees = this.state.selectedEmployees;
 		let selectedJobTypes = this.state.selectedJobTypes;
 		
 		return Jobs.find({
-			"estimateEmployee": employeeNumber,
+			"estimateEmployee": { $in: selectedEmployees },
 			"jobTypeCode": { $in: selectedJobTypes }
 		}).fetch();
 	}
 
 	render() {
-		let employees = Employees.find().fetch();
+		let employees = this.state.employees;
 		let jobTypes = this.state.jobTypes;
+		
 		return (
 			<div>
-			<Dropdown
+			<CheckboxGroup
 				onSelectionChange={this.handleEmployeeChange}
-				options={Employees.find().fetch()}
+				options={employees}
 			/>
 			<CheckboxGroup
 				onSelectionChange={this.handleJobTypesChange}

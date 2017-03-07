@@ -36,6 +36,8 @@ Meteor.startup(() => {
 			let employeeRandom = Math.floor((Math.random() * 6) + 1);
 			let vehicleIdRandom = Math.floor(Math.random() * 4);
 			let milageRandom = Math.floor((Math.random() * 50) + 1);
+			let randomIds = [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)];
+			let randomQts = [Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1)];
 
 			Jobs.insert({
 				invoice: i,
@@ -51,6 +53,8 @@ Meteor.startup(() => {
 				estimateEmployee: employeeRandom,
 				installCost: costRandom,
 				installParts: {},
+				installIds: randomIds,
+				installQts: randomQts,
 				installEmployee: employeeRandom,
 				vehicleId: vehicleIdArray[vehicleIdRandom],
 				mileage: milageRandom,
@@ -65,10 +69,12 @@ Meteor.startup(() => {
 	}
 
 	if(Inventory.find().count() === 0) {
-		let itemTypeArray = ['a', 'b', 'c'];
 
-		for (i = 1; i < 1000; i++) {
-			let itemTypeRandom = Math.floor(Math.random() * 3);
+		for (i = 1; i < 100; i++) {
+			let omonthRandom = Math.floor(Math.random() * 12);
+			let odayRandom = Math.floor((Math.random() * 32) + 1);
+			let rmonthRandom = Math.floor(Math.random() * 12);
+			let rdayRandom = Math.floor((Math.random() * 32) + 1);
 			let quantityRandom = Math.floor(Math.random() * 50);
 			let modelNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
 			let serialNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
@@ -77,12 +83,11 @@ Meteor.startup(() => {
 			Inventory.insert({
 				inventoryItemId: i,
 				inventoryItemName: 'Placeholder Item',
+				unitPrice: costRandom,
 				inventoryItemQuantity: quantityRandom,
 				make: 'Plaecholder Make',
 				model: modelNumRandom,
 				serialNum: serialNumRandom,
-				itemTypeCode: itemTypeArray[itemTypeRandom],
-				unitPrice: costRandom,
 				createdAt: new Date()
 				
 			});

@@ -8,21 +8,27 @@ import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
 
 
-export default class JobsByEmployee extends TrackerReact(React.Component) {
+export default class EmployeeSummary extends TrackerReact(React.Component) {
 
+	findAllValuesOfCollectionAttribute(collection, attribute) {
+		let values = [];
+		let attributeCursor = collection.find({}, {attribute: 1});
+		attributeCursor.map(
+			function(a) {
+				if(this.includes(a[attribute]))
+					return;
+				else
+					this.push(a[attribute]);
+			}
+		,values);
+		return values;
+	}
+	
 	constructor(props) {
 		super(props);
 		
-		let jobTypes = [];
-		let jobTypesCursor = Jobs.find({}, {jobTypeCode: 1});
-		jobTypesCursor.map(
-			function(j) { 
-				if(this.includes(j.jobTypeCode))
-					return;
-				else 
-					this.push(j.jobTypeCode); },
-		jobTypes);
-
+		jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
+		console.log(jobTypes);
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),

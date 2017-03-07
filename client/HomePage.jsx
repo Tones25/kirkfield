@@ -11,41 +11,51 @@ export default class HomePage extends Component {
 		<div className="row">
 
 			<div className="col-sm-6">
-				<button type="button"
+				<form method="post" action="/inventoryInput">
+				<button
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-shopping-cart"></span> Inventory
 				</button>
+				</form>
 			</div>
 			<div className="col-sm-6">
-				<button type="button"
+				<form method="post" action="/jobInput">
+				<button
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-briefcase"></span> Jobs
 				</button>
+				</form>
 			</div>
 			
 			<div className="col-sm-6">
-				<button type="button"
+				<form method="post" action="/vehicleInput">
+				<button
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-road"></span> Vehicles
 				</button>
+				</form>
 			</div>
 			<div className="col-sm-6">
-				<button type="button"
+				<form method="post" action="/employees">
+				<button
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-user"></span> Employees
 				</button>
+				</form>
 			</div>
 			
 			<div className="col-sm-12">
-				<button type="button"
+				<form method="post" action="/reporting">
+				<button
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-th-list"></span> Reports 
 				</button>
+				</form>
 			</div>
 
 		</div>

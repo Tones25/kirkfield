@@ -5,16 +5,33 @@ export default class CheckboxGroup extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			options: this.props.options
+			options: this.props.options,
+			checked: []
 		}
 		this.onSelectionChange = this.onSelectionChange.bind(this);
 	}
 	
 	onSelectionChange(event) {
-		this.props.onSelectionChange(event.target.value);
+		//console.log(event.target.value);
+		let toggled = event.target.value;
+		console.log(toggled);
+		this.setState((prevState, props) => {
+			let toggledIndex = prevState.checked.indexOf(toggled);
+			console.log(toggledIndex);
+			let newChecked = prevState.checked;
+			if (toggledIndex === -1) {
+				newChecked.push(toggled);
+				console.log(newChecked);
+			} else {
+				newChecked.splice(toggledIndex, 1);		
+			}
+			return {checked: newChecked};
+		});
+		//this.props.onSelectionChange(event.target.value);
 	}
 	
 	render() {
+		console.log(this.state.checked);
 		return (
 			<div className="form-group">
 				{this.state.options.map( (option) => {

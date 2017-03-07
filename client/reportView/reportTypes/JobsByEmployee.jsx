@@ -31,7 +31,8 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 			startDate: new Date(),
 			endDate: new Date(),
 			employee: Employees.findOne()._id,
-			jobTypes: jobTypes
+			jobTypes: jobTypes,
+			selectedJobTypes: []
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -68,33 +69,27 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 		});
 	}
 	
-	handleJobTypesChange(jobType) {
-	
-	this.setState((prevState, props) => {
-		let toggled = prevState.jobTypes.filter(function (j) { return j._id === jobType; });
-		toggled = toggled[0];
-		let toggledIndex = prevState.jobTypes.indexOf(toggled);
-		let newJobTypes = prevState.jobTypes;
-		newJobTypes.splice(toggledIndex, 1);
-		toggled.selected = !toggled.selected;
-		newJobTypes.splice(toggledIndex, 0, toggled);
-		return {jobTypes: newJobTypes}; 
-	});
+	toggleMembership(toggled, alreadySelected) {
+		let toggledIndex = alreadySelected.indexOf(toggled);
+		if (toggledIndex === -1) {
+			alreadySelected.push(toggled);
+		} else {
+			alreadySelected.splice(toggledIndex, 1);
+		}
+		return alreadySelected;
+	}
+
+	handleJobTypesChange(event) {
+		let toggled = event.target.value;
+		let newSelectedJobTypes = this.toggleMembership(toggled, this.state.selectedJobTypes);
+		this.setState({selectedJobTypes: newSelectedJobTypes});
 	}
 	
 	jobItems() {
 		
 		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
-		let jobTypes = this.state.jobTypes;
-		let selectedJobTypes = [];
-		jobTypes.map(
-			function(j) { 
-				if (j.selected === true) {
-					this.push(j._id);
-				}
-			}, selectedJobTypes
-		);
-
+		let selectedJobTypes = this.state.selectedJobTypes;
+		
 		return Jobs.find({
 			"estimateEmployee": employeeNumber,
 			"jobTypeCode": { $in: selectedJobTypes }

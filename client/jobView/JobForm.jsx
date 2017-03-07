@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {Inventory} from './../inventoryView/InventoryInputWrapper.jsx';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
 
+import SearchBox from './../parameterInputComponents/SearchBox.jsx';
+
 export default class JobForm extends Component {
 
 	constructor() {
@@ -12,8 +14,11 @@ export default class JobForm extends Component {
 				inventory: Meteor.subscribe("allInventory"),
 				employees: Meteor.subscribe("allEmployees")
 			},
-			installItems: [{key:0}]
+			installItems: [{key:'installItem' + 0}]
 		};
+		
+		this.changeInstallItem = this.changeInstallItem.bind(this);
+		this.inventoryItems = this.inventoryItems.bind(this);
 	}
 	
 	componentWillUnmount() {
@@ -35,7 +40,7 @@ export default class JobForm extends Component {
 		console.log(itemList);	*/
 		this.setState(function(prevState, props) {
 			let newInstallItems = prevState.installItems
-			newInstallItems.push({key: newInstallItems.length});
+			newInstallItems.push({key: 'installItem' + newInstallItems.length});
 			//console.log(newInstallItems[0].value);
 			return {
 				installItems: newInstallItems
@@ -43,6 +48,22 @@ export default class JobForm extends Component {
 		});
 	}
 	
+	changeInstallItem(item) {
+		let newInstallItems = [];
+		this.setState(function(prevState, props) {
+			prevState.installItems.map(
+				function(i) {
+					if (i.key != item.list.id) {
+						this.push({key: i.key, item: i.value})
+					}
+				}
+			, newInstallItems);
+		});
+		newInstallItems.push({key: item.list.id, item: item.value});
+		this.setState({installItems: newInstallItems});
+		console.log(this.state.installItems);
+	}
+
 	addJob(event) {
 		event.preventDefault();
 		let invoice = this.refs.invoice.value.trim();
@@ -323,25 +344,20 @@ export default class JobForm extends Component {
 					</div>
 					</div>
 					
-					{this.state.installItems.map( (installItem) => {
-					
-						let formElementId = 'installItem' + installItem.key;
+					{this.state.installItems.map( function(installItem) {
+						let formElementId = installItem.key;
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
 									<div className="col-sm-2">
-										<input 
-											list={formElementId + 'name'}
-											ref={formElementId}
-											className="form-control"
-											placeholder="Install Item"
+										<SearchBox
+											options={this.inventoryItems()}
+											onSelectionChange={this.changeInstallItem}
+											inputElementListAttribute={formElementId}
+											inputElementRefAttribute={formElementId}
+											datalistElementIdAttribute={formElementId}
+											placeholder={"Placeholder"}
 										/>
-										<datalist id={formElementId + 'name'}>
-											{this.inventoryItems().map( (item) => {
-												return <option
-															key={item._id}
-															value={item.inventoryItemName + "-#" + item.inventoryItemId} />
-											})}
-										</datalist>
+										
 									</div>
 									
 									<label 
@@ -358,8 +374,8 @@ export default class JobForm extends Component {
 											placeholder='1'
 										/>
 									</div>
-								</div>
-					})}
+								</div>;
+					}, this)}
 					
 					<button className="btn btn-primary"
 						type="button"

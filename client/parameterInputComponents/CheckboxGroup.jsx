@@ -18,11 +18,13 @@ export default class CheckboxGroup extends Component {
 		return (
 			<div className="form-group">
 				{this.state.options.map( (option) => {
-					return 	<div key={option}>
-								<input
-								type="checkbox"
-								onChange={this.onSelectionChange}
-								value={option}/>{option}
+					return 	<div className="checkbox col-sm-1" key={option}>
+								<label>
+									<input
+										type="checkbox"
+										onChange={this.onSelectionChange}
+										value={option}/>{option}
+								</label>
 							</div>
 				})}
 			</div>

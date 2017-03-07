@@ -103,14 +103,33 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		
 		return (
 			<div>
-			<CheckboxGroup
-				onSelectionChange={this.handleEmployeeChange}
-				options={employees}
-			/>
+			
+			<div className="row">
+				<div className="panel-group col-sm-6">
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							<h4 className="panel-title">
+								<a data-toggle="collapse" href="#employeesCollapse">Employees</a>
+							</h4>
+						</div>
+						<div id="employeesCollapse" className="panel-collapse collapse">
+							<div className="panel-body">
+								<CheckboxGroup
+									onSelectionChange={this.handleEmployeeChange}
+									options={employees}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="col-sm-6">
 			<CheckboxGroup
 				onSelectionChange={this.handleJobTypesChange}
 				options={jobTypes}
 			/>
+			</div>
+			
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}

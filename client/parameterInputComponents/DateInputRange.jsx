@@ -19,26 +19,37 @@ export default class DateRangeInput extends Component {
 	
 	render() {
 		return (
-			<div>
-				
-				Start Date:
-				
+			<div className="form-group">
+				<label
+					className="control-label col-sm-3"
+					htmlFor="startDate">
+					Start Date:
+				</label>
+				<div className="col-sm-3">
 				<input 
 					type="Date" 
 					className="form-control"
 					id="startDate"
 					ref="startDate"
-					onChange={this.handleStartDateChange}/>
-				
-				End Date:
-				
+					defaultValue={new Date().toISOString().substring(0,10)}
+					onChange={this.handleStartDateChange}
+				/>
+				</div>
+				<label 
+					className="control-label col-sm-3"
+					htmlFor="endDate">
+					End Date:
+				</label>
+				<div className="col-sm-3">
 				<input 
 					type="Date" 
 					className="form-control"
 					id="endDate"
 					ref="endDate"
-					onChange={this.handleEndDateChange}/>
-			
+					defaultValue={new Date().toISOString().substring(0,10)}
+					onChange={this.handleEndDateChange}
+				/>
+				</div>
 			</div>
 
 		)

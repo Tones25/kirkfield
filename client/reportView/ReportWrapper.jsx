@@ -69,7 +69,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 					className="form-horizontal">
 					
 					<div className="row">
-					<div className="form-group col-sm-6">
+					<div className="form-group col-sm-8">
 						<label
 							className="control-label col-sm-6"
 							htmlFor="selectReport">
@@ -90,16 +90,16 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 							</select>
 						</div>
 					</div>
-					<div className="col-sm-6">
+					<div className="col-sm-4">
 						<button type="submit" className="btn btn-primary pull-right" value="submit">
 							Submit
 						</button>
 					</div>
 					</div>
-					<div className="row">
-					{this.reportInputs()}
-					</div>
 				</form>
+				<div className="row">
+					{this.reportInputs()}
+				</div>
 			</div>
 		</div>
 

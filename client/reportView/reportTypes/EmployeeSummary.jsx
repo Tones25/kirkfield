@@ -6,7 +6,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
-
+import DataTable from './../../DataTable.jsx';
 
 export default class EmployeeSummary extends TrackerReact(React.Component) {
 
@@ -28,7 +28,7 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		super(props);
 		
 		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
-		let employees = this.findAllValuesOfCollectionAttribute(Employees, 'employeeFirstName');
+		let employees = this.findAllValuesOfCollectionAttribute(Employees, '_id');
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
@@ -92,17 +92,28 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		let selectedJobTypes = this.state.selectedJobTypes;
 		
 		return Jobs.find({
-			"estimateEmployee": { $in: selectedEmployees },
-			"jobTypeCode": { $in: selectedJobTypes }
+			$and: [
+				{"estimateEmployee": { $in: selectedEmployees }},
+				{"jobTypeCode": { $in: selectedJobTypes }},
+				{"date": { 	$gte: this.state.startDate,
+							$lte: this.state.endDate }
+				}
+			]
 		}).fetch();
 	}
 
+	employees() {
+		return Employees.find().fetch();
+	}
+	
 	render() {
 		let employees = this.state.employees;
 		let jobTypes = this.state.jobTypes;
 		
 		return (
 			<div>
+			<form
+				className="form-horizontal">
 			
 			<div className="row">
 				<div className="panel-group col-sm-6">
@@ -116,30 +127,43 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 							<div className="panel-body">
 								<CheckboxGroup
 									onSelectionChange={this.handleEmployeeChange}
-									options={employees}
+									options={this.employees()}
+									keyProperty="_id"
+									labelProperty="employeeFirstName"
 								/>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			
 			<div className="col-sm-6">
 			<CheckboxGroup
 				onSelectionChange={this.handleJobTypesChange}
 				options={jobTypes}
+				label="Job Types"
 			/>
 			</div>
 			
-			<DateInputRange 
-				onStartDateChange={this.handleStartDateChange}
-				onEndDateChange={this.handleEndDateChange}
-			/>
-			<div className="panel-body">
-				<ul className="resolutions">
-					{this.jobItems().map( (jobItems) => {
-						return <JobSingle key={jobItems._id} jobItem={jobItems} />
-					})}
-				</ul>
+			</div>
+			
+			<div className="row">
+				<div className="col-sm-12">
+				<DateInputRange 
+					onStartDateChange={this.handleStartDateChange}
+					onEndDateChange={this.handleEndDateChange}
+				/>
+				</div>
+			</div>
+			
+			</form>
+			
+			<div className="row">
+				<DataTable
+					rowHeight={50}
+					columns={['installEmployee', '_id']}
+					columnNames={['Install Employee', 'Job ID']}
+					data={this.jobItems()}
+				/>
 			</div>
 			
 			</div>

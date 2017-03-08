@@ -17,13 +17,15 @@ export default class CheckboxGroup extends Component {
 	render() {
 		return (
 			<div className="form-group">
+				<label className="row">{this.props.label ? this.props.label : ""}</label>
 				{this.state.options.map( (option) => {
-					return 	<div className="checkbox col-sm-1" key={option}>
+					return 	<div className="checkbox row"
+								 key={this.props.keyProperty ? option[this.props.keyProperty] : option}>
 								<label>
 									<input
 										type="checkbox"
 										onChange={this.onSelectionChange}
-										value={option}/>{option}
+										value={this.props.keyProperty ? option[this.props.keyProperty] : option}/>{this.props.labelProperty ? option[this.props.labelProperty] : option}
 								</label>
 							</div>
 				})}

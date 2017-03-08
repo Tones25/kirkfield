@@ -6,29 +6,36 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
-import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
-export default class JobsByEmployee extends TrackerReact(React.Component) {
 
+export default class EmployeeSummary extends TrackerReact(React.Component) {
+
+	findAllValuesOfCollectionAttribute(collection, attribute) {
+		let values = [];
+		let attributeCursor = collection.find({}, {attribute: 1});
+		attributeCursor.map(
+			function(a) {
+				if(this.includes(a[attribute]))
+					return;
+				else
+					this.push(a[attribute]);
+			}
+		,values);
+		return values;
+	}
+	
 	constructor(props) {
 		super(props);
 		
-		let jobTypes = [];
-		let jobTypesCursor = Jobs.find({}, {jobTypeCode: 1});
-		jobTypesCursor.map(
-			function(j) { 
-				if(this.includes(j.jobTypeCode))
-					return;
-				else 
-					this.push(j.jobTypeCode); },
-		jobTypes);
-
+		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
+		let employees = this.findAllValuesOfCollectionAttribute(Employees, 'employeeFirstName');
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
-			employee: Employees.findOne()._id,
+			employees: employees,
 			jobTypes: jobTypes,
-			selectedJobTypes: []
+			selectedJobTypes: [],
+			selectedEmployees: []
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -38,9 +45,8 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 
 	handleEmployeeChange(employee) {
-		this.setState({
-			employee: employee,
-		});
+		let newSelectedEmployees = this.toggleMembership(employee, this.state.selectedEmployees);
+		this.setState({selectedEmployees: newSelectedEmployees});
 	}
 
 	handleStartDateChange(startDate) {
@@ -75,31 +81,31 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 		return alreadySelected;
 	}
 
-	handleJobTypesChange(event) {
-		let toggled = event.target.value;
-		let newSelectedJobTypes = this.toggleMembership(toggled, this.state.selectedJobTypes);
+	handleJobTypesChange(jobType) {
+		let newSelectedJobTypes = this.toggleMembership(jobType, this.state.selectedJobTypes);
 		this.setState({selectedJobTypes: newSelectedJobTypes});
 	}
 	
 	jobItems() {
 		
-		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
+		let selectedEmployees = this.state.selectedEmployees;
 		let selectedJobTypes = this.state.selectedJobTypes;
 		
 		return Jobs.find({
-			"estimateEmployee": employeeNumber,
+			"estimateEmployee": { $in: selectedEmployees },
 			"jobTypeCode": { $in: selectedJobTypes }
 		}).fetch();
 	}
 
 	render() {
-		let employees = Employees.find().fetch();
+		let employees = this.state.employees;
 		let jobTypes = this.state.jobTypes;
+		
 		return (
 			<div>
-			<Dropdown
+			<CheckboxGroup
 				onSelectionChange={this.handleEmployeeChange}
-				options={Employees.find().fetch()}
+				options={employees}
 			/>
 			<CheckboxGroup
 				onSelectionChange={this.handleJobTypesChange}

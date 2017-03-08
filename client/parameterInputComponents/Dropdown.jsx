@@ -17,7 +17,7 @@ export default class Dropdown extends Component {
 	render() {
 		return (
 			<div>
-				Selection:
+				
 				<select onChange={this.onSelectionChange}>
 					{this.state.options.map( (option) => {
 						return <option

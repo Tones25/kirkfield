@@ -7,7 +7,7 @@ import JobSingle from './JobSingle.jsx';
 
 import {Vehicles} from './../vehicleView/VehicleInputWrapper.jsx';
 
-Jobs = new Mongo.Collection("jobs");
+export const Jobs = new Mongo.Collection("jobs");
 
 export default class JobInputWrapper extends TrackerReact(React.Component) {
 	constructor() {

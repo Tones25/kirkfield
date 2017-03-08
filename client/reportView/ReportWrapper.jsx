@@ -5,7 +5,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import TestReport from './reportTypes/TestReport';
 import ReportA from './reportTypes/ReportA';
 import JobsByEmployee from './reportTypes/JobsByEmployee.jsx';
-
+import EmployeeSummary from './reportTypes/EmployeeSummary.jsx';
 
 
 
@@ -52,6 +52,8 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 			return(<ReportA />)
 		if(reportType == 'JobsByEmployee')
 			return(<JobsByEmployee/>)
+		if(reportType == 'EmployeeSummary')
+			return(<EmployeeSummary/>)
 		
 	}
 
@@ -66,6 +68,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 						Chose report:
 						<select value={this.state.value} onChange={this.handleChange}>
 							<option value=""> </option>
+							<option value="EmployeeSummary">Employee Summary</option>
 							<option value="ReportA">Report A</option>
 							<option value="TestReport">Test Report</option>
 							<option value="JobsByEmployee">Jobs By Employee</option>

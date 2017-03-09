@@ -53,8 +53,8 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 				<div className="panel-body">
 					<DataTable 
 						rowHeight={tableRowHeight}
-						columns={['inventoryItemId', 'inventoryItemName', 'inventoryItemQuantity']}
-						columnNames={['Item Id', 'Item Name', 'Quantity']}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'make', 'model', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Make', 'Model#', 'Serial#']}
 						data={this.state.recent}
 					/>
 				</div>

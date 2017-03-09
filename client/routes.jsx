@@ -8,6 +8,7 @@ import InventorySearchWrapper from './inventoryView/InventorySearchWrapper.jsx';
 import InventoryDetail from './inventoryView/InventoryDetail.jsx';
 
 import JobInputWrapper from './jobView/JobInputWrapper.jsx';
+import JobDetail from './jobView/JobDetail.jsx';
 
 import VehicleInputWrapper from './vehicleView/VehicleInputWrapper.jsx';
 import VehiclesWrapper from './vehicleView/VehiclesWrapper.jsx';
@@ -91,6 +92,15 @@ FlowRouter.route('/jobInput', {
 	action() {
 		mount(MainLayout, {
 			content: (<JobInputWrapper />),
+		})
+	}
+})
+
+FlowRouter.route('/job/:id', {
+	action(params) {
+		mount(MainLayout, {
+			//this passes params.id as a prop into RosultionDetail instance
+			content: (<JobDetail id={params.id} />),
 		})
 	}
 })

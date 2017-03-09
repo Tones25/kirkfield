@@ -12,6 +12,7 @@ import JobDetail from './jobView/JobDetail.jsx';
 
 import CustomerInputWrapper from './customerView/CustomerInputWrapper.jsx';
 import CustomerDetail from './customerView/CustomerDetail.jsx';
+import CustomerDetailWrapper from './customerView/CustomerDetailWrapper.jsx';
 
 import VehicleInputWrapper from './vehicleView/VehicleInputWrapper.jsx';
 import VehiclesWrapper from './vehicleView/VehiclesWrapper.jsx';
@@ -70,7 +71,7 @@ FlowRouter.route('/customer/:id', {
 	action(params) {
 		mount(MainLayout, {
 			//this passes params.id as a prop into RosultionDetail instance
-			content: (<CustomerDetail id={params.id} />),
+			content: (<CustomerDetailWrapper id={params.id} />),
 		})
 	}
 })

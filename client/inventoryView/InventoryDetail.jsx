@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import {Inventory} from './InventoryInputWrapper'
+import {Inventory} from './InventoryInputWrapper.jsx'
 
 
 export default class InventoryDetail extends TrackerReact(Component) {
@@ -39,7 +39,7 @@ export default class InventoryDetail extends TrackerReact(Component) {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-				Bert.alert('Changes saved', 'success', 'fixed-top', 'fa-frown-o');
+				Bert.alert('Changes saved', 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
 		}
@@ -51,6 +51,10 @@ export default class InventoryDetail extends TrackerReact(Component) {
 		return Inventory.findOne(this.props.id);
 	}
 
+	back() {
+		FlowRouter.go("/inventoryInput");
+	}
+
 	render() {
 		let item = this.inventory();
 
@@ -58,12 +62,10 @@ export default class InventoryDetail extends TrackerReact(Component) {
 			return(<div>Loading...</div>)
 		}
 		return(
-			<div>	
-			<form method="post" action="/inventoryInput">				
-				<button className="btn btn-primary">
+			<div>				
+				<button className="btn btn-primary" onClick={this.back.bind(this)}>
 						Back to Inventory<span className="glyphicon glyphicon-return"></span>
 				</button>
-			</form>
 			<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>{item.inventoryItemName}&emsp;(Item#{item.inventoryItemId})</h1>
@@ -90,7 +92,7 @@ export default class InventoryDetail extends TrackerReact(Component) {
 						id="itemPrice"
 						type="number" 
 						ref="inventoryItemPrice"
-						step="any"
+						step="0.01"
 						defaultValue={item.unitPrice}
 					/>
 					</div>

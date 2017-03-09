@@ -53,9 +53,13 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 				<div className="panel-body">
 					<DataTable 
 						rowHeight={tableRowHeight}
-						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'make', 'model', 'serialNum']}
-						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Make', 'Model#', 'Serial#']}
-						data={this.state.recent}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
+						deleteButtons={true}
+						deleteFunction={'deleteInventoryItem'}
+						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
+						data={this.inventoryItems()}
 					/>
 				</div>
 				</div>

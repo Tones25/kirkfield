@@ -71,10 +71,6 @@ Meteor.startup(() => {
 	if(Inventory.find().count() === 0) {
 
 		for (i = 1; i < 100; i++) {
-			let omonthRandom = Math.floor(Math.random() * 12);
-			let odayRandom = Math.floor((Math.random() * 32) + 1);
-			let rmonthRandom = Math.floor(Math.random() * 12);
-			let rdayRandom = Math.floor((Math.random() * 32) + 1);
 			let quantityRandom = Math.floor(Math.random() * 50);
 			let modelNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
 			let serialNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
@@ -96,6 +92,34 @@ Meteor.startup(() => {
 
 		
 	}
+
+	if(Customers.find().count() === 0) {
+
+		for (i = 1; i < 100; i++) {
+			let addressRandom = Math.floor(Math.random() * 550);
+			let phoneRnd = Math.floor((Math.random() * 899) + 100) + '-' + Math.floor((Math.random() * 8999) + 1000);
+			let monthRandom = Math.floor(Math.random() * 12);
+			let dayRandom = Math.floor((Math.random() * 32) + 1);
+
+			Customers.insert({
+				customerId: i,
+				contactName: 'McDonnel Miller #' + i,
+				address: addressRandom + ' Ez Street',
+				billableOwner: '',
+				billableAddress: '',
+				phone1: '(204)-' + phoneRnd,
+				phone2: '',
+				qsp: false,
+				comments: 'Some additional information.',
+				nextService: new Date(2017, monthRandom, dayRandom),
+				createdAt: new Date()
+				
+			});
+
+		}
+
+		
+	}	
 	
 	if(Vehicles.find().count() === 0) {
 		Vehicles.insert({

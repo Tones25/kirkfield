@@ -173,6 +173,10 @@ export default class JobDetail extends TrackerReact(Component) {
 
 		
 	}
+
+	back() {
+		FlowRouter.go("/jobInput");
+	}
 	
 	render() {
 		let job = this.job();
@@ -181,12 +185,10 @@ export default class JobDetail extends TrackerReact(Component) {
 			return (<div>Loading...</div>)
 		}
 		return(
-			<div className="row">	
-			<form method="post" action="/jobInput">				
-				<button className="btn btn-primary">
+			<div className="row">				
+				<button className="btn btn-primary" onClick={this.back.bind(this)}>
 						Back to Jobs<span className="glyphicon glyphicon-return"></span>
 				</button>
-			</form>
 			<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>Invoice #{job.invoice}</h1>

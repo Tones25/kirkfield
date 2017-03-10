@@ -76,19 +76,23 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 
 	handleJobTypesChange(event) {
-		let toggled = event.target.value;
+		let toggled = event;
 		let newSelectedJobTypes = this.toggleMembership(toggled, this.state.selectedJobTypes);
 		this.setState({selectedJobTypes: newSelectedJobTypes});
 	}
 	
 	jobItems() {
 		
-		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
+		let employeeNumber = this.state.employee;
 		let selectedJobTypes = this.state.selectedJobTypes;
 		
 		return Jobs.find({
-			"estimateEmployee": employeeNumber,
-			"jobTypeCode": { $in: selectedJobTypes }
+			$and: [	{"estimateEmployee": employeeNumber},
+					{"jobTypeCode": { $in: selectedJobTypes }},
+					{"date": { 	$gte: this.state.startDate,
+								$lte: this.state.endDate }
+					}
+			]
 		}).fetch();
 	}
 

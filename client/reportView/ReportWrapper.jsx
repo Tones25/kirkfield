@@ -62,23 +62,46 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 	render() {
 		
 		return(
+		<div>
 			<div className="row">
-				<form onSubmit={this.handleSubmit}>
-					<label>
-						Chose report:
-						<select value={this.state.value} onChange={this.handleChange}>
-							<option value=""> </option>
-							<option value="EmployeeSummary">Employee Summary</option>
-							<option value="ReportA">Report A</option>
-							<option value="TestReport">Test Report</option>
-							<option value="JobsByEmployee">Jobs By Employee</option>
-							<option value="report3">Report 3</option>
-						</select>
-					</label>	
-					<input type="submit" value="submit"/>
-					{this.reportInputs()}
+				<form 
+					onSubmit={this.handleSubmit}
+					className="form-horizontal">
+					
+					<div className="row">
+					<div className="form-group col-sm-8">
+						<label
+							className="control-label col-sm-6"
+							htmlFor="selectReport">
+							Choose report:
+						</label>
+						<div className="col-sm-6">
+							<select 
+								id="selectReport"
+								value={this.state.value} 
+								onChange={this.handleChange}
+								className="form-control">
+								<option value=""> </option>
+								<option value="EmployeeSummary">Employee Summary</option>
+								<option value="ReportA">Report A</option>
+								<option value="TestReport">Test Report</option>
+								<option value="JobsByEmployee">Jobs By Employee</option>
+								<option value="report3">Report 3</option>
+							</select>
+						</div>
+					</div>
+					<div className="col-sm-4">
+						<button type="submit" className="btn btn-primary pull-right" value="submit">
+							Submit
+						</button>
+					</div>
+					</div>
 				</form>
+				<div className="row">
+					{this.reportInputs()}
+				</div>
 			</div>
+		</div>
 
 		)
 	}

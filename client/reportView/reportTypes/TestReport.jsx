@@ -4,6 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
+import BarChart from '../chartTypes/BarChart.jsx';
 
 
 export default class TestReport extends TrackerReact(React.Component) {
@@ -53,13 +54,47 @@ export default class TestReport extends TrackerReact(React.Component) {
 		}).fetch();
 	}
 
+	mapJobItems() {
+		let data = [
+			{ qty: 0, xLabel: "Jan"},
+			{ qty: 0, xLabel: "Feb"},
+			{ qty: 0, xLabel: "Mar"},
+			{ qty: 0, xLabel: "Apr"},
+			{ qty: 0, xLabel: "May"},
+			{ qty: 0, xLabel: "Jun"},
+			{ qty: 0, xLabel: "Jul"},
+			{ qty: 0, xLabel: "Aug"},
+			{ qty: 0, xLabel: "Sep"},
+			{ qty: 0, xLabel: "Oct"},
+			{ qty: 0, xLabel: "Nov"},
+			{ qty: 0, xLabel: "Dec"},
+		];
+
+		let jobs = Jobs.find({
+		date:{
+			$gte: this.state.startDate,
+			$lt: this.state.endDate
+			}
+		}).fetch();
+
+		jobs.map( (d) => {
+			data[d.date.getMonth()].qty += 1;
+		});
+
+		console.log(data);
+		return data;
+	}
+
 	render() {
+		const width = 640;
+		const height = 480;
 		return (
 			<div>
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
 			/>
+			<BarChart data={this.mapJobItems()} width={width} height={height}/>
 			<div className="panel-body">
 				<ul className="resolutions">
 					{this.jobItems().map( (jobItems) => {

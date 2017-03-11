@@ -11,7 +11,7 @@ class DataTable extends TrackerReact(React.Component) {
 	}
 	
 	editButton(rowIndex) {
-		Meteor.call(this.props.editFunction, this.props.data[rowIndex]);
+		this.props.editFunction(this.props.data[rowIndex]);
 	}
 	
 	render() {
@@ -60,7 +60,7 @@ class DataTable extends TrackerReact(React.Component) {
 					width={columnWidth}
 				/>;
 		}
-		
+		//console.log(this.props.data);
 		return (<Table	
 						rowsCount={this.props.data.length}
 						rowHeight={this.props.rowHeight}

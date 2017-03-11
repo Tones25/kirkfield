@@ -2,7 +2,7 @@ Meteor.methods({
 
 	toggleResolution(resolution) {
 		if(Meteor.userId() !== resolution.user) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		Resolutions.update(resolution._id, {
 			$set: {complete: !resolution.complete}
@@ -23,9 +23,14 @@ Meteor.methods({
 		}*/
 	},
 
+	goToRoute(route) {
+		//console.log(route);
+		FlowRouter.go(route);
+	},
+
 	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 
 		entry = Inventory.findOne({inventoryItemId: inventoryItemId})
@@ -40,7 +45,7 @@ Meteor.methods({
 			Inventory.insert({
 				inventoryItemId: inventoryItemId,
 				inventoryItemName: inventoryItemName,
-				unitPrice: parseDouble(unitPrice),
+				unitPrice: parseFloat(unitPrice),
 				inventoryItemQuantity: parseInt(inventoryItemQuantity),
 				make: make,
 				model: model,
@@ -53,12 +58,10 @@ Meteor.methods({
 
 	editInventoryItem(inventoryItem, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Inventory.findOne({_id: inventoryItem._id})
-		console.log(entry)
 		if(entry) {
-			console.log("Attempting database update...");
 			Inventory.update(
 				{_id: entry._id},
 				{$set: {
@@ -78,8 +81,8 @@ Meteor.methods({
 	deleteInventoryItem(inventoryItem) {
 		//can only delete items user inserted
 		//might have to change
-		if(Meteor.userId() !== inventoryItem.user) {
-			throw new Meteor.Error('Not authorized')
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
 		}
 		Inventory.remove(inventoryItem._id)
 	},
@@ -87,7 +90,7 @@ Meteor.methods({
 	addJob(invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
 			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 			entry = Jobs.findOne({invoice: parseInt(invoice)})
 		if(entry) {
@@ -138,7 +141,7 @@ Meteor.methods({
 
 	editJobItem(inventoryItem, inventoryItemName, inventoryItemQuantity) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Inventory.findOne({_id: inventoryItem._id})
 		if(entry) {
@@ -159,7 +162,7 @@ Meteor.methods({
 	
 	deleteJobItem(job) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		let installIds = job.installIds
 		let installQts = job.installQts
@@ -182,7 +185,7 @@ Meteor.methods({
 		vehicleModel, vehicleModelYear, licensePlate,
 		color, initialMileage) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Vehicles.findOne({vehicleId: parseInt(vehicleId)})
 		if(entry) {
@@ -205,8 +208,8 @@ Meteor.methods({
 	deleteVehicle(vehicle) {
 		//can only delete vehicles user inserted
 		//might have to change
-		if(Meteor.userId() !== vehicle.user) {
-			throw new Meteor.Error('Not authorized')
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
 		}
 		Vehicles.remove(vehicle._id)
 	},
@@ -214,7 +217,7 @@ Meteor.methods({
 	addEmployee(employeeId, employeeFirstName, employeeLastName, 
 		employeeStartDate, employeeExperience, employeeHourlyRate) {
 		if(!Meteor.userId()) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Employees.findOne({employeeId: parseInt(employeeId)})
 		if(entry) {
@@ -238,9 +241,81 @@ Meteor.methods({
 		//can only delete vehicles user inserted
 		//might have to change
 		if(Meteor.userId() !== employee.user) {
-			throw new Meteor.Error('Not authorized')
+			throw new Meteor.Error('You must be logged in.')
 		}
 		Employees.remove(employee._id)
+	},
+
+	addCustomer(customerId, contactName, address, 
+		billableOwner, billableAddress, phone1,
+		phone2, qsp, comments, nextService) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Customers.findOne({customerId: parseInt(customerId)})
+		if(entry) {
+			throw new Meteor.Error('Duplicate id')
+		}
+			let dateTokens = nextService.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+
+
+		Customers.insert({
+				customerId: customerId,
+				contactName: contactName,
+				address: address,
+				billableOwner: billableOwner,
+				billableAddress: billableAddress,
+				phone1: phone1,
+				phone2: phone2,
+				qsp: qsp,
+				comments: comments,
+				nextService:  new Date(dateYear, dateMonth, dateDay),
+				createdAt: new Date()
+				
+			})
+	},
+
+	editCustomer(customer, contactName, address, 
+		billableOwner, billableAddress, phone1,
+		phone2, qsp, comments, nextService) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Customers.findOne({_id: customer._id})
+			let dateTokens = nextService.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+		if(entry) {
+			Customers.update(
+				{_id: entry._id},
+				{$set: {
+					contactName: contactName,
+					address: address,
+					billableOwner: billableOwner,
+					billableAddress: billableAddress,
+					phone1: phone1,
+					phone2: phone2,
+					qsp: qsp,
+					comments: comments,
+					nextService: new Date(dateYear, dateMonth, dateDay),
+				}}
+				)
+		} else {
+			throw new Meteor.Error('Invalid ID')
+		}
+	},
+
+	deleteCustomer(customer) {
+		//can only delete vehicles user inserted
+		//might have to change
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		Customers.remove(customer._id)
 	},
 	
 	

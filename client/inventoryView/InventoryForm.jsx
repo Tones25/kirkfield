@@ -26,8 +26,9 @@ export default class InventoryForm extends Component {
 		if (validInput) {
 			Meteor.call('addInventoryItem', inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum, (error, data) => {
 			if(error) {
-				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
+				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
+			Bert.alert('Successfully added Item: ' + inventoryItemName, 'success', 'fixed-top', 'fa-smile-o');
 			this.refs.inventoryItemId.value = "";
 			this.refs.inventoryItemName.value = "";
 			this.refs.inventoryItemPrice.value = "";
@@ -78,7 +79,7 @@ export default class InventoryForm extends Component {
 						id="itemPrice"
 						type="number" 
 						ref="inventoryItemPrice"
-						step="any"
+						step="0.01"
 						placeholder="Item Price"
 					/>
 					</div>

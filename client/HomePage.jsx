@@ -6,56 +6,66 @@ export default class HomePage extends Component {
 		Session.set('Meteor.loginButtons.dropdownVisible', true);
 	}
 
+	inv(route) {
+		FlowRouter.go('/inventoryInput');
+	}
+
+	job(route) {
+		FlowRouter.go('/jobInput');
+	}
+
+	veh(route) {
+		FlowRouter.go('/vehicleInput');
+	}
+
+	emp(route) {
+		FlowRouter.go('/employees');
+	}
+
+	rep(route) {
+		FlowRouter.go('/reporting');
+	}
+
 	render() {
 		return(
 		<div className="row">
 
 			<div className="col-sm-6">
-				<form method="post" action="/inventoryInput">
-				<button
+				<button onClick={this.inv.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-shopping-cart"></span> Inventory
 				</button>
-				</form>
 			</div>
 			<div className="col-sm-6">
-				<form method="post" action="/jobInput">
-				<button
+				<button onClick={this.job.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-briefcase"></span> Jobs
 				</button>
-				</form>
 			</div>
 			
 			<div className="col-sm-6">
-				<form method="post" action="/vehicleInput">
-				<button
+				<button onClick={this.veh.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-road"></span> Vehicles
 				</button>
-				</form>
 			</div>
 			<div className="col-sm-6">
-				<form method="post" action="/employees">
-				<button
+				<button onClick={this.emp.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-user"></span> Employees
 				</button>
-				</form>
 			</div>
 			
 			<div className="col-sm-12">
-				<form method="post" action="/reporting">
-				<button
+				<button onClick={this.rep.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-th-list"></span> Reports 
 				</button>
-				</form>
 			</div>
 
 		</div>

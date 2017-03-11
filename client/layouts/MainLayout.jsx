@@ -42,6 +42,7 @@ export const MainLayout = ({content}) => (
 						</ul>
 					</li>
 					<li><a href="/employees">Employees</a></li>
+					<li><a href="/customers">Customers</a></li>
 					<li><a href="/reporting">Reporting</a></li>
 					<li><AccountsUI /></li>
 				</ul>

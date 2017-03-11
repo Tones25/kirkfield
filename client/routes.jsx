@@ -10,6 +10,10 @@ import InventoryDetail from './inventoryView/InventoryDetail.jsx';
 import JobInputWrapper from './jobView/JobInputWrapper.jsx';
 import JobDetail from './jobView/JobDetail.jsx';
 
+import CustomerInputWrapper from './customerView/CustomerInputWrapper.jsx';
+import CustomerDetail from './customerView/CustomerDetail.jsx';
+import CustomerDetailWrapper from './customerView/CustomerDetailWrapper.jsx';
+
 import VehicleInputWrapper from './vehicleView/VehicleInputWrapper.jsx';
 import VehiclesWrapper from './vehicleView/VehiclesWrapper.jsx';
 import VehicleDetail from './vehicleView/VehicleDetail.jsx';
@@ -51,6 +55,23 @@ FlowRouter.route('/inventory/:id', {
 		mount(MainLayout, {
 			//this passes params.id as a prop into RosultionDetail instance
 			content: (<InventoryDetail id={params.id} />),
+		})
+	}
+})
+
+FlowRouter.route('/customers', {
+	action() {
+		mount(MainLayout, {
+			content: (<CustomerInputWrapper />),
+		})
+	}
+})
+
+FlowRouter.route('/customer/:id', {
+	action(params) {
+		mount(MainLayout, {
+			//this passes params.id as a prop into RosultionDetail instance
+			content: (<CustomerDetailWrapper id={params.id} />),
 		})
 	}
 })

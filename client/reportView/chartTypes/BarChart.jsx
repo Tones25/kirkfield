@@ -67,6 +67,9 @@ export default class BarChart extends Component {
 			.text(function(d, i) { 	    	  	
 				return d.qty; 
 			});
+
+		qtyLabel.exit()
+	    		.remove();
  
 	   	var xLabel = svg.selectAll(".xLabel").data(data);
 	    xLabel.enter()
@@ -83,6 +86,9 @@ export default class BarChart extends Component {
 	    	  .attr("y", function(d, i) {
 	    	  	return props.height - 5; 
 	    	  });
+
+	    xLabel.exit()
+	    	  .remove();
 	}
 
 	render() {

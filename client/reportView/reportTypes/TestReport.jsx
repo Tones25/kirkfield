@@ -55,34 +55,96 @@ export default class TestReport extends TrackerReact(React.Component) {
 	}
 
 	mapJobItems() {
-		let data = [
-			{ qty: 0, xLabel: "Jan"},
-			{ qty: 0, xLabel: "Feb"},
-			{ qty: 0, xLabel: "Mar"},
-			{ qty: 0, xLabel: "Apr"},
-			{ qty: 0, xLabel: "May"},
-			{ qty: 0, xLabel: "Jun"},
-			{ qty: 0, xLabel: "Jul"},
-			{ qty: 0, xLabel: "Aug"},
-			{ qty: 0, xLabel: "Sep"},
-			{ qty: 0, xLabel: "Oct"},
-			{ qty: 0, xLabel: "Nov"},
-			{ qty: 0, xLabel: "Dec"},
-		];
+		let trimmedData = [];
+		if(this.state.endDate.getMonth() - this.state.startDate.getMonth() < 1) {
+			let data = [
+				{ qty: 0, xLabel: "1"},
+				{ qty: 0, xLabel: "2"},
+				{ qty: 0, xLabel: "3"},
+				{ qty: 0, xLabel: "4"},
+				{ qty: 0, xLabel: "5"},
+				{ qty: 0, xLabel: "6"},
+				{ qty: 0, xLabel: "7"},
+				{ qty: 0, xLabel: "8"},
+				{ qty: 0, xLabel: "9"},
+				{ qty: 0, xLabel: "10"},
+				{ qty: 0, xLabel: "11"},
+				{ qty: 0, xLabel: "12"},
+				{ qty: 0, xLabel: "13"},
+				{ qty: 0, xLabel: "14"},
+				{ qty: 0, xLabel: "15"},
+				{ qty: 0, xLabel: "16"},
+				{ qty: 0, xLabel: "17"},
+				{ qty: 0, xLabel: "18"},
+				{ qty: 0, xLabel: "19"},
+				{ qty: 0, xLabel: "20"},
+				{ qty: 0, xLabel: "21"},
+				{ qty: 0, xLabel: "22"},
+				{ qty: 0, xLabel: "23"},
+				{ qty: 0, xLabel: "24"},
+				{ qty: 0, xLabel: "25"},
+				{ qty: 0, xLabel: "26"},
+				{ qty: 0, xLabel: "27"},
+				{ qty: 0, xLabel: "28"},
+				{ qty: 0, xLabel: "29"},
+				{ qty: 0, xLabel: "30"},
+				{ qty: 0, xLabel: "31"}
+			];
 
-		let jobs = Jobs.find({
-		date:{
-			$gte: this.state.startDate,
-			$lt: this.state.endDate
-			}
-		}).fetch();
+			let jobs = Jobs.find({
+			date:{
+				$gte: this.state.startDate,
+				$lte: this.state.endDate
+				}
+			}).fetch();
 
-		jobs.map( (d) => {
-			data[d.date.getMonth()].qty += 1;
-		});
+			
 
-		console.log(data);
-		return data;
+			jobs.map( (d) => {
+				data[d.date.getDate() - 1].qty += 1;
+			});
+
+			
+			for(let i = this.state.startDate.getDate() - 1; i < this.state.endDate.getDate(); i++) {
+				
+					trimmedData.push(data[i]);
+			}	
+
+		} else {
+				
+			let data = [
+				{ qty: 0, xLabel: "Jan"},
+				{ qty: 0, xLabel: "Feb"},
+				{ qty: 0, xLabel: "Mar"},
+				{ qty: 0, xLabel: "Apr"},
+				{ qty: 0, xLabel: "May"},
+				{ qty: 0, xLabel: "Jun"},
+				{ qty: 0, xLabel: "Jul"},
+				{ qty: 0, xLabel: "Aug"},
+				{ qty: 0, xLabel: "Sep"},
+				{ qty: 0, xLabel: "Oct"},
+				{ qty: 0, xLabel: "Nov"},
+				{ qty: 0, xLabel: "Dec"},
+			];
+	
+			let jobs = Jobs.find({
+			date:{
+				$gte: this.state.startDate,
+				$lt: this.state.endDate
+				}
+			}).fetch();
+	
+			jobs.map( (d) => {
+				data[d.date.getMonth()].qty += 1;
+			});
+	
+			
+			for(let i = 0; i < data.length; i++) {
+				if(data[i].qty > 0)
+					trimmedData.push(data[i]);
+			}		
+		}
+		return trimmedData;
 	}
 
 	render() {

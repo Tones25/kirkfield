@@ -81,8 +81,10 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 	
 	jobItems() {
+		
 		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
 		let selectedJobTypes = this.state.selectedJobTypes;
+		
 		return Jobs.find({
 			"estimateEmployee": employeeNumber,
 			"jobTypeCode": { $in: selectedJobTypes },

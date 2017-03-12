@@ -9,9 +9,21 @@ Meteor.methods({
 		})
 	},
 
+	generateId(Table, idFieldName) {
+		let count = 0;
+		//console.log(Table, idFieldName);
+		return 0;
+		/*for (var i=0; i<2; i++) {
+			entry = Table.findOne({idFieldName: i})
+			console.log(entry)
+			if (!entry) {
+				return i;
+				break;
+			}
+		}*/
+	},
 
-
-	addInventoryItem(inventoryItemId, inventoryItemName, inventoryItemQuantity) {
+	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
 		}
@@ -28,29 +40,35 @@ Meteor.methods({
 			Inventory.insert({
 				inventoryItemId: inventoryItemId,
 				inventoryItemName: inventoryItemName,
+				unitPrice: parseDouble(unitPrice),
 				inventoryItemQuantity: parseInt(inventoryItemQuantity),
-				complete: false,
+				make: make,
+				model: model,
+				serialNum: serialNum,
 				createdAt: new Date(),
 				user: Meteor.userId()
 			})
 		}
 	},
 
-	editInventoryItem(inventoryItem, inventoryItemName, inventoryItemQuantity) {
+	editInventoryItem(inventoryItem, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
 		}
 		entry = Inventory.findOne({_id: inventoryItem._id})
+		console.log(entry)
 		if(entry) {
 			console.log("Attempting database update...");
-			newQuantity = parseInt(inventoryItemQuantity)
 			Inventory.update(
 				{_id: entry._id},
-				{$set: {inventoryItemName: inventoryItemName}}
-				)
-			Inventory.update(
-				{_id: entry._id},
-				{$set: {inventoryItemQuantity: newQuantity}}
+				{$set: {
+					inventoryItemName: inventoryItemName,
+					unitPrice: unitPrice,
+					inventoryItemQuantity: inventoryItemQuantity,
+					make: make,
+					model: model,
+					serialNum: serialNum
+				}}
 				)
 		} else {
 			throw new Meteor.Error('Invalid ID')
@@ -67,9 +85,13 @@ Meteor.methods({
 	},
 
 	addJob(invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installEmployee, vehicleId, mileage) {
+			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
+		}
+			entry = Jobs.findOne({invoice: parseInt(invoice)})
+		if(entry) {
+			throw new Meteor.Error('Duplicate invoice')
 		}
 			let dateTokens = date.split("-");
 			let dateYear = parseInt(dateTokens[0]);
@@ -90,6 +112,8 @@ Meteor.methods({
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
 				installParts: installParts,
+				installIds: installIds,
+				installQts: installQts,
 				installEmployee: parseInt(installEmployee),
 				vehicleId: vehicleId,
 				mileage: parseInt(mileage),
@@ -97,15 +121,73 @@ Meteor.methods({
 				createdAt: new Date(),
 				user: Meteor.userId()
 			})
+			//Decrease stock quantity of job's installed items
+			for (var i=0;i<installIds.length;i++) {
+				entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i])})
+				//console.log(installQts[i])
+				let quant = installQts[i] || 1
+				//console.log(quant)
+				newQuantity = entry.inventoryItemQuantity - quant
+				Inventory.update(
+					{_id: entry._id},
+					{$set: {inventoryItemQuantity: newQuantity}}
+					)
+			}
 		
 	},
-	
-	addVehicle(vehicleId, vehicleName, vehicleMake,
-		vehicleModel, vehicleModelYear, licensePlate) {
+
+	editJobItem(inventoryItem, inventoryItemName, inventoryItemQuantity) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
 		}
-
+		entry = Inventory.findOne({_id: inventoryItem._id})
+		if(entry) {
+			console.log("Attempting database update...");
+			newQuantity = parseInt(inventoryItemQuantity)
+			Inventory.update(
+				{_id: entry._id},
+				{$set: {inventoryItemName: inventoryItemName}}
+				)
+			Inventory.update(
+				{_id: entry._id},
+				{$set: {inventoryItemQuantity: newQuantity}}
+				)
+		} else {
+			throw new Meteor.Error('Invalid ID')
+		}
+	},
+	
+	deleteJobItem(job) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('Not authorized')
+		}
+		let installIds = job.installIds
+		let installQts = job.installQts
+		Jobs.remove(job._id)
+		//Restore stock quantity of the deleted job's installed items
+		for (var i=0;i<installIds.length;i++) {
+			entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i])})
+			//console.log(installQts[i])
+			let quant = parseInt(installQts[i]) || 1
+			//console.log(quant)
+			newQuantity = entry.inventoryItemQuantity + quant
+			Inventory.update(
+				{_id: entry._id},
+				{$set: {inventoryItemQuantity: newQuantity}}
+				)
+		}
+	},
+	
+	addVehicle(vehicleId, vehicleName, vehicleMake,
+		vehicleModel, vehicleModelYear, licensePlate,
+		color, initialMileage) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('Not authorized')
+		}
+		entry = Vehicles.findOne({vehicleId: parseInt(vehicleId)})
+		if(entry) {
+			throw new Meteor.Error('Duplicate id')
+		}
 		Vehicles.insert({
 			vehicleId: vehicleId,
 			vehicleName: vehicleName,
@@ -113,9 +195,10 @@ Meteor.methods({
 			vehicleModel: vehicleModel,
 			vehicleModelYear: vehicleModelYear,
 			licensePlate: licensePlate,
+			color: color,
+			initialMileage: initialMileage,
 			createdAt: new Date(),
 			user: Meteor.userId()
-			//add model year, license plate, color, w/e
 		})
 	},
 	
@@ -128,14 +211,24 @@ Meteor.methods({
 		Vehicles.remove(vehicle._id)
 	},
 
-	addEmployee(employeeId, employeeName) {
+	addEmployee(employeeId, employeeFirstName, employeeLastName, 
+		employeeStartDate, employeeExperience, employeeHourlyRate) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('Not authorized')
+		}
+		entry = Employees.findOne({employeeId: parseInt(employeeId)})
+		if(entry) {
+			throw new Meteor.Error('Duplicate id')
 		}
 
 		Employees.insert({
 			employeeId: employeeId,
-			employeeName: employeeName,
+			employeeFirstName: employeeFirstName,
+			employeeLastName: employeeLastName,
+			employeeStartDate: employeeStartDate,
+			employeeEndDate: null,
+			employeeExperience: employeeExperience,
+			employeeHourlyRate: employeeHourlyRate,
 			createdAt: new Date(),
 			user: Meteor.userId()
 		})
@@ -150,4 +243,11 @@ Meteor.methods({
 		Employees.remove(employee._id)
 	},
 	
+	addUser(userId, userFirstName, userLastName, password){
+       entry = User.findOne({UserId})
+		if(entry) {
+			throw new Meteor.Error('Duplicate id')
+		}
+
+	}
 });

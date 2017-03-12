@@ -33,18 +33,14 @@ render() {
 			<div className="row">
 				<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Add Employee</h1>
+					<h1>Add Account</h1>
 				</div>
 				<div className="panel-body">
 					<AccountForm />
 				</div>
 				</div>
 				
-				//<div className="panel panel-primary">
-				//<div className="panel-heading">
-				//	<h1>All Employees</h1>
-				//</div>
-				//<div className="panel-body">
+				
 				
 					<div className="panel-group" id="employeeAccordion">
 	

@@ -109,10 +109,8 @@ export default class JobForm extends Component {
 		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
-		let estimateParts = this.refs.estimateParts.value.trim();
 		let estimateEmployee = this.refs.estimateEmployee.value.trim();
 		let installCost = this.refs.installCost.value.trim();
-		let installParts = this.refs.installParts.value.trim();
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
 		let mileage = this.refs.mileage.value.trim();
@@ -122,35 +120,11 @@ export default class JobForm extends Component {
 		//var installQts = [];
 		installations = this.state.installItems;
 		console.log(installations);
-        /*const itemIds = {};
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.length == 12)
-    	.forEach(key => {
-         	itemIds[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemIds[key]!=null) {
-         	itemIds[key] = itemIds[key].split("#")[1];
-         	installIds[parseInt(key.substr(11))] = itemIds[key];
-         }
-        });
-		//Create array of installItem Quantities
-		const itemQts = {}; 
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.substr(12) === 'quantity')
-    	.forEach(key => {
-         	itemQts[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemQts[key]!=null) {
-         	//console.log(itemQts[key]);
-         	installQts[parseInt(key.substr(11))] = itemQts[key];
-         }
-        });*/
-
 
 		//add further input validation rules here
 		if(invoice) {
 			Meteor.call('addJob', invoice, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installations, installEmployee, vehicleId, mileage, (error, data) => {
+			estimateCost, estimateEmployee, installCost, installations, installEmployee, vehicleId, mileage, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -160,10 +134,8 @@ export default class JobForm extends Component {
 			document.getElementById("selCust").value == "";
 			this.refs.jobTypeCode.value = "";
 			this.refs.estimateCost.value = "";
-			this.refs.estimateParts.value = "";
 			this.refs.estimateEmployee.value = "";
 			this.refs.installCost.value = "";
-			this.refs.installParts.value = "";
 			this.refs.installEmployee.value = "";
 			this.refs.vehicleId.value = "";
 			this.refs.mileage.value = "";
@@ -246,8 +218,8 @@ export default class JobForm extends Component {
 				
 				
 				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateCost">Estimate Cost:</label>
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -258,19 +230,8 @@ export default class JobForm extends Component {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="estimateParts">Estimate Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="estimateParts"
-						ref="estimateParts"
-						placeholder="Estimate Parts"
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="estimateEmployee">Estimate Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="estimateEmployee"
@@ -292,8 +253,8 @@ export default class JobForm extends Component {
 				<h3>Install</h3>
 				
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="installCost">Install Cost:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installCost">Install Cost:</label>
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -304,19 +265,8 @@ export default class JobForm extends Component {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="installParts">Install Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="installParts"
-						ref="installParts"
-						placeholder="Install Parts"
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="installEmployee">Install Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installEmployee">Install Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="installEmployee"

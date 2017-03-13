@@ -19,7 +19,7 @@ export default class JobDetail extends TrackerReact(Component) {
 				jobs: Meteor.subscribe("allJobs", function() { this.componentWillMount();}.bind(this)),
 				employees: Meteor.subscribe("allEmployees"),
 				customers: Meteor.subscribe("allCustomers"),
-				vehicles: Meteor.subscribe("allvehicles")
+				vehicles: Meteor.subscribe("allVehicles")
 			},
 			customer: 0,
 			installItems: []
@@ -211,10 +211,12 @@ export default class JobDetail extends TrackerReact(Component) {
 					<h1>Invoice #{job.invoice}</h1>
 				</div>
 				<div className="panel-body">
-					<form className="form-horizontal" onSubmit={this.editJob.bind(this)}>
+				<form className="form-horizontal" onSubmit={this.editJob.bind(this)}>
+				<div className="well well-sm">
+				<h3>Job</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						type="date" 
 						className="form-control"
@@ -223,6 +225,18 @@ export default class JobDetail extends TrackerReact(Component) {
 						defaultValue={this.date()}
 					/>
 					</div>
+				
+					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
+					<div className="col-sm-4">
+					<input 
+						type="text"
+						className="form-control"
+						id="jobTypeCode"
+						ref="jobTypeCode"
+						defaultValue={job.jobTypeCode}
+					/>
+					</div>
+				</div>
 				</div>
 				
 				<div className="well well-sm">
@@ -246,23 +260,11 @@ export default class JobDetail extends TrackerReact(Component) {
 					</div>
 				</div>
 				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text"
-						className="form-control"
-						id="jobTypeCode"
-						ref="jobTypeCode"
-						defaultValue={job.jobTypeCode}
-					/>
-					</div>
-				</div>
-				
-				
+				<div className="well well-sm">
+				<h3>Estimate</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -273,8 +275,8 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="estimateEmployee">Estimate Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
+					<div className="col-sm-4">
 					<select
 						className="form-control"
 						id="estimateEmployee"
@@ -291,13 +293,14 @@ export default class JobDetail extends TrackerReact(Component) {
 					</select>
 					</div>
 				</div>
-				
+				</div>
+
 				<div className="well">
 				<h3>Install</h3>
 				
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="installCost">Install Cost:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -308,8 +311,8 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="installEmployee">Install Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installEmployee">Install Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="installEmployee"
@@ -333,7 +336,7 @@ export default class JobDetail extends TrackerReact(Component) {
 						console.log(formElementId.substr(11,12));
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
-									<div className="col-sm-4">
+									<div className="col-sm-3">
 										<SearchBox
 											options={this.inventoryItems()}
 											onSelectionChange={this.changeInstallItem}
@@ -349,7 +352,7 @@ export default class JobDetail extends TrackerReact(Component) {
 									</div>
 									
 									<label 
-										className="control-label col-sm-2"
+										className="control-label col-sm-3"
 										htmlFor={formElementId + 'quantity'}>
 										Install Item Quantity:
 									</label>

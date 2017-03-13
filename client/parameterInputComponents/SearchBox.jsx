@@ -7,14 +7,14 @@ export default class Dropdown extends Component {
 			options: this.props.options
 		}
 		this.onSelectionChange = this.onSelectionChange.bind(this);
-		console.log(this.props.defaultValue);
-		console.log(this.props.inputElementListAttribute);
+		//console.log(this.props.defaultValue);
+		//console.log(this.props.inputElementListAttribute);
 		//console.log(this.props.options);
 	}
 	
 	onSelectionChange(event) {
 		this.props.onSelectionChange(event.target);
-		console.log(event.target.value);
+		//console.log(event.target.value);
 	}
 	
 	render() {

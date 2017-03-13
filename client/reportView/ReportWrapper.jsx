@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-import TestReport from './reportTypes/TestReport';
+import NumberOfInvoicesReport from './reportTypes/NumberOfInvoicesReport';
 import ReportA from './reportTypes/ReportA';
 import JobsByEmployee from './reportTypes/JobsByEmployee.jsx';
 import EmployeeSummary from './reportTypes/EmployeeSummary.jsx';
+import TotalInvoicesByType from './reportTypes/TotalInvoicesByType.jsx';
 
 
 
@@ -23,7 +24,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		};
 		
 		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
+		//this.handleSubmit = this.handleSubmit.bind(this);
 		this.reportInputs = this.reportInputs.bind(this);
 
 	}
@@ -36,24 +37,26 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		this.setState({value: event.target.value});
 	}
 
-	handleSubmit(event) {
-		alert('oi ' + this.state.value);
-		event.preventDefault();
-	}
+	//handleSubmit(event) {
+	//	alert('oi ' + this.state.value);
+	//	event.preventDefault();
+	//}
 
 	//This will act as a running list of report types
 	//for conditional rendering based on the select forms value
 	reportInputs() {
 		reportType = this.state.value;
 
-		if(reportType == 'TestReport')
-			return(<TestReport />)
+		if(reportType == 'NumberOfInvoicesReport')
+			return(<NumberOfInvoicesReport />)
 		if(reportType == 'ReportA')
 			return(<ReportA />)
 		if(reportType == 'JobsByEmployee')
 			return(<JobsByEmployee/>)
 		if(reportType == 'EmployeeSummary')
 			return(<EmployeeSummary/>)
+		if(reportType == 'TotalInvoicesByType')
+			return(<TotalInvoicesByType/>)
 		
 	}
 
@@ -63,19 +66,20 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		
 		return(
 			<div className="row">
-				<form onSubmit={this.handleSubmit}>
+				<form >
 					<label>
 						Chose report:
 						<select value={this.state.value} onChange={this.handleChange}>
 							<option value=""> </option>
 							<option value="EmployeeSummary">Employee Summary</option>
 							<option value="ReportA">Report A</option>
-							<option value="TestReport">Test Report</option>
+							<option value="NumberOfInvoicesReport">Number Of Inovices</option>
 							<option value="JobsByEmployee">Jobs By Employee</option>
 							<option value="report3">Report 3</option>
+							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
 						</select>
 					</label>	
-					<input type="submit" value="submit"/>
+					
 					{this.reportInputs()}
 				</form>
 			</div>

@@ -7,7 +7,7 @@ import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 import BarChart from '../chartTypes/BarChart.jsx';
 
 
-export default class TestReport extends TrackerReact(React.Component) {
+export default class NumberOfInvoicesReport extends TrackerReact(React.Component) {
 
 	constructor(props) {
 		super(props);

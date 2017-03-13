@@ -4,9 +4,10 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
+import PieChart from '../chartTypes/PieChart.jsx';
 
 
-export default class TestReport extends TrackerReact(React.Component) {
+export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 
 	constructor(props) {
 		super(props);
@@ -53,13 +54,48 @@ export default class TestReport extends TrackerReact(React.Component) {
 		}).fetch();
 	}
 
+	mapJobItems() {
+		
+		
+		let data = [
+			{ label: "a", count: 0},
+			{ label: "b", count: 0},
+			{ label: "c", count: 0},
+		];
+
+		let jobs = Jobs.find({
+			date:{
+				$gte: this.state.startDate,
+				$lte: this.state.endDate
+				}
+		}).fetch();
+
+		for(let i = 0; i < jobs.length; i++) {
+			if(jobs[i].jobTypeCode == 'a')
+				data[0].count += 1;
+			else if(jobs[i].jobTypeCode =='b')
+				data[1].count += 1;
+			else if(jobs[i].jobTypeCode == 'c')
+				data[2].count += 1;
+			else
+				console.log('error mapping data point');
+		}
+
+
+		console.log(data);
+		return data;
+	}
+
 	render() {
+		const width = 640;
+		const height = 480;
 		return (
 			<div>
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
 			/>
+			<PieChart data={this.mapJobItems()} width={width} height={height}/>
 			<div className="panel-body">
 				<ul className="resolutions">
 					{this.jobItems().map( (jobItems) => {

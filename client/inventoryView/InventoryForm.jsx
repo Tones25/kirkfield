@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Match, check } from 'meteor/check';
+import {Inventory} from './InventoryInputWrapper.jsx';
 
 export default class InventoryForm extends Component {
 
@@ -44,6 +45,14 @@ export default class InventoryForm extends Component {
 	}
 	
 	render() {
+		var id = Inventory.findOne(
+			{},
+			{sort: {inventoryItemId: -1},
+			limit: 1}
+		);
+		if (id == undefined) {
+			return <div>Loading...</div>
+		}
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addInventoryItem.bind(this)}>
@@ -55,7 +64,7 @@ export default class InventoryForm extends Component {
 						id="itemId"
 						type="text" 
 						ref="inventoryItemId"
-						placeholder="Item Id"
+						defaultValue={parseInt(id.inventoryItemId)+1}
 					/>
 					</div>
 					</div>

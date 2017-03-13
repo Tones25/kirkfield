@@ -17,15 +17,35 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 			subscription: {
 				inventory: Meteor.subscribe("allInventory")
 			},
+			search: ""
 		};
+		this.handleSearchChange = this.handleSearchChange.bind(this);
 	}
 
 	componentWillUnmount() {
 		this.state.subscription.inventory.stop();
 	}
 
+	handleSearchChange() {
+		let search = document.getElementById("search").value;
+		this.setState({
+			search: search,
+		});
+	}
+
 	inventoryItems() {
-		return Inventory.find().fetch();
+		return Inventory.find(
+			{$or:[
+			{inventoryItemName:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{make:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{model:{
+			$regex: this.state.search, "$options": "i",
+			}}]}
+		).fetch();
 	}
 	
 	recent() {
@@ -48,9 +68,17 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 				
 				<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Recently Added Inventory</h1>
+					<h1>Inventory Listing</h1>
 				</div>
-				<div className="panel-body">
+				<div className="panel-body">		
+					<input 
+						type="text" 
+						className="form-control"
+						id="search"
+						ref="search"
+						placeholder="Search"
+					onChange={this.handleSearchChange.bind(this)}
+					/>
 					<DataTable 
 						rowHeight={tableRowHeight}
 						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}

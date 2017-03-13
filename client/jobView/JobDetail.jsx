@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import {Inventory} from './../inventoryView/InventoryInputWrapper.jsx';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
+import {Customers} from './../customerView/CustomerInputWrapper.jsx';
 import {Vehicles} from './../vehicleView/VehicleInputWrapper.jsx';
 import {Jobs} from './../jobView/JobInputWrapper.jsx';
+
+import SearchBox from './../parameterInputComponents/SearchBox.jsx';
 
 export default class JobDetail extends TrackerReact(Component) {
 
@@ -15,31 +18,45 @@ export default class JobDetail extends TrackerReact(Component) {
 				inventory: Meteor.subscribe("allInventory"),
 				jobs: Meteor.subscribe("allJobs"),
 				employees: Meteor.subscribe("allEmployees"),
+				customers: Meteor.subscribe("allCustomers"),
 				vehicles: Meteor.subscribe("allvehicles")
 			},
-			installItems: [{ key:0}]
+			customer: 0,
+			installItems: [{key:'installItem' + 0, quantity: 1}]
 		};
+		this.changeCustomer = this.changeCustomer.bind(this);
+		this.changeInstallItem = this.changeInstallItem.bind(this);
+		this.changeInstallItemQuantity = this.changeInstallItemQuantity.bind(this);
 	}
 
 	componentDidMount() {
 		let job = this.job();
 		console.log(job);
-		let installations = job.installIds;
-		console.log("installIds: " + installations + " installQts: " + job.installQts);
+		let installations = job.installations;
+		//this.setState(installitems)
+		//console.log("installIds: " + installations.item + " installQts: " + installations.quantity);
 		for (var i=0;i<installations.length-1;i++) {
 			this.addInstallItem();
 		}
-		this.populateInstallItems(installations);
+		this.setState({installItems: installations})
+		console.log(this.state.installItems);
+		document.getElementById('installItem0').value=installations[0].item;
+		//this.populateInstallItems(installations);
 	}
 	
 	componentWillUnmount() {
 		this.state.subscription.inventory.stop();
 		this.state.subscription.jobs.stop();
 		this.state.subscription.employees.stop();
+		this.state.subscription.customers.stop();
 	}
 
 	inventoryItems() {
 		return Inventory.find().fetch();
+	}
+
+	customers() {
+		return Customers.find().fetch();
 	}
 
 	job() {
@@ -48,7 +65,7 @@ export default class JobDetail extends TrackerReact(Component) {
 
 	date() {
 		let job = this.job();
-		console.log(job.date.getFullYear() + " " + job.date.getMonth() + " " + job.date.getDate());
+		//console.log(job.date.getFullYear() + " " + job.date.getMonth() + " " + job.date.getDate());
 		/*let dateTokens = job.date.toString().split("-");
 
 		let dateYear = parseInt(dateTokens[0]);
@@ -56,7 +73,7 @@ export default class JobDetail extends TrackerReact(Component) {
 		let dateDay = parseInt(dateTokens[2]);
 		console.log(dateYear + " " + dateMonth + " " + dateDay);*/
 		newDate = new Date(parseInt(job.date.getFullYear()), parseInt(job.date.getMonth()), parseInt(job.date.getDate()));
-		console.log(newDate);
+		//console.log(newDate);
 		return newDate.toISOString().substr(0,10);
 	}
 
@@ -77,30 +94,70 @@ export default class JobDetail extends TrackerReact(Component) {
 	vehicles() {
 		return Vehicles.find().fetch();
 	}
-
+	
 	addInstallItem() {
 
 		/*itemList += item._id + ",";
 		console.log(itemList);	*/
 		this.setState(function(prevState, props) {
 			let newInstallItems = prevState.installItems
-			newInstallItems.push({key: newInstallItems.length});
+			newInstallItems.push({key: 'installItem' + newInstallItems.length});
 			//console.log(newInstallItems[0].value);
 			return {
 				installItems: newInstallItems
 			};
 		});
 	}
+
+	changeCustomer(customer) {
+		//console.output(document.getElementById("selCust").value);
+		this.setState({customer: customer.value});
+		console.log(this.state.customer);
+	}
+	
+	changeInstallItem(item) {
+		
+		this.setState(function(prevState, props) {
+			let newInstallItems = [];
+			prevState.installItems.map(
+				function(i) {
+					console.log(item);
+					console.log(item.list.id);
+					console.log(i.key);
+					if (i.key === item.list.id) {
+						this.push({key: i.key, item: item.value, quantity: i.quantity});
+					} else {
+						this.push(i);
+					}
+				}
+			, newInstallItems);
+			return {installItems: newInstallItems};
+		});
+	}
+
+	changeInstallItemQuantity(event) {
+	
+		let id = event.target.id;
+		let value = event.target.value;
+		this.setState(function(prevState, props) {
+			let newInstallItems = [];
+			prevState.installItems.map( 
+				function(i) {
+					if (i.key + 'quantity' === id) {
+						this.push({key: i.key, item: i.item, quantity: value});
+					} else {
+						this.push(i);
+					}
+				}
+			, newInstallItems);
+			return {installItems: newInstallItems};
+		});
+	}
 	
 	editJob(event) {
 		event.preventDefault();
-		let invoice = this.refs.invoice.value.trim();
 		let date = this.refs.date.value.trim();
-		let firstName = this.refs.firstName.value.trim();
-		let lastName = this.refs.lastName.value.trim();
-		let address = this.refs.address.value.trim();
-		let phoneNumber = this.refs.phoneNumber.value.trim();
-		let email = this.refs.email.value.trim();
+		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
 		let estimateParts = this.refs.estimateParts.value.trim();
@@ -112,7 +169,10 @@ export default class JobDetail extends TrackerReact(Component) {
 		let mileage = this.refs.mileage.value.trim();
 		let tempCounter = 0;
 		//Create array of installItem Ids
-        var installIds = [];
+        var installations = [];
+		installations = this.state.installItems;
+		console.log(installations);
+        /*var installIds = [];
         const itemIds = {};
 		Object.keys(this.refs)
     	.filter(key => key.substr(0,11) === 'installItem')
@@ -136,22 +196,18 @@ export default class JobDetail extends TrackerReact(Component) {
          	//console.log(itemQts[key]);
          	installQts[parseInt(key.substr(11))] = itemQts[key];
          }
-        });
+        });*/
 
 		//add further input validation rules here
-		/*if(invoice) {
-			Meteor.call('editJobItem', invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage, (error, data) => {
+		if(this.job()) {
+			Meteor.call('editJobItem', this.job(), date, customer, jobTypeCode,
+			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installations, installEmployee, vehicleId, mileage, (error, data) => {
 			if(error) {
-				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
+				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			this.refs.invoice.value = "";
+			Bert.alert('Successfully updated Job#' + invoice, 'success', 'fixed-top', 'fa-smile-o');
 			this.refs.date.value = "";
-			this.refs.firstName.value = "";
-			this.refs.lastName.value = "";
-			this.refs.address.value = "";
-			this.refs.phoneNumber.value = "";
-			this.refs.email.value = "";
+			document.getElementById("selCust").value == "";
 			this.refs.jobTypeCode.value = "";
 			this.refs.estimateCost.value = "";
 			this.refs.estimateParts.value = "";
@@ -169,7 +225,7 @@ export default class JobDetail extends TrackerReact(Component) {
 	        });
 			}
 		});
-		}*/
+		}
 
 		
 	}
@@ -180,6 +236,7 @@ export default class JobDetail extends TrackerReact(Component) {
 	
 	render() {
 		let job = this.job();
+		console.log(this.state.installItems);
 		//console.log(vehicles);
 		if (!job) {
 			return (<div>Loading...</div>)
@@ -210,66 +267,23 @@ export default class JobDetail extends TrackerReact(Component) {
 				
 				<div className="well well-sm">
 				<h3>Customer</h3>
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="firstName">First Name:</label>
+				<div className="form-group" key="selCust">
+					<label className="control-label col-sm-2" htmlFor="selCust">Select Customer:</label>
 					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="firstName"
-						ref="firstName"
-						defaultValue={job.firstName}
-					/>
+						<SearchBox
+							options={this.customers()}
+							onSelectionChange={this.changeCustomer}
+							inputElementListAttribute="selCust"
+							inputElementRefAttribute="selCust"
+							datalistElementIdAttribute="selCust"
+							datalistElementKey={'customerId'}
+							datalistElementValue={'contactName'}
+							defaultValue={job.customer}
+							placeholder={"Placeholder"}
+						/>
+						
 					</div>
-				
-					<label className="control-label col-sm-2" htmlFor="lastName">Last Name:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="lastName"
-						ref="lastName"
-						defaultValue={job.lastName}
-					/>
 					</div>
-				</div>
-				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="address">Address:</label>
-					<div className="col-sm-10">
-					<input 
-						type="text" 
-						className="form-control"
-						id="address"
-						ref="address"
-						defaultValue={job.address}
-					/>
-					</div>
-				</div>
-				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="phoneNumber">Phone Number:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text"
-						className="form-control"
-						id="phoneNumber"
-						ref="phoneNumber"
-						defaultValue={job.phoneNumber}
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="email">Email Address:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="email"
-						ref="email"
-						defaultValue={job.email}
-					/>
-					</div>
-				</div>
 				</div>
 				
 				<div className="form-group">
@@ -375,43 +389,45 @@ export default class JobDetail extends TrackerReact(Component) {
 					</div>
 					</div>
 					
-					{this.state.installItems.map( (installItem) => {
 					
-						let formElementId = 'installItem' + installItem.key;
+					{this.state.installItems.map( function(installItem) {
+						let formElementId = installItem.key;
+						console.log(formElementId.substr(11,12));
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
-									<div className="col-sm-2">
-										<input 
-											list={formElementId + 'name'}
-											ref={formElementId}
-											className="form-control"
-											placeholder="Install Item"
+									<div className="col-sm-4">
+										<SearchBox
+											options={this.inventoryItems()}
+											onSelectionChange={this.changeInstallItem}
+											inputElementListAttribute={formElementId}
+											inputElementRefAttribute={formElementId}
+											datalistElementIdAttribute={formElementId}
+											datalistElementKey={'inventoryItemId'}
+											datalistElementValue={'inventoryItemName'}
+											defaultValue={this.state.installItems[parseInt(formElementId.substr(11,12))].item}
+											placeholder={"Placeholder"}
 										/>
-										<datalist id={formElementId + 'name'}>
-											{this.inventoryItems().map( (item) => {
-												return <option
-															key={item._id}
-															value={item.inventoryItemName + "-#" + item.inventoryItemId} />
-											})}
-										</datalist>
+										
 									</div>
 									
 									<label 
-										className="control-label col-sm-3"
+										className="control-label col-sm-2"
 										htmlFor={formElementId + 'quantity'}>
 										Install Item Quantity:
 									</label>
-									<div className="col-sm-3">
+									<div className="col-sm-2">
 										<input
+											onChange={this.changeInstallItemQuantity}
 											type="number"
 											className="form-control"
 											id={formElementId + 'quantity'}
 											ref={formElementId + 'quantity'}
+											defaultValue={this.state.installItems[parseInt(formElementId.substr(11,12))].quantity}
 											placeholder='1'
 										/>
 									</div>
-								</div>
-					})}
+								</div>;
+					}, this)}
 
 					
 					

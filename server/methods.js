@@ -1,33 +1,5 @@
 Meteor.methods({
 
-	toggleResolution(resolution) {
-		if(Meteor.userId() !== resolution.user) {
-			throw new Meteor.Error('You must be logged in.')
-		}
-		Resolutions.update(resolution._id, {
-			$set: {complete: !resolution.complete}
-		})
-	},
-
-	generateId(Table, idFieldName) {
-		let count = 0;
-		//console.log(Table, idFieldName);
-		return 0;
-		/*for (var i=0; i<2; i++) {
-			entry = Table.findOne({idFieldName: i})
-			console.log(entry)
-			if (!entry) {
-				return i;
-				break;
-			}
-		}*/
-	},
-
-	goToRoute(route) {
-		//console.log(route);
-		FlowRouter.go(route);
-	},
-
 	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
@@ -87,8 +59,9 @@ Meteor.methods({
 		Inventory.remove(inventoryItem._id)
 	},
 
-	addJob(invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage) {
+	addJob(invoice, date, customer, jobTypeCode,
+			estimateCost, estimateParts, estimateEmployee,
+			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -104,19 +77,14 @@ Meteor.methods({
 			Jobs.insert({
 				invoice: parseInt(invoice),
 				date: new Date(dateYear, dateMonth, dateDay),
-				firstName: firstName,
-				lastName: lastName,
-				address: address,
-				phoneNumber: parseInt(phoneNumber),
-				email: email,
+				customer: customer,
 				jobTypeCode: jobTypeCode,
 				estimateCost: parseFloat(estimateCost),
 				estimateParts: estimateParts,
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
 				installParts: installParts,
-				installIds: installIds,
-				installQts: installQts,
+				installations: installations,
 				installEmployee: parseInt(installEmployee),
 				vehicleId: vehicleId,
 				mileage: parseInt(mileage),
@@ -125,10 +93,11 @@ Meteor.methods({
 				user: Meteor.userId()
 			})
 			//Decrease stock quantity of job's installed items
-			for (var i=0;i<installIds.length;i++) {
-				entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i])})
+			if (installations[0].item) {
+			for (var i=0;i<installations.length;i++) {
+				entry = Inventory.findOne({inventoryItemId: parseInt(installations[i].item)})
 				//console.log(installQts[i])
-				let quant = installQts[i] || 1
+				let quant = installations[i].quantity || 1
 				//console.log(quant)
 				newQuantity = entry.inventoryItemQuantity - quant
 				Inventory.update(
@@ -136,26 +105,38 @@ Meteor.methods({
 					{$set: {inventoryItemQuantity: newQuantity}}
 					)
 			}
-		
+		}
 	},
 
-	editJobItem(inventoryItem, inventoryItemName, inventoryItemQuantity) {
+	editJobItem(job, date, customer, jobTypeCode,
+			estimateCost, estimateParts, estimateEmployee,
+			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
-		entry = Inventory.findOne({_id: inventoryItem._id})
+		entry = Jobs.findOne({_id: job._id})
 		if(entry) {
-			console.log("Attempting database update...");
-			newQuantity = parseInt(inventoryItemQuantity)
-			Inventory.update(
+			let dateTokens = date.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+			Jobs.update(
 				{_id: entry._id},
-				{$set: {inventoryItemName: inventoryItemName}}
-				)
-			Inventory.update(
-				{_id: entry._id},
-				{$set: {inventoryItemQuantity: newQuantity}}
-				)
-		} else {
+				{$set: {
+				date: new Date(dateYear, dateMonth, dateDay),
+				customer: customer,
+				jobTypeCode: jobTypeCode,
+				estimateCost: parseFloat(estimateCost),
+				estimateParts: estimateParts,
+				estimateEmployee: parseInt(estimateEmployee),
+				installCost: parseFloat(installCost),
+				installParts: installParts,
+				installations: installations,
+				installEmployee: parseInt(installEmployee),
+				vehicleId: vehicleId,
+				mileage: parseInt(mileage),
+				complete: false
+		}})} else {
 			throw new Meteor.Error('Invalid ID')
 		}
 	},
@@ -181,9 +162,10 @@ Meteor.methods({
 		}
 	},
 	
-	addVehicle(vehicleId, vehicleName, vehicleMake,
+	addVehicle(vehicleId, vehicleMake,
 		vehicleModel, vehicleModelYear, licensePlate,
-		color, initialMileage) {
+		color, initialMileage, repairHist, description, 
+		lastOil, nextOil) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -191,19 +173,69 @@ Meteor.methods({
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
+			let dateTokens = lastOil.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+			let lOil =  new Date(dateYear, dateMonth, dateDay);
+			let dateTokens2 = nextOil.split("-");
+			let dateYear2 = parseInt(dateTokens2[0]);
+			let dateMonth2 = parseInt(dateTokens2[1]) - 1; //BSON month is 0 based
+			let dateDay2 = parseInt(dateTokens2[2]);
+			let nOil =  new Date(dateYear2, dateMonth2, dateDay2);
 		Vehicles.insert({
 			vehicleId: vehicleId,
-			vehicleName: vehicleName,
 			vehicleMake: vehicleMake,
 			vehicleModel: vehicleModel,
 			vehicleModelYear: vehicleModelYear,
 			licensePlate: licensePlate,
 			color: color,
 			initialMileage: initialMileage,
+			description: description,
+			repairHist: repairHist,
+			lastOil:  lOil,
+			nextOil:  nOil,
 			createdAt: new Date(),
 			user: Meteor.userId()
 		})
 	},
+
+		editVehicle(vehicle, vehicleMake,
+		vehicleModel, vehicleModelYear, licensePlate,
+		color, initialMileage, repairHist, description, 
+		lastOil, nextOil) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Vehicles.findOne({_id: vehicle._id})
+		if(entry) {
+			let dateTokens = lastOil.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+			let lOil =  new Date(dateYear, dateMonth, dateDay);
+			let dateTokens2 = nextOil.split("-");
+			let dateYear2 = parseInt(dateTokens2[0]);
+			let dateMonth2 = parseInt(dateTokens2[1]) - 1; //BSON month is 0 based
+			let dateDay2 = parseInt(dateTokens2[2]);
+			let nOil =  new Date(dateYear2, dateMonth2, dateDay2);
+		Vehicles.update(
+				{_id: entry._id},
+				{$set: {
+			vehicleMake: vehicleMake,
+			vehicleModel: vehicleModel,
+			vehicleModelYear: vehicleModelYear,
+			licensePlate: licensePlate,
+			color: color,
+			initialMileage: initialMileage,
+			description: description,
+			repairHist: repairHist,
+			lastOil:  lOil,
+			nextOil:  nOil,
+			createdAt: new Date(),
+			user: Meteor.userId()
+		}})
+	}},
 	
 	deleteVehicle(vehicle) {
 		//can only delete vehicles user inserted
@@ -248,7 +280,7 @@ Meteor.methods({
 
 	addCustomer(customerId, contactName, address, 
 		billableOwner, billableAddress, phone1,
-		phone2, qsp, comments, nextService) {
+		phone2, email, qsp, comments, nextService) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -270,6 +302,7 @@ Meteor.methods({
 				billableAddress: billableAddress,
 				phone1: phone1,
 				phone2: phone2,
+				email: email,
 				qsp: qsp,
 				comments: comments,
 				nextService:  new Date(dateYear, dateMonth, dateDay),
@@ -280,7 +313,7 @@ Meteor.methods({
 
 	editCustomer(customer, contactName, address, 
 		billableOwner, billableAddress, phone1,
-		phone2, qsp, comments, nextService) {
+		phone2, email, qsp, comments, nextService) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -299,6 +332,7 @@ Meteor.methods({
 					billableAddress: billableAddress,
 					phone1: phone1,
 					phone2: phone2,
+					email: email,
 					qsp: qsp,
 					comments: comments,
 					nextService: new Date(dateYear, dateMonth, dateDay),

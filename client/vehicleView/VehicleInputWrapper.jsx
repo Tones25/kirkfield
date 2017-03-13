@@ -15,16 +15,36 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 		this.state = {
 			subscription: {
 				vehicles: Meteor.subscribe("allVehicles")
-			}
+			},
+			search: ""
 		}
+		this.handleSearchChange = this.handleSearchChange.bind(this);
 	}
 
 	componentWillUnmount() {
 		this.state.subscription.vehicles.stop();
 	}
 
+	handleSearchChange() {
+		let search = document.getElementById("search").value;
+		this.setState({
+			search: search,
+		});
+	}
+
 	vehicles() {
-		return Vehicles.find().fetch();
+		return Vehicles.find(
+			{$or:[
+			{description:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{vehicleMake:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{vehicleModel:{
+			$regex: this.state.search, "$options": "i"
+			}}]}
+		).fetch();
 	}
 
 	render() {
@@ -43,16 +63,25 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 				
 				<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Recently Added Vehicles</h1>
+					<h1>Vehicle Listing</h1>
 				</div>
-				<div className="panel-body">
+				<div className="panel-body">		
+					<input 
+						type="text" 
+						className="form-control"
+						id="search"
+						ref="search"
+						placeholder="Search"
+					onChange={this.handleSearchChange.bind(this)}
+					/>
 					<DataTable 
 						rowHeight={tableRowHeight}
-						columns={['vehicleName', 'vehicleModelYear', 'vehicleMake', 'vehicleModel', 'licensePlate']}
-						columnNames={['Vehicle Name', 'Model Year', 'Make', 'Model', 'License Plate']}
+						columns={['vehicleModelYear', 'vehicleMake', 'vehicleModel', 'licensePlate']}
+						columnNames={['Model Year', 'Make', 'Model', 'License Plate']}
 						deleteButtons={true}
 						deleteFunction={'deleteVehicle'}
 						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/vehicle/" + route._id);} }
 						data={this.state.vehicles}
 					/>
 				</div>

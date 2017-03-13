@@ -1,17 +1,22 @@
 import React, {Component} from 'react';
+import {Vehicles} from './VehicleInputWrapper';
 export default class VehicleForm extends Component {
 
 
 	addVehicle(event) {
 		event.preventDefault();
 		let vehicleId = this.refs.vehicleId.value.trim();
-		let vehicleName = this.refs.vehicleName.value.trim();
 		let vehicleMake = this.refs.vehicleMake.value.trim();
 		let vehicleModel = this.refs.vehicleModel.value.trim();
 		let vehicleModelYear = this.refs.vehicleModelYear.value.trim();
+		console.log(this.refs.licensePlate.value.trim());
 		let licensePlate = this.refs.licensePlate.value.trim();
 		let color = this.refs.vehicleColor.value.trim();
 		let initialMileage = this.refs.initialMileage.value.trim();
+		let repairHist = this.refs.repairHist.value.trim();
+		let description = this.refs.description.value.trim();
+		let lastOil = this.refs.lastOil.value.trim();
+		let nextOil = this.refs.nextOil.value.trim();
 		let validInput = true;
 		
 		//add further input validation rules here
@@ -25,26 +30,39 @@ export default class VehicleForm extends Component {
 				validInput = false;
 			}
 		if (validInput) {
-			Meteor.call('addVehicle', vehicleId, vehicleName, vehicleMake,
-				vehicleModel, vehicleModelYear, licensePlate, color, initialMileage, (error, data) => {
+			Meteor.call('addVehicle', vehicleId, vehicleMake,
+				vehicleModel, vehicleModelYear, licensePlate, color, initialMileage, 
+				repairHist, description, lastOil, nextOil, (error, data) => {
 			if(error) {
-				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
+				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
+				Bert.alert('Successfully added Item: ' + vehicleModelYear + " " + vehicleMake + " " + vehicleModel, 'success', 'fixed-top', 'fa-smile-o');
 			this.refs.vehicleId.value = "";
-			this.refs.vehicleName.value = "";
 			this.refs.vehicleMake.value = "";
 			this.refs.vehicleModel.value = "";
 			this.refs.vehicleModelYear.value = "";
-			this.refs.licensePlate = "";
-			this.refs.color = "";
-			this.refs.initialMileage = 50000;
 			this.refs.licensePlate.value = "";
+			this.refs.color.value = "";
+			this.refs.initialMileage.value = 50000;
+			this.refs.licensePlate.value = "";
+			this.refs.description.value = "";
+			this.refs.repairHist.value = "";
+			this.refs.lastOil.value = "";
+			this.refs.nextOil.value = "";
 			}
 		});
 		}}
 	}
 	
 	render() {
+		var id = Vehicles.findOne(
+			{},
+			{sort: {vehicleId: -1},
+			limit: 1}
+		);
+		if (id == undefined) {
+			return <div>Loading...</div>
+		}
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addVehicle.bind(this)}>
@@ -57,18 +75,7 @@ export default class VehicleForm extends Component {
 						type="text" 
 						ref="vehicleId"
 						placeholder="Vehicle Id"
-					/>
-					</div>
-					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="vehicleName">Vehicle Name:</label>
-					<div className="col-sm-10">
-					<input 
-						className="form-control"
-						id="vehicleName"
-						type="text" 
-						ref="vehicleName"
-						placeholder="Vehicle Name"
+						defaultValue={parseInt(id.vehicleId)+1}
 					/>
 					</div>
 					</div>
@@ -145,7 +152,49 @@ export default class VehicleForm extends Component {
 						defaultValue={50000}
 					/>
 					</div>
+					</div>
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="description">Description:</label>
+					<div className="col-sm-5">
+					<input 
+						className="form-control"
+						id="description"
+						type="text" 
+						ref="description"
+						placeholder="Description"
+					/>
+					</div>
+					<label className="control-label col-sm-2" htmlFor="lastOil">Last Oil Change:</label>
+					<div className="col-sm-3">
+					<input 
+						type="date" 
+						className="form-control"
+						id="lastOil"
+						ref="lastOil"
+					/>
+					</div>
+					</div>
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="repairHist">Repair History:</label>
+					<div className="col-sm-5">
+					<textarea 
+						className="form-control"
+						id="repairHist"
+						cols="40" rows="5" 
+						ref="repairHist"
+						placeholder="Repair History"
+					/>
 					
+					</div>
+					<label className="control-label col-sm-2" htmlFor="nextOil">Next Oil Change:</label>
+					<div className="col-sm-3">
+					<input 
+						type="date" 
+						className="form-control"
+						id="nextOil"
+						ref="nextOil"
+					/>
+					</div>
 					</div>
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>

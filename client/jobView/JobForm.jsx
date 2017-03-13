@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {Inventory} from './../inventoryView/InventoryInputWrapper.jsx';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
+import {Customers} from './../customerView/CustomerInputWrapper.jsx';
+import {Jobs} from './JobInputWrapper.jsx';
 
 import SearchBox from './../parameterInputComponents/SearchBox.jsx';
 
@@ -12,11 +14,14 @@ export default class JobForm extends Component {
 		this.state = {
 			subscription: {
 				inventory: Meteor.subscribe("allInventory"),
-				employees: Meteor.subscribe("allEmployees")
+				employees: Meteor.subscribe("allEmployees"),
+				customers: Meteor.subscribe("allCustomers")
 			},
+			customer: 0,
 			installItems: [{key:'installItem' + 0, quantity: 1}]
 		};
 		
+		this.changeCustomer = this.changeCustomer.bind(this);
 		this.changeInstallItem = this.changeInstallItem.bind(this);
 		this.changeInstallItemQuantity = this.changeInstallItemQuantity.bind(this);
 		this.inventoryItems = this.inventoryItems.bind(this);
@@ -25,6 +30,7 @@ export default class JobForm extends Component {
 	componentWillUnmount() {
 		this.state.subscription.inventory.stop();
 		this.state.subscription.employees.stop();
+		this.state.subscription.customers.stop();
 	}
 
 	inventoryItems() {
@@ -33,6 +39,15 @@ export default class JobForm extends Component {
 	
 	employees() {
 		return Employees.find().fetch();
+	}
+	
+	customers() {
+		return Customers.find().fetch();
+	}
+
+	changeCustomer(customer) {
+		this.setState({customer: customer.value});
+		console.log(this.state.customer);
 	}
 	
 	addInstallItem() {
@@ -48,13 +63,15 @@ export default class JobForm extends Component {
 			};
 		});
 	}
-	
 	changeInstallItem(item) {
 		
 		this.setState(function(prevState, props) {
 			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
+					console.log(item);
+					console.log(item.list.id);
+					console.log(i.key);
 					if (i.key === item.list.id) {
 						this.push({key: i.key, item: item.value, quantity: i.quantity});
 					} else {
@@ -89,11 +106,7 @@ export default class JobForm extends Component {
 		event.preventDefault();
 		let invoice = this.refs.invoice.value.trim();
 		let date = this.refs.date.value.trim();
-		let firstName = this.refs.firstName.value.trim();
-		let lastName = this.refs.lastName.value.trim();
-		let address = this.refs.address.value.trim();
-		let phoneNumber = this.refs.phoneNumber.value.trim();
-		let email = this.refs.email.value.trim();
+		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
 		let estimateParts = this.refs.estimateParts.value.trim();
@@ -105,8 +118,11 @@ export default class JobForm extends Component {
 		let mileage = this.refs.mileage.value.trim();
 		let tempCounter = 0;
 		//Create array of installItem Ids
-        var installIds = [];
-        const itemIds = {};
+        var installations = [];
+		//var installQts = [];
+		installations = this.state.installItems;
+		console.log(installations);
+        /*const itemIds = {};
 		Object.keys(this.refs)
     	.filter(key => key.substr(0,11) === 'installItem')
     	.filter(key => key.length == 12)
@@ -118,7 +134,6 @@ export default class JobForm extends Component {
          }
         });
 		//Create array of installItem Quantities
-		var installQts = [];
 		const itemQts = {}; 
 		Object.keys(this.refs)
     	.filter(key => key.substr(0,11) === 'installItem')
@@ -129,22 +144,20 @@ export default class JobForm extends Component {
          	//console.log(itemQts[key]);
          	installQts[parseInt(key.substr(11))] = itemQts[key];
          }
-        });
+        });*/
+
 
 		//add further input validation rules here
 		if(invoice) {
-			Meteor.call('addJob', invoice, date, firstName, lastName, address, phoneNumber, email, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installIds, installQts, installEmployee, vehicleId, mileage, (error, data) => {
+			Meteor.call('addJob', invoice, date, customer, jobTypeCode,
+			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installations, installEmployee, vehicleId, mileage, (error, data) => {
 			if(error) {
-				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
+				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
+			Bert.alert('Successfully added Job#' + invoice, 'success', 'fixed-top', 'fa-smile-o');
 			this.refs.invoice.value = "";
 			this.refs.date.value = "";
-			this.refs.firstName.value = "";
-			this.refs.lastName.value = "";
-			this.refs.address.value = "";
-			this.refs.phoneNumber.value = "";
-			this.refs.email.value = "";
+			document.getElementById("selCust").value == "";
 			this.refs.jobTypeCode.value = "";
 			this.refs.estimateCost.value = "";
 			this.refs.estimateParts.value = "";
@@ -163,7 +176,7 @@ export default class JobForm extends Component {
 			}
 		});
 		}
-
+		//document.getElementById("cForm").addCustomer();
 		
 	}
 	
@@ -200,66 +213,22 @@ export default class JobForm extends Component {
 				
 				<div className="well well-sm">
 				<h3>Customer</h3>
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="firstName">First Name:</label>
+				<div className="form-group" key="selCust">
+					<label className="control-label col-sm-2" htmlFor="selCust">Select Customer:</label>
 					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="firstName"
-						ref="firstName"
-						placeholder="First Name"
-					/>
+						<SearchBox
+							options={this.customers()}
+							onSelectionChange={this.changeCustomer}
+							inputElementListAttribute="selCust"
+							inputElementRefAttribute="selCust"
+							datalistElementIdAttribute="selCust"
+							datalistElementKey={'customerId'}
+							datalistElementValue={'contactName'}
+							placeholder={"Customer ID#"}
+						/>
+						
 					</div>
-				
-					<label className="control-label col-sm-2" htmlFor="lastName">Last Name:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="lastName"
-						ref="lastName"
-						placeholder="Last Name"
-					/>
 					</div>
-				</div>
-				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="address">Address:</label>
-					<div className="col-sm-10">
-					<input 
-						type="text" 
-						className="form-control"
-						id="address"
-						ref="address"
-						placeholder="Address"
-					/>
-					</div>
-				</div>
-				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="phoneNumber">Phone Number:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text"
-						className="form-control"
-						id="phoneNumber"
-						ref="phoneNumber"
-						placeholder="Phone Number"
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="email">Email Address:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text" 
-						className="form-control"
-						id="email"
-						ref="email"
-						placeholder="Email"
-					/>
-					</div>
-				</div>
 				</div>
 				
 				<div className="form-group">
@@ -365,29 +334,30 @@ export default class JobForm extends Component {
 					</div>
 					</div>
 					
-
 					{this.state.installItems.map( function(installItem) {
 						let formElementId = installItem.key;
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
-									<div className="col-sm-2">
+									<div className="col-sm-4">
 										<SearchBox
 											options={this.inventoryItems()}
 											onSelectionChange={this.changeInstallItem}
 											inputElementListAttribute={formElementId}
 											inputElementRefAttribute={formElementId}
 											datalistElementIdAttribute={formElementId}
+											datalistElementKey={'inventoryItemId'}
+											datalistElementValue={'inventoryItemName'}
 											placeholder={"Placeholder"}
 										/>
 										
 									</div>
 									
 									<label 
-										className="control-label col-sm-3"
+										className="control-label col-sm-2"
 										htmlFor={formElementId + 'quantity'}>
 										Install Item Quantity:
 									</label>
-									<div className="col-sm-3">
+									<div className="col-sm-2">
 										<input
 											onChange={this.changeInstallItemQuantity}
 											type="number"

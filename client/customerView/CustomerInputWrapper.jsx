@@ -16,19 +16,58 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 			subscription: {
 				customers: Meteor.subscribe("allCustomers")
 			},
+			search: ""
 		};
+		this.handleSearchChange = this.handleSearchChange.bind(this);
 	}
 
 	componentWillUnmount() {
 		this.state.subscription.customers.stop();
 	}
 
+	handleSearchChange() {
+		let search = document.getElementById("search").value;
+		this.setState({
+			search: search,
+		});
+	}
+
 	customers() {
-		return Customers.find().fetch();
+		return Customers.find(
+			{$or:[
+			{contactName:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{address:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{billableOwner:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{billableAddress:{
+			$regex: this.state.search, "$options": "i",
+			}}]},
+			{sort: {nextService: 1}}
+		).fetch();
 	}
 	
-	recent() {
-		return Customers.find();
+	top() {
+		var id = Customers.findOne(
+			{},
+			{sort: {customerId: -1},
+			limit: 1}
+		);
+		//id++;
+		if (id != undefined) {
+			//document.getElementById("customerform").componentShouldUpdate();
+			return parseInt(id.customerId);
+		}
+		else {
+			return 72;
+		}
+		console.log(id);
+		//return parseInt(id.customerId);
+		//return 16;
 	}
 	
 	render() {
@@ -41,15 +80,26 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 					<h1>New Customer</h1>
 				</div>
 				<div className="panel-body">
-					<CustomerForm />
+					<CustomerForm
+						id="customerform"
+						newId={this.top()}
+					/>
 				</div>
 				</div>
 				
 				<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Recently Added Customers</h1>
+					<h1>Customer Listing</h1>
 				</div>
-				<div className="panel-body">
+				<div className="panel-body">			
+					<input 
+						type="text" 
+						className="form-control"
+						id="search"
+						ref="search"
+						placeholder="Search"
+					onChange={this.handleSearchChange.bind(this)}
+					/>
 					<DataTable 
 						rowHeight={tableRowHeight}
 						columns={['customerId', 'contactName', 'address', 'phone1']}

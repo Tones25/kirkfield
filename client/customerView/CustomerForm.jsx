@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Match, check } from 'meteor/check';
+import {Customers} from './CustomerInputWrapper.jsx';
 
 export default class CustomerForm extends Component {
 
@@ -12,6 +13,7 @@ export default class CustomerForm extends Component {
 		let billableAddress = this.refs.billableAddress.value.trim();
 		let phone1 = this.refs.phone1.value.trim();
 		let phone2 = this.refs.phone2.value.trim();
+		let email = this.refs.email.value.trim();
 		let qsp = this.refs.qsp.checked;
 		console.log(qsp);
 		let comments = this.refs.comments.value.trim();
@@ -24,7 +26,7 @@ export default class CustomerForm extends Component {
 				validInput = false;
 			}
 		if (validInput) {
-			Meteor.call('addCustomer', customerId, contactName, address, billableOwner, billableAddress, phone1, phone2, qsp, comments, nextService, (error, data) => {
+			Meteor.call('addCustomer', customerId, contactName, address, billableOwner, billableAddress, phone1, phone2, email, qsp, comments, nextService, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -36,6 +38,7 @@ export default class CustomerForm extends Component {
 			this.refs.billableAddress.value = "";
 			this.refs.phone1.value = "";
 			this.refs.phone2.value = "";
+			this.refs.email.value = "";
 			this.refs.comments.value = "";
 			this.refs.nextService.value = "";
 			}
@@ -46,6 +49,14 @@ export default class CustomerForm extends Component {
 	}
 	
 	render() {
+		var id = Customers.findOne(
+			{},
+			{sort: {customerId: -1},
+			limit: 1}
+		);
+		if (id == undefined) {
+			return <div>Loading...</div>
+		}
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addCustomer.bind(this)}>
@@ -57,7 +68,7 @@ export default class CustomerForm extends Component {
 						id="itemId"
 						type="number" 
 						ref="customerId"
-						placeholder="Item Id"
+						defaultValue={parseInt(id.customerId) + 1}
 					/>
 					</div>
 					</div>
@@ -134,6 +145,18 @@ export default class CustomerForm extends Component {
 					</div>
 					</div>
 					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="phone2">Email Address:</label>
+					<div className="col-sm-10">
+					<input 
+						className="form-control"
+						id="email"
+						type="text"
+						ref="email"
+						placeholder="Email Address"
+					/>
+					</div>
+					</div>
+					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="qsp">Has Quality Service Plan:</label>
 					<div className="col-sm-10">
 					<input 
@@ -169,6 +192,6 @@ export default class CustomerForm extends Component {
 					</div>
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>
-			)
+			)			
 	}
 }

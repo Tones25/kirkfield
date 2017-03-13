@@ -29,11 +29,12 @@ export default class CustomerDetail extends TrackerReact(Component) {
 		let phone1 = this.refs.phone1.value.trim();
 		let phone2 = this.refs.phone2.value.trim();
 		let qsp = this.refs.qsp.checked;
+		let email = this.refs.email.value.trim();
 		let comments = this.refs.comments.value.trim();
 		let nextService = this.refs.nextService.value.trim();
 		let validInput = true;
 		if (validInput) {
-			Meteor.call('editCustomer', customer, contactName, address, billableOwner, billableAddress, phone1, phone2, qsp, comments, nextService, (error, data) => {
+			Meteor.call('editCustomer', customer, contactName, address, billableOwner, billableAddress, phone1, phone2, email, qsp, comments, nextService, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -133,6 +134,18 @@ export default class CustomerDetail extends TrackerReact(Component) {
 						type="tel"
 						ref="phone2"
 						defaultValue={customer.phone2}
+					/>
+					</div>
+					</div>
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="phone2">Email Address:</label>
+					<div className="col-sm-10">
+					<input 
+						className="form-control"
+						id="email"
+						type="text"
+						ref="email"
+						defaultValue={customer.email}
 					/>
 					</div>
 					</div>

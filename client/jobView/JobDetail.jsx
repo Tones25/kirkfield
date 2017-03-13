@@ -16,32 +16,32 @@ export default class JobDetail extends TrackerReact(Component) {
 		this.state = {
 			subscription: {
 				inventory: Meteor.subscribe("allInventory"),
-				jobs: Meteor.subscribe("allJobs"),
+				jobs: Meteor.subscribe("allJobs", function() { this.componentWillMount();}.bind(this)),
 				employees: Meteor.subscribe("allEmployees"),
 				customers: Meteor.subscribe("allCustomers"),
 				vehicles: Meteor.subscribe("allvehicles")
 			},
 			customer: 0,
-			installItems: [{key:'installItem' + 0, quantity: 1}]
+			installItems: []
 		};
 		this.changeCustomer = this.changeCustomer.bind(this);
 		this.changeInstallItem = this.changeInstallItem.bind(this);
 		this.changeInstallItemQuantity = this.changeInstallItemQuantity.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		let job = this.job();
+		if (!job) {
+			console.log(job);
+			return;
+		}
 		console.log(job);
 		let installations = job.installations;
-		//this.setState(installitems)
-		//console.log("installIds: " + installations.item + " installQts: " + installations.quantity);
-		for (var i=0;i<installations.length-1;i++) {
-			this.addInstallItem();
+		if (installations.length > 0) {
+			this.setState({installItems: installations})
+			console.log(this.state.installItems);
+			document.getElementById('installItem0').value=installations[0].item;
 		}
-		this.setState({installItems: installations})
-		console.log(this.state.installItems);
-		document.getElementById('installItem0').value=installations[0].item;
-		//this.populateInstallItems(installations);
 	}
 	
 	componentWillUnmount() {
@@ -60,6 +60,7 @@ export default class JobDetail extends TrackerReact(Component) {
 	}
 
 	job() {
+		console.log(this.props);
 		return Jobs.findOne(this.props.id);
 	}
 
@@ -75,16 +76,6 @@ export default class JobDetail extends TrackerReact(Component) {
 		newDate = new Date(parseInt(job.date.getFullYear()), parseInt(job.date.getMonth()), parseInt(job.date.getDate()));
 		//console.log(newDate);
 		return newDate.toISOString().substr(0,10);
-	}
-
-	populateInstallItems(installations) {
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.length == 12)
-    	.forEach(key => {
-    		console.log(key.substr(11));
-         	ReactDOM.findDOMNode(this.refs[key]).value = installations[parseInt(key.substr(11))];
-        });
 	}
 	
 	employees() {

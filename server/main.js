@@ -27,7 +27,7 @@ Meteor.startup(() => {
 		let jobTypeArray = ['a', 'b', 'c'];
 		let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
 
-		for (i = 1; i < 1000; i++) {
+		for (i = 1; i < 50; i++) {
 			let jobTypeRandom = Math.floor(Math.random() * 3);
 			let monthRandom = Math.floor(Math.random() * 12);
 			let dayRandom = Math.floor((Math.random() * 32) + 1);
@@ -36,25 +36,23 @@ Meteor.startup(() => {
 			let employeeRandom = Math.floor((Math.random() * 6) + 1);
 			let vehicleIdRandom = Math.floor(Math.random() * 4);
 			let milageRandom = Math.floor((Math.random() * 50) + 1);
-			let randomIds = [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)];
+			let randomIds = [Math.floor(Math.random() * 40), Math.floor(Math.random() * 40), Math.floor(Math.random() * 40)];
+			let randomCust = Math.floor(Math.random() * 40);
 			let randomQts = [Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1)];
 
 			Jobs.insert({
 				invoice: i,
 				date: new Date(2017, monthRandom, dayRandom),
-				firstName: 'Billy',
-				lastName: 'Bob',
-				address: '69 Thorton Bay',
-				phoneNumber: 2045559999,
-				email: 'be@cool.ca',
+				customer: randomCust,
 				jobTypeCode: jobTypeArray[jobTypeRandom],
 				estimateCost: estimateRandom,
 				estimateParts: {},
 				estimateEmployee: employeeRandom,
 				installCost: costRandom,
 				installParts: {},
-				installIds: randomIds,
-				installQts: randomQts,
+				installations: [{key: 'installItem0', item: randomIds[0], quantity: randomQts[0]},
+						{key: 'installItem1', item: randomIds[1], quantity: randomQts[1]},
+						{key: 'installItem2', item: randomIds[2], quantity: randomQts[2]}],
 				installEmployee: employeeRandom,
 				vehicleId: vehicleIdArray[vehicleIdRandom],
 				mileage: milageRandom,
@@ -70,7 +68,7 @@ Meteor.startup(() => {
 
 	if(Inventory.find().count() === 0) {
 
-		for (i = 1; i < 100; i++) {
+		for (i = 1; i < 40; i++) {
 			let quantityRandom = Math.floor(Math.random() * 50);
 			let modelNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
 			let serialNumRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
@@ -95,7 +93,7 @@ Meteor.startup(() => {
 
 	if(Customers.find().count() === 0) {
 
-		for (i = 1; i < 100; i++) {
+		for (i = 1; i < 40; i++) {
 			let addressRandom = Math.floor(Math.random() * 550);
 			let phoneRnd = Math.floor((Math.random() * 899) + 100) + '-' + Math.floor((Math.random() * 8999) + 1000);
 			let monthRandom = Math.floor(Math.random() * 12);
@@ -109,6 +107,7 @@ Meteor.startup(() => {
 				billableAddress: '',
 				phone1: '(204)-' + phoneRnd,
 				phone2: '',
+				email: 'asdf@zxcv.com',
 				qsp: false,
 				comments: 'Some additional information.',
 				nextService: new Date(2017, monthRandom, dayRandom),

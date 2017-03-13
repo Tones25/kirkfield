@@ -60,7 +60,6 @@ export default class JobDetail extends TrackerReact(Component) {
 	}
 
 	job() {
-		console.log(this.props);
 		return Jobs.findOne(this.props.id);
 	}
 
@@ -168,22 +167,7 @@ export default class JobDetail extends TrackerReact(Component) {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			Bert.alert('Successfully updated Job#' + invoice, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.date.value = "";
-			document.getElementById("selCust").value == "";
-			this.refs.jobTypeCode.value = "";
-			this.refs.estimateCost.value = "";
-			this.refs.estimateEmployee.value = "";
-			this.refs.installCost.value = "";
-			this.refs.installEmployee.value = "";
-			this.refs.vehicleId.value = "";
-			this.refs.mileage.value = "";
-			const installValues = {}; 
-			Object.keys(this.refs)
-	    	.filter(key => key.substr(0,11) === 'installItem')
-	    	.forEach(key => {
-	         	ReactDOM.findDOMNode(this.refs[key]).value = "";
-	        });
+				Bert.alert('Successfully updated Job#' + this.job().invoice, 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
 		}

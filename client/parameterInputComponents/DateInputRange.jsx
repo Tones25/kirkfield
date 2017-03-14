@@ -18,6 +18,11 @@ export default class DateRangeInput extends Component {
 	}
 	
 	render() {
+		let today = new Date();
+		let lastWeek = new Date();
+		lastWeek.setDate(today.getDate() - 7);
+		today = today.toISOString().substring(0, 10);
+		lastWeek = lastWeek.toISOString().substring(0, 10);
 		return (
 			<div>
 				
@@ -28,6 +33,7 @@ export default class DateRangeInput extends Component {
 					className="form-control"
 					id="startDate"
 					ref="startDate"
+					defaultValue={lastWeek}
 					onChange={this.handleStartDateChange}/>
 				
 				End Date:
@@ -37,6 +43,7 @@ export default class DateRangeInput extends Component {
 					className="form-control"
 					id="endDate"
 					ref="endDate"
+					defaultValue={today}
 					onChange={this.handleEndDateChange}/>
 			
 			</div>

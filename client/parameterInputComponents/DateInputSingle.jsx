@@ -24,6 +24,7 @@ export default class DateInput extends Component {
 					className="form-control"
 					id="date"
 					ref="date"
+					defaultValue={new Date().toISOString().substring(0, 10)}
 					onChange={this.handleDateChange}/>
 				
 				End Date:

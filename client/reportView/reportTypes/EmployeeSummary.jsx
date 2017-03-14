@@ -8,6 +8,8 @@ import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
+import SearchBox from '../../parameterInputComponents/SearchBox.jsx';
+
 export default class EmployeeSummary extends TrackerReact(React.Component) {
 
 	findAllValuesOfCollectionAttribute(collection, attribute) {
@@ -28,11 +30,9 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		super(props);
 		
 		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
-		let employees = this.findAllValuesOfCollectionAttribute(Employees, 'employeeFirstName');
 		this.state = {
 			startDate: new Date(),
 			endDate: new Date(),
-			employees: employees,
 			jobTypes: jobTypes,
 			selectedJobTypes: [],
 			selectedEmployees: []
@@ -44,9 +44,13 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		this.handleJobTypesChange = this.handleJobTypesChange.bind(this);
 	}
 
+	employees() {
+		return Employees.find().fetch();
+	}
+	
 	handleEmployeeChange(employee) {
-		let newSelectedEmployees = this.toggleMembership(employee, this.state.selectedEmployees);
-		this.setState({selectedEmployees: newSelectedEmployees});
+		console.log(employee.value);
+		this.setState({employee: employee.value})
 	}
 
 	handleStartDateChange(startDate) {
@@ -98,31 +102,42 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	}
 
 	render() {
-		let employees = this.state.employees;
 		let jobTypes = this.state.jobTypes;
 		
 		return (
 			<div>
-			<CheckboxGroup
-				onSelectionChange={this.handleEmployeeChange}
-				options={employees}
-			/>
-			<CheckboxGroup
-				onSelectionChange={this.handleJobTypesChange}
-				options={jobTypes}
-			/>
-			<DateInputRange 
-				onStartDateChange={this.handleStartDateChange}
-				onEndDateChange={this.handleEndDateChange}
-			/>
-			<div className="panel-body">
-				<ul className="resolutions">
-					{this.jobItems().map( (jobItems) => {
-						return <JobSingle key={jobItems._id} jobItem={jobItems} />
-					})}
-				</ul>
+			<div className="well well-sm">
+				<h2>Employee Summary</h2>
+
+			<form className="form-horizontal">
+				<div className="form-group">
+					<label className="control-label col-sm-2">Employee: </label>
+					<div className="col-sm-4">
+					<SearchBox
+						options={this.employees()}
+						onSelectionChange={this.handleEmployeeChange}
+						inputElementListAttribute="selectEmployee"
+						inputElementRefAttribute="selectEmployee"
+						datalistElementIdAttribute="selectEmployee"
+						datalistElementKey="employeeId"
+						datalistElementValue="employeeFirstName"
+						placeholder="Employee"
+					/>
+					</div>
+				</div>
+				
+				<DateInputRange 
+						onStartDateChange={this.handleStartDateChange}
+						onEndDateChange={this.handleEndDateChange}
+				/>
+				<CheckboxGroup
+					onSelectionChange={this.handleJobTypesChange}
+					options={jobTypes}
+				/>
+					
+			</form>
+
 			</div>
-			
 			</div>
 			)
 	}

@@ -24,10 +24,11 @@ export default class DateRangeInput extends Component {
 		today = today.toISOString().substring(0, 10);
 		lastWeek = lastWeek.toISOString().substring(0, 10);
 		return (
-			<div>
-				
-				Start Date:
-				
+			<div className="form-group">
+				<label className="control-label col-sm-2">
+					Start Date:
+				</label>
+				<div className="col-sm-4">
 				<input 
 					type="Date" 
 					className="form-control"
@@ -35,17 +36,20 @@ export default class DateRangeInput extends Component {
 					ref="startDate"
 					defaultValue={lastWeek}
 					onChange={this.handleStartDateChange}/>
+				</div>
 				
-				End Date:
-				
-				<input 
-					type="Date" 
-					className="form-control"
-					id="endDate"
-					ref="endDate"
-					defaultValue={today}
-					onChange={this.handleEndDateChange}/>
-			
+				<label className="control-label col-sm-2">
+					End Date:
+				</label>
+				<div className="col-sm-4">
+					<input 
+						type="Date" 
+						className="form-control"
+						id="endDate"
+						ref="endDate"
+						defaultValue={today}
+						onChange={this.handleEndDateChange}/>
+				</div>
 			</div>
 
 		)

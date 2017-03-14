@@ -69,9 +69,6 @@ export default class JobForm extends Component {
 			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
-					console.log(item);
-					console.log(item.list.id);
-					console.log(i.key);
 					if (i.key === item.list.id) {
 						this.push({key: i.key, item: item.value, quantity: i.quantity});
 					} else {
@@ -110,6 +107,7 @@ export default class JobForm extends Component {
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
 		let estimateEmployee = this.refs.estimateEmployee.value.trim();
+		console.log(estimateEmployee);
 		let installCost = this.refs.installCost.value.trim();
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
@@ -119,7 +117,6 @@ export default class JobForm extends Component {
         var installations = [];
 		//var installQts = [];
 		installations = this.state.installItems;
-		console.log(installations);
 
 		//add further input validation rules here
 		if(invoice) {
@@ -240,7 +237,7 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -275,7 +272,7 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>

@@ -265,11 +265,12 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="estimateEmployee"
 						ref="estimateEmployee"
+						defaultValue={job.estimateEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -301,11 +302,12 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="installEmployee"
 						ref="installEmployee"
+						defaultValue={job.installEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>

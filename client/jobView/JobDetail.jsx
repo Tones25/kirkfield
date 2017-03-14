@@ -35,11 +35,9 @@ export default class JobDetail extends TrackerReact(Component) {
 			console.log(job);
 			return;
 		}
-		console.log(job);
 		let installations = job.installations;
 		if (installations.length > 0) {
 			this.setState({installItems: installations})
-			console.log(this.state.installItems);
 			document.getElementById('installItem0').value=installations[0].item;
 		}
 	}
@@ -111,9 +109,6 @@ export default class JobDetail extends TrackerReact(Component) {
 			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
-					console.log(item);
-					console.log(item.list.id);
-					console.log(i.key);
 					if (i.key === item.list.id) {
 						this.push({key: i.key, item: item.value, quantity: i.quantity});
 					} else {
@@ -265,11 +260,12 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="estimateEmployee"
 						ref="estimateEmployee"
+						defaultValue={job.estimateEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -301,11 +297,12 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="installEmployee"
 						ref="installEmployee"
+						defaultValue={job.installEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>

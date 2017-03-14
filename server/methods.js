@@ -60,8 +60,8 @@ Meteor.methods({
 	},
 
 	addJob(invoice, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee,
-			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
+			estimateCost, estimateEmployee,
+			installCost, installations, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -80,10 +80,8 @@ Meteor.methods({
 				customer: customer,
 				jobTypeCode: jobTypeCode,
 				estimateCost: parseFloat(estimateCost),
-				estimateParts: estimateParts,
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
-				installParts: installParts,
 				installations: installations,
 				installEmployee: parseInt(installEmployee),
 				vehicleId: vehicleId,
@@ -109,8 +107,8 @@ Meteor.methods({
 	},
 
 	editJobItem(job, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee,
-			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
+			estimateCost, estimateEmployee,
+			installCost, installations, installEmployee, vehicleId, mileage) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -127,10 +125,8 @@ Meteor.methods({
 				customer: customer,
 				jobTypeCode: jobTypeCode,
 				estimateCost: parseFloat(estimateCost),
-				estimateParts: estimateParts,
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
-				installParts: installParts,
 				installations: installations,
 				installEmployee: parseInt(installEmployee),
 				vehicleId: vehicleId,

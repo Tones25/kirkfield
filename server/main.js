@@ -27,7 +27,7 @@ Meteor.startup(() => {
 		let jobTypeArray = ['a', 'b', 'c'];
 		let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
 
-		for (i = 1; i < 50; i++) {
+		for (i = 1; i < 1000; i++) {
 			let jobTypeRandom = Math.floor(Math.random() * 3);
 			let monthRandom = Math.floor(Math.random() * 12);
 			let dayRandom = Math.floor((Math.random() * 32) + 1);

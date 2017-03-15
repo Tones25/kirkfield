@@ -151,7 +151,7 @@ export default class CustomerDetail extends TrackerReact(Component) {
 					</div>
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="qsp">Has Quality Service Plan:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-1">
 					<input 
 						className="form-control"
 						id="qsp"

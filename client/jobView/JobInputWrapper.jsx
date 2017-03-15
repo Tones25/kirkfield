@@ -6,6 +6,7 @@ import JobForm from './JobForm.jsx';
 import JobSingle from './JobSingle.jsx';
 
 import {Vehicles} from './../vehicleView/VehicleInputWrapper.jsx';
+import {Customers} from './../customerView/CustomerInputWrapper.jsx';
 import DataTable from './../DataTable.jsx';
 
 export const Jobs = new Mongo.Collection("jobs");
@@ -37,7 +38,22 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 	}
 
 	jobItems() {
-		return Jobs.find().fetch();
+		return Jobs.find(
+			{$or:[
+			{cName:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{cAddr:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{empName:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{invoice:{
+			$regex: this.state.search, "$options": "i",
+			}}]},
+			{sort: {complete: 1, date: 1}}
+		).fetch();
 	}
 
 	vehicles() {
@@ -72,8 +88,8 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 					/>
 					<DataTable 
 						rowHeight={tableRowHeight}
-						columns={['invoice', 'customer', 'installCost', 'installEmployee']}
-						columnNames={['Invoice#', 'Customer ID#', 'Charge ($)', 'Employee ID#']}
+						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
+						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
 						deleteButtons={true}
 						deleteFunction={'deleteJobItem'}
 						editButtons={true}

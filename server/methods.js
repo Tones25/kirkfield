@@ -59,9 +59,10 @@ Meteor.methods({
 		Inventory.remove(inventoryItem._id)
 	},
 
-	addJob(invoice, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee,
-			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
+	addJob(invoice, complete, date, customer, jobTypeCode,
+			estimateCost, estimateEmployee,
+			installCost, installations, installEmployee,
+			vehicleId, mileage, comments) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -69,53 +70,75 @@ Meteor.methods({
 		if(entry) {
 			throw new Meteor.Error('Duplicate invoice')
 		}
+			cust = Customers.findOne({customerId: parseInt(customer)});
+			if (!cust) throw new Meteor.Error('Invalid Customer')
+			emp = Employees.findOne({employeeId: parseInt(installEmployee)});
+			if (!emp) throw new Meteor.Error('Invalid Employee')
 			let dateTokens = date.split("-");
 			let dateYear = parseInt(dateTokens[0]);
 			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
 			let dateDay = parseInt(dateTokens[2]);
+			let cName = cust.contactName || '';
+			let	cAddr = cust.address || '';
+			let	cPhn1 = cust.phone1 || '';
+			let	cPhn2 = cust.phone2 || '';
+			let empName = emp.employeeFirstName || '';
+			console.log(installations[0].item);
 
 			Jobs.insert({
 				invoice: parseInt(invoice),
+				complete: complete,
 				date: new Date(dateYear, dateMonth, dateDay),
 				customer: customer,
+				cName: cName,
+				cAddr: cAddr,
+				cPhn1: cPhn1,
+				cPhn2: cPhn2,
 				jobTypeCode: jobTypeCode,
 				estimateCost: parseFloat(estimateCost),
-				estimateParts: estimateParts,
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
-				installParts: installParts,
 				installations: installations,
-				installEmployee: parseInt(installEmployee),
+				installEmployee: installEmployee,
+				empName: empName,
 				vehicleId: vehicleId,
 				mileage: parseInt(mileage),
-				complete: false,
+				comments: comments,
 				createdAt: new Date(),
 				user: Meteor.userId()
 			})
 			//Decrease stock quantity of job's installed items
-			if (installations[0].item) {
+			if (installations[0].item != null) {
 			for (var i=0;i<installations.length;i++) {
+
 				entry = Inventory.findOne({inventoryItemId: parseInt(installations[i].item)})
-				//console.log(installQts[i])
+				if (entry) {
 				let quant = installations[i].quantity || 1
-				//console.log(quant)
+				console.log(quant)
 				newQuantity = entry.inventoryItemQuantity - quant
 				Inventory.update(
 					{_id: entry._id},
 					{$set: {inventoryItemQuantity: newQuantity}}
 					)
+				}
 			}
 		}
 	},
 
-	editJobItem(job, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee,
-			installCost, installParts, installations, installEmployee, vehicleId, mileage) {
+	editJobItem(job, complete, date, customer, jobTypeCode,
+			estimateCost, estimateEmployee,
+			installCost, installations,
+			installEmployee, vehicleId, mileage, comments) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Jobs.findOne({_id: job._id})
 		if(entry) {
+			cust = Customers.findOne({customerId: parseInt(customer)});
+			if (!cust) throw new Meteor.Error('Invalid Customer')
+			emp = Employees.findOne({employeeId: parseInt(installEmployee)});
+			if (!emp) throw new Meteor.Error('Invalid Employee')
+			let oldInstalls = entry.installations;
 			let dateTokens = date.split("-");
 			let dateYear = parseInt(dateTokens[0]);
 			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
@@ -123,20 +146,58 @@ Meteor.methods({
 			Jobs.update(
 				{_id: entry._id},
 				{$set: {
+				complete: complete,
 				date: new Date(dateYear, dateMonth, dateDay),
 				customer: customer,
+				cName: cust.contactName,
+				cAddr: cust.address,
+				cPhn1: cust.phone1,
+				cPhn2: cust.phone2,
 				jobTypeCode: jobTypeCode,
 				estimateCost: parseFloat(estimateCost),
-				estimateParts: estimateParts,
 				estimateEmployee: parseInt(estimateEmployee),
 				installCost: parseFloat(installCost),
-				installParts: installParts,
 				installations: installations,
 				installEmployee: parseInt(installEmployee),
+				empName: emp.employeeFirstName,
 				vehicleId: vehicleId,
 				mileage: parseInt(mileage),
-				complete: false
-		}})} else {
+				comments: comments
+		}})
+
+		if (oldInstalls != installations) {
+		//Restore stock from the previous version of the job
+		for (var i=0;i<oldInstalls.length;i++) {
+			entry = Inventory.findOne({inventoryItemId: parseInt(oldInstalls[i].item)});
+			if (entry) {
+			let quant = parseInt(oldInstalls[i].quantity) || 1
+			newQuantity = entry.inventoryItemQuantity + quant
+			Inventory.update(
+				{_id: entry._id},
+				{$set: {inventoryItemQuantity: newQuantity}}
+				)
+			}
+		}
+
+		//Decrease stock quantity of job's new installations
+		if (installations[0].item) {
+		for (var i=0;i<installations.length;i++) {
+			entry = Inventory.findOne({inventoryItemId: parseInt(installations[i].item)})
+			if (entry) {
+			//console.log(installQts[i])
+			let quant = installations[i].quantity || 1
+			//console.log(quant)
+			newQuantity = entry.inventoryItemQuantity - quant
+			Inventory.update(
+				{_id: entry._id},
+				{$set: {inventoryItemQuantity: newQuantity}}
+				)
+			}
+			}
+		}		
+	}
+
+	} else {
 			throw new Meteor.Error('Invalid ID')
 		}
 	},
@@ -145,14 +206,13 @@ Meteor.methods({
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
-		let installIds = job.installIds
-		let installQts = job.installQts
+		let installIds = job.installations
 		Jobs.remove(job._id)
 		//Restore stock quantity of the deleted job's installed items
 		for (var i=0;i<installIds.length;i++) {
-			entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i])})
+			entry = Inventory.findOne({inventoryItemId: parseInt(installIds[i].item)})
 			//console.log(installQts[i])
-			let quant = parseInt(installQts[i]) || 1
+			let quant = parseInt(installIds[i].quantity) || 1
 			//console.log(quant)
 			newQuantity = entry.inventoryItemQuantity + quant
 			Inventory.update(

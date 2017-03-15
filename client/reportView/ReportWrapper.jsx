@@ -16,7 +16,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		super();
 
 		this.state = {
-			value: '',
+			value: 'EmployeeSummary',
 			subscription: {
 				jobs: Meteor.subscribe("allJobs"),
 				employees: Meteor.subscribe("allEmployees")
@@ -66,22 +66,32 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		
 		return(
 			<div className="row">
-				<form >
-					<label>
-						Chose report:
-						<select value={this.state.value} onChange={this.handleChange}>
-							<option value=""> </option>
+				<form className="form-horizontal">
+				<div className="well well-sm">
+				<div className="form-group">
+				<h3>
+					<label className="control-label col-sm-4" htmlFor="chooseReport">
+						Choose report:
+					</label>
+					<div className="col-sm-8">
+					<select 
+						className="form-control" 
+						id="chooseReport" 
+						value={this.state.value} 
+						onChange={this.handleChange}>
 							<option value="EmployeeSummary">Employee Summary</option>
 							<option value="ReportA">Report A</option>
 							<option value="NumberOfInvoicesReport">Number Of Inovices</option>
 							<option value="JobsByEmployee">Jobs By Employee</option>
 							<option value="report3">Report 3</option>
 							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
-						</select>
-					</label>	
-					
-					{this.reportInputs()}
+					</select>	
+					</div>
+					</h3>
+				</div>
+				</div>
 				</form>
+				{this.reportInputs()}
 			</div>
 
 		)

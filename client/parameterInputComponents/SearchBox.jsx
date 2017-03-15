@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class Dropdown extends Component {
+export default class SearchBox extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -31,8 +31,8 @@ export default class Dropdown extends Component {
 				<datalist id={this.props.datalistElementIdAttribute}>
 					{this.props.options.map( (option) => {
 						return <option
-									key={option._id}
-									value={option[this.props.datalistElementKey]} 
+									key={option[this.props.datalistElementKey]}
+									value={option[this.props.datalistElementKey]}
 								>{option[this.props.datalistElementValue]} </option>
 					})}
 				</datalist>

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+
+
 export default class DateRangeInput extends Component {
 
 	constructor(props) {
@@ -18,37 +20,41 @@ export default class DateRangeInput extends Component {
 	}
 	
 	render() {
-		let today = new Date();
-		let lastWeek = new Date();
-		lastWeek.setDate(today.getDate() - 7);
-		today = today.toISOString().substring(0, 10);
-		lastWeek = lastWeek.toISOString().substring(0, 10);
+		console.log(this.props.startDate);
 		return (
-			<div>
-				
-				Start Date:
-				
+			<div className="form-group">
+				<label className="control-label col-sm-2">
+					Start Date:
+				</label>
+				<div className="col-sm-4">
 				<input 
 					type="Date" 
 					className="form-control"
 					id="startDate"
 					ref="startDate"
-					defaultValue={lastWeek}
+					defaultValue={this.props.startDate.toISOString().substring(0, 10)}
 					onChange={this.handleStartDateChange}/>
+				</div>
 				
-				End Date:
-				
-				<input 
-					type="Date" 
-					className="form-control"
-					id="endDate"
-					ref="endDate"
-					defaultValue={today}
-					onChange={this.handleEndDateChange}/>
-			
+				<label className="control-label col-sm-2">
+					End Date:
+				</label>
+				<div className="col-sm-4">
+					<input 
+						type="Date" 
+						className="form-control"
+						id="endDate"
+						ref="endDate"
+						defaultValue={this.props.endDate.toISOString().substring(0, 10)}
+						onChange={this.handleEndDateChange}/>
+				</div>
 			</div>
 
 		)
 	}				
+}
 
+DateRangeInput.defaultProps = {
+	startDate: new Date(),
+	endDate: new Date()
 }

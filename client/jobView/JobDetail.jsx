@@ -36,8 +36,10 @@ export default class JobDetail extends TrackerReact(Component) {
 			return;
 		}
 		let installations = job.installations;
+    let customer = job.customer;
 		if (installations.length > 0) {
-			this.setState({installItems: installations})
+			this.setState({installItems: installations,
+                    customer: customer});
 			document.getElementById('installItem0').value=installations[0].item;
 		}
 	}
@@ -47,6 +49,7 @@ export default class JobDetail extends TrackerReact(Component) {
 		this.state.subscription.jobs.stop();
 		this.state.subscription.employees.stop();
 		this.state.subscription.customers.stop();
+		this.state.subscription.vehicles.stop();
 	}
 
 	inventoryItems() {
@@ -141,6 +144,7 @@ export default class JobDetail extends TrackerReact(Component) {
 	
 	editJob(event) {
 		event.preventDefault();
+    	let complete = this.refs.complete.checked;
 		let date = this.refs.date.value.trim();
 		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
@@ -150,6 +154,7 @@ export default class JobDetail extends TrackerReact(Component) {
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
 		let mileage = this.refs.mileage.value.trim();
+    	let comments = this.refs.comments.value.trim();
 		let tempCounter = 0;
 		//Create array of installItem Ids
         var installations = [];
@@ -157,8 +162,9 @@ export default class JobDetail extends TrackerReact(Component) {
 		
 		//add further input validation rules here
 		if(this.job()) {
-			Meteor.call('editJobItem', this.job(), date, customer, jobTypeCode,
-			estimateCost, estimateEmployee, installCost, installations, installEmployee, vehicleId, mileage, (error, data) => {
+			Meteor.call('editJobItem', this.job(), complete, date, customer,
+			  jobTypeCode, estimateCost, estimateEmployee, installCost,
+		      installations, installEmployee, vehicleId, mileage, comments, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -206,7 +212,7 @@ export default class JobDetail extends TrackerReact(Component) {
 					</div>
 				
 					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
-					<div className="col-sm-4">
+					<div className="col-sm-3">
 					<input 
 						type="text"
 						className="form-control"
@@ -215,7 +221,17 @@ export default class JobDetail extends TrackerReact(Component) {
 						defaultValue={job.jobTypeCode}
 					/>
 					</div>
-				</div>
+			          <label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
+			          <div className="col-sm-1">
+			          <input 
+			            className="form-control"
+			            id="complete"
+			            type="checkbox" 
+			            ref="complete"
+			            defaultChecked={job.complete}
+			          />
+			          </div>
+			        </div>
 				</div>
 				
 				<div className="well well-sm">
@@ -373,9 +389,9 @@ export default class JobDetail extends TrackerReact(Component) {
 						{this.vehicles().map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleName} 
+										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel} 
 										>
-										{vehicles.vehicleName}
+										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>
 						})}
 			
@@ -393,6 +409,19 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 				</div>
+			          <div className="form-group">
+			          <label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
+			          <div className="col-sm-5">
+			          <textarea 
+			            className="form-control"
+			            id="comments"
+			            cols="40" rows="5" 
+			            ref="comments"
+			            defaultValue={job.comments}
+			          />
+			          
+			          </div>
+			          </div>
 					<input type="submit" className="btn btn-primary pull-right" value="Save changes"/>
 				</form>
 				</div>

@@ -23,49 +23,6 @@ Meteor.startup(() => {
 	
 	}
 
-	if(Jobs.find().count() === 0) {
-		let jobTypeArray = ['a', 'b', 'c'];
-		let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
-
-		for (i = 1; i < 50; i++) {
-			let jobTypeRandom = Math.floor(Math.random() * 3);
-			let monthRandom = Math.floor(Math.random() * 12);
-			let dayRandom = Math.floor((Math.random() * 32) + 1);
-			let estimateRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
-			let costRandom = parseFloat(parseFloat(Math.max(100 , (estimateRandom + ((Math.random() * 1000) - 500)))).toFixed(2));
-			let employeeRandom = Math.floor((Math.random() * 6) + 1);
-			let vehicleIdRandom = Math.floor(Math.random() * 4);
-			let milageRandom = Math.floor((Math.random() * 50) + 1);
-			let randomIds = [Math.floor(Math.random() * 40), Math.floor(Math.random() * 40), Math.floor(Math.random() * 40)];
-			let randomCust = Math.floor(Math.random() * 40);
-			let randomQts = [Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1)];
-
-			Jobs.insert({
-				invoice: i,
-				date: new Date(2017, monthRandom, dayRandom),
-				customer: randomCust,
-				jobTypeCode: jobTypeArray[jobTypeRandom],
-				estimateCost: estimateRandom,
-				estimateParts: {},
-				estimateEmployee: employeeRandom,
-				installCost: costRandom,
-				installParts: {},
-				installations: [{key: 'installItem0', item: randomIds[0], quantity: randomQts[0]},
-						{key: 'installItem1', item: randomIds[1], quantity: randomQts[1]},
-						{key: 'installItem2', item: randomIds[2], quantity: randomQts[2]}],
-				installEmployee: employeeRandom,
-				vehicleId: vehicleIdArray[vehicleIdRandom],
-				mileage: milageRandom,
-				complete: false,
-				createdAt: new Date()
-				
-			});
-
-		}
-
-		
-	}
-
 	if(Inventory.find().count() === 0) {
 
 		for (i = 1; i < 40; i++) {
@@ -166,5 +123,55 @@ Meteor.startup(() => {
 			createdAt: new Date()
 		});
 	}
+
+	if(Jobs.find().count() === 0) {
+	let jobTypeArray = ['a', 'b', 'c'];
+	let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
+
+	for (i = 1; i < 50; i++) {
+		let jobTypeRandom = Math.floor(Math.random() * 3);
+		let monthRandom = Math.floor(Math.random() * 12);
+		let dayRandom = Math.floor((Math.random() * 32) + 1);
+		let estimateRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
+		let costRandom = parseFloat(parseFloat(Math.max(100 , (estimateRandom + ((Math.random() * 1000) - 500)))).toFixed(2));
+		let employeeRandom = Math.floor((Math.random() * 6) + 1);
+		let vehicleIdRandom = Math.floor(Math.random() * 4);
+		let milageRandom = Math.floor((Math.random() * 50) + 1);
+		let randomIds = [Math.floor(Math.random() * 40), Math.floor(Math.random() * 40), Math.floor(Math.random() * 40)];
+		let randomCust = Math.floor(Math.random() * 40);
+		let randomQts = [Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1)];
+		cust = Customers.findOne({customerId: parseInt(randomCust)});
+		emp = Employees.findOne({employeeId: parseInt(employeeRandom)});
+		Jobs.insert({
+			invoice: i,
+			complete: false,
+			date: new Date(2017, monthRandom, dayRandom),
+			customer: randomCust,
+			cName: cust.contactName,
+			cAddr: cust.address,
+			cPhn1: cust.phone1,
+			cPhn2: cust.phone2,
+			jobTypeCode: jobTypeArray[jobTypeRandom],
+			estimateCost: estimateRandom,
+			estimateParts: {},
+			estimateEmployee: employeeRandom,
+			empName: emp.employeeFirstName,
+			installCost: costRandom,
+			installParts: {},
+			installations: [{key: 'installItem0', item: randomIds[0], quantity: randomQts[0]},
+					{key: 'installItem1', item: randomIds[1], quantity: randomQts[1]},
+					{key: 'installItem2', item: randomIds[2], quantity: randomQts[2]}],
+			installEmployee: employeeRandom,
+			vehicleId: vehicleIdRandom,
+			mileage: milageRandom,
+			comments: "Worst. Job. Ever!",
+			createdAt: new Date()
+			
+		});
+
+	}
+
+	
+}
 
 });

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Inventory} from './../inventoryView/InventoryInputWrapper.jsx';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
 import {Customers} from './../customerView/CustomerInputWrapper.jsx';
+import {Vehicles} from './../vehicleView/VehicleInputWrapper.jsx';
 import {Jobs} from './JobInputWrapper.jsx';
 
 import SearchBox from './../parameterInputComponents/SearchBox.jsx';
@@ -15,7 +16,9 @@ export default class JobForm extends Component {
 			subscription: {
 				inventory: Meteor.subscribe("allInventory"),
 				employees: Meteor.subscribe("allEmployees"),
-				customers: Meteor.subscribe("allCustomers")
+				customers: Meteor.subscribe("allCustomers"),
+				jobs: Meteor.subscribe("allJobs"),
+				vehicles: Meteor.subscribe("allVehicles")
 			},
 			customer: 0,
 			installItems: [{key:'installItem' + 0, quantity: 1}]
@@ -31,6 +34,8 @@ export default class JobForm extends Component {
 		this.state.subscription.inventory.stop();
 		this.state.subscription.employees.stop();
 		this.state.subscription.customers.stop();
+		this.state.subscription.jobs.stop();
+		this.state.subscription.vehicles.stop();
 	}
 
 	inventoryItems() {
@@ -52,8 +57,6 @@ export default class JobForm extends Component {
 	
 	addInstallItem() {
 
-		/*itemList += item._id + ",";
-		console.log(itemList);	*/
 		this.setState(function(prevState, props) {
 			let newInstallItems = prevState.installItems
 			newInstallItems.push({key: 'installItem' + newInstallItems.length});
@@ -69,9 +72,6 @@ export default class JobForm extends Component {
 			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
-					console.log(item);
-					console.log(item.list.id);
-					console.log(i.key);
 					if (i.key === item.list.id) {
 						this.push({key: i.key, item: item.value, quantity: i.quantity});
 					} else {
@@ -105,52 +105,29 @@ export default class JobForm extends Component {
 	addJob(event) {
 		event.preventDefault();
 		let invoice = this.refs.invoice.value.trim();
+		let complete = this.refs.complete.checked;
 		let date = this.refs.date.value.trim();
 		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
-		let estimateParts = this.refs.estimateParts.value.trim();
 		let estimateEmployee = this.refs.estimateEmployee.value.trim();
+		console.log(estimateEmployee);
 		let installCost = this.refs.installCost.value.trim();
-		let installParts = this.refs.installParts.value.trim();
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
 		let mileage = this.refs.mileage.value.trim();
+		let comments = this.refs.comments.value.trim();
 		let tempCounter = 0;
 		//Create array of installItem Ids
         var installations = [];
 		//var installQts = [];
 		installations = this.state.installItems;
-		console.log(installations);
-        /*const itemIds = {};
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.length == 12)
-    	.forEach(key => {
-         	itemIds[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemIds[key]!=null) {
-         	itemIds[key] = itemIds[key].split("#")[1];
-         	installIds[parseInt(key.substr(11))] = itemIds[key];
-         }
-        });
-		//Create array of installItem Quantities
-		const itemQts = {}; 
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.substr(12) === 'quantity')
-    	.forEach(key => {
-         	itemQts[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemQts[key]!=null) {
-         	//console.log(itemQts[key]);
-         	installQts[parseInt(key.substr(11))] = itemQts[key];
-         }
-        });*/
-
 
 		//add further input validation rules here
 		if(invoice) {
-			Meteor.call('addJob', invoice, date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installations, installEmployee, vehicleId, mileage, (error, data) => {
+			Meteor.call('addJob', invoice, complete, date, customer, 
+				jobTypeCode, estimateCost, estimateEmployee, installCost,
+				installations, installEmployee, vehicleId, mileage, comments, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -160,13 +137,12 @@ export default class JobForm extends Component {
 			document.getElementById("selCust").value == "";
 			this.refs.jobTypeCode.value = "";
 			this.refs.estimateCost.value = "";
-			this.refs.estimateParts.value = "";
 			this.refs.estimateEmployee.value = "";
 			this.refs.installCost.value = "";
-			this.refs.installParts.value = "";
 			this.refs.installEmployee.value = "";
 			this.refs.vehicleId.value = "";
 			this.refs.mileage.value = "";
+			this.refs.comments.value = "";
 			const installValues = {}; 
 			Object.keys(this.refs)
 	    	.filter(key => key.substr(0,11) === 'installItem')
@@ -181,8 +157,16 @@ export default class JobForm extends Component {
 	}
 	
 	render() {
+		newId = Jobs.findOne(
+			{},
+			{sort: {invoice: -1},
+			limit: 1}
+		);
 		let vehicles = this.props.vehicles;
 		//console.log(vehicles);
+		if (!newId) {
+			return (<div>Loading...</div>);
+		}
 		return(
 			<form className="form-horizontal" onSubmit={this.addJob.bind(this)}>
 				<div className="form-group">
@@ -193,6 +177,7 @@ export default class JobForm extends Component {
 						className="form-control"
 						id="invoiceNumber"
 						ref="invoice"
+						defaultValue={parseInt(newId.invoice) + 1}
 						placeholder="Invoice"
 					/>
 					</div>
@@ -200,13 +185,22 @@ export default class JobForm extends Component {
 
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-8">
 					<input 
 						type="date" 
 						className="form-control"
 						id="date"
 						ref="date"
 						placeholder="Date"
+					/>
+					</div>
+					<label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
+					<div className="col-sm-1">
+					<input 
+						className="form-control"
+						id="complete"
+						type="checkbox" 
+						ref="complete"
 					/>
 					</div>
 				</div>
@@ -246,8 +240,8 @@ export default class JobForm extends Component {
 				
 				
 				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateCost">Estimate Cost:</label>
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -258,19 +252,8 @@ export default class JobForm extends Component {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="estimateParts">Estimate Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="estimateParts"
-						ref="estimateParts"
-						placeholder="Estimate Parts"
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="estimateEmployee">Estimate Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="estimateEmployee"
@@ -279,7 +262,7 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -292,8 +275,8 @@ export default class JobForm extends Component {
 				<h3>Install</h3>
 				
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="installCost">Install Cost:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installCost">Install Cost:</label>
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -304,19 +287,8 @@ export default class JobForm extends Component {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="installParts">Install Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="installParts"
-						ref="installParts"
-						placeholder="Install Parts"
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="installEmployee">Install Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installEmployee">Install Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="installEmployee"
@@ -325,7 +297,7 @@ export default class JobForm extends Component {
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -389,9 +361,9 @@ export default class JobForm extends Component {
 						{vehicles.map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleName} 
+										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 										>
-										{vehicles.vehicleName}
+										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>
 						})}
 			
@@ -409,6 +381,19 @@ export default class JobForm extends Component {
 					/>
 					</div>
 				</div>
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
+					<div className="col-sm-5">
+					<textarea 
+						className="form-control"
+						id="comments"
+						cols="40" rows="5" 
+						ref="comments"
+						placeholder="Write something here."
+					/>
+					
+					</div>
+					</div>
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>
 			)

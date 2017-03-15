@@ -19,7 +19,7 @@ export default class JobDetail extends TrackerReact(Component) {
 				jobs: Meteor.subscribe("allJobs", function() { this.componentWillMount();}.bind(this)),
 				employees: Meteor.subscribe("allEmployees"),
 				customers: Meteor.subscribe("allCustomers"),
-				vehicles: Meteor.subscribe("allvehicles")
+				vehicles: Meteor.subscribe("allVehicles")
 			},
 			customer: 0,
 			installItems: []
@@ -35,11 +35,11 @@ export default class JobDetail extends TrackerReact(Component) {
 			console.log(job);
 			return;
 		}
-		console.log(job);
 		let installations = job.installations;
+    let customer = job.customer;
 		if (installations.length > 0) {
-			this.setState({installItems: installations})
-			console.log(this.state.installItems);
+			this.setState({installItems: installations,
+                    customer: customer});
 			document.getElementById('installItem0').value=installations[0].item;
 		}
 	}
@@ -49,6 +49,7 @@ export default class JobDetail extends TrackerReact(Component) {
 		this.state.subscription.jobs.stop();
 		this.state.subscription.employees.stop();
 		this.state.subscription.customers.stop();
+		this.state.subscription.vehicles.stop();
 	}
 
 	inventoryItems() {
@@ -60,7 +61,6 @@ export default class JobDetail extends TrackerReact(Component) {
 	}
 
 	job() {
-		console.log(this.props);
 		return Jobs.findOne(this.props.id);
 	}
 
@@ -112,9 +112,6 @@ export default class JobDetail extends TrackerReact(Component) {
 			let newInstallItems = [];
 			prevState.installItems.map(
 				function(i) {
-					console.log(item);
-					console.log(item.list.id);
-					console.log(i.key);
 					if (i.key === item.list.id) {
 						this.push({key: i.key, item: item.value, quantity: i.quantity});
 					} else {
@@ -147,73 +144,31 @@ export default class JobDetail extends TrackerReact(Component) {
 	
 	editJob(event) {
 		event.preventDefault();
+    	let complete = this.refs.complete.checked;
 		let date = this.refs.date.value.trim();
 		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();
 		let estimateCost = this.refs.estimateCost.value.trim();
-		let estimateParts = this.refs.estimateParts.value.trim();
 		let estimateEmployee = this.refs.estimateEmployee.value.trim();
 		let installCost = this.refs.installCost.value.trim();
-		let installParts = this.refs.installParts.value.trim();
 		let installEmployee = this.refs.installEmployee.value.trim();
 		let vehicleId = this.refs.vehicleId.value.trim();
 		let mileage = this.refs.mileage.value.trim();
+    	let comments = this.refs.comments.value.trim();
 		let tempCounter = 0;
 		//Create array of installItem Ids
         var installations = [];
 		installations = this.state.installItems;
-		console.log(installations);
-        /*var installIds = [];
-        const itemIds = {};
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.length == 12)
-    	.forEach(key => {
-         	itemIds[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemIds[key]!=null) {
-         	itemIds[key] = itemIds[key].split("#")[1];
-         	installIds[parseInt(key.substr(11))] = itemIds[key];
-         }
-        });
-		//Create array of installItem Quantities
-		var installQts = [];
-		const itemQts = {}; 
-		Object.keys(this.refs)
-    	.filter(key => key.substr(0,11) === 'installItem')
-    	.filter(key => key.substr(12) === 'quantity')
-    	.forEach(key => {
-         	itemQts[key] = ReactDOM.findDOMNode(this.refs[key]).value || null;
-         	if (itemQts[key]!=null) {
-         	//console.log(itemQts[key]);
-         	installQts[parseInt(key.substr(11))] = itemQts[key];
-         }
-        });*/
-
+		
 		//add further input validation rules here
 		if(this.job()) {
-			Meteor.call('editJobItem', this.job(), date, customer, jobTypeCode,
-			estimateCost, estimateParts, estimateEmployee, installCost, installParts, installations, installEmployee, vehicleId, mileage, (error, data) => {
+			Meteor.call('editJobItem', this.job(), complete, date, customer,
+			  jobTypeCode, estimateCost, estimateEmployee, installCost,
+		      installations, installEmployee, vehicleId, mileage, comments, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			Bert.alert('Successfully updated Job#' + invoice, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.date.value = "";
-			document.getElementById("selCust").value == "";
-			this.refs.jobTypeCode.value = "";
-			this.refs.estimateCost.value = "";
-			this.refs.estimateParts.value = "";
-			this.refs.estimateEmployee.value = "";
-			this.refs.installCost.value = "";
-			this.refs.installParts.value = "";
-			this.refs.installEmployee.value = "";
-			this.refs.vehicleId.value = "";
-			this.refs.mileage.value = "";
-			const installValues = {}; 
-			Object.keys(this.refs)
-	    	.filter(key => key.substr(0,11) === 'installItem')
-	    	.forEach(key => {
-	         	ReactDOM.findDOMNode(this.refs[key]).value = "";
-	        });
+				Bert.alert('Successfully updated Job#' + this.job().invoice, 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
 		}
@@ -227,8 +182,7 @@ export default class JobDetail extends TrackerReact(Component) {
 	
 	render() {
 		let job = this.job();
-		console.log(this.state.installItems);
-		//console.log(vehicles);
+
 		if (!job) {
 			return (<div>Loading...</div>)
 		}
@@ -242,10 +196,12 @@ export default class JobDetail extends TrackerReact(Component) {
 					<h1>Invoice #{job.invoice}</h1>
 				</div>
 				<div className="panel-body">
-					<form className="form-horizontal" onSubmit={this.editJob.bind(this)}>
+				<form className="form-horizontal" onSubmit={this.editJob.bind(this)}>
+				<div className="well well-sm">
+				<h3>Job</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						type="date" 
 						className="form-control"
@@ -254,6 +210,28 @@ export default class JobDetail extends TrackerReact(Component) {
 						defaultValue={this.date()}
 					/>
 					</div>
+				
+					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
+					<div className="col-sm-3">
+					<input 
+						type="text"
+						className="form-control"
+						id="jobTypeCode"
+						ref="jobTypeCode"
+						defaultValue={job.jobTypeCode}
+					/>
+					</div>
+			          <label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
+			          <div className="col-sm-1">
+			          <input 
+			            className="form-control"
+			            id="complete"
+			            type="checkbox" 
+			            ref="complete"
+			            defaultChecked={job.complete}
+			          />
+			          </div>
+			        </div>
 				</div>
 				
 				<div className="well well-sm">
@@ -277,23 +255,11 @@ export default class JobDetail extends TrackerReact(Component) {
 					</div>
 				</div>
 				
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text"
-						className="form-control"
-						id="jobTypeCode"
-						ref="jobTypeCode"
-						defaultValue={job.jobTypeCode}
-					/>
-					</div>
-				</div>
-				
-				
+				<div className="well well-sm">
+				<h3>Estimate</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -304,28 +270,18 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="estimateParts">Estimate Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="estimateParts"
-						ref="estimateParts"
-						defaultValue={job.estimateParts}
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="estimateEmployee">Estimate Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
+					<div className="col-sm-4">
 					<select
 						className="form-control"
 						id="estimateEmployee"
 						ref="estimateEmployee"
+						defaultValue={job.estimateEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -333,13 +289,14 @@ export default class JobDetail extends TrackerReact(Component) {
 					</select>
 					</div>
 				</div>
-				
+				</div>
+
 				<div className="well">
 				<h3>Install</h3>
 				
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="installCost">Install Cost:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input 
 						type="number"
 						step="0.01"
@@ -350,28 +307,18 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="installParts">Install Parts:</label>
-					<div className="col-sm-2">
-					<input 
-						type="text"
-						className="form-control"
-						id="installParts"
-						ref="installParts"
-						defaultValue={job.installParts}
-					/>
-					</div>
-					
-					<label className="control-label col-sm-2" htmlFor="installEmployee">Install Employee:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="installEmployee">Install Employee:</label>
+					<div className="col-sm-3">
 					<select
 						className="form-control"
 						id="installEmployee"
 						ref="installEmployee"
+						defaultValue={job.installEmployee}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
-										value={employee.employeeFirstName}
+										value={employee.employeeId}
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -386,7 +333,7 @@ export default class JobDetail extends TrackerReact(Component) {
 						console.log(formElementId.substr(11,12));
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
-									<div className="col-sm-4">
+									<div className="col-sm-3">
 										<SearchBox
 											options={this.inventoryItems()}
 											onSelectionChange={this.changeInstallItem}
@@ -402,7 +349,7 @@ export default class JobDetail extends TrackerReact(Component) {
 									</div>
 									
 									<label 
-										className="control-label col-sm-2"
+										className="control-label col-sm-3"
 										htmlFor={formElementId + 'quantity'}>
 										Install Item Quantity:
 									</label>
@@ -442,9 +389,9 @@ export default class JobDetail extends TrackerReact(Component) {
 						{this.vehicles().map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleName} 
+										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel} 
 										>
-										{vehicles.vehicleName}
+										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>
 						})}
 			
@@ -462,6 +409,19 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 				</div>
+			          <div className="form-group">
+			          <label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
+			          <div className="col-sm-5">
+			          <textarea 
+			            className="form-control"
+			            id="comments"
+			            cols="40" rows="5" 
+			            ref="comments"
+			            defaultValue={job.comments}
+			          />
+			          
+			          </div>
+			          </div>
 					<input type="submit" className="btn btn-primary pull-right" value="Save changes"/>
 				</form>
 				</div>

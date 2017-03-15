@@ -58,7 +58,7 @@ Meteor.methods({
 		}
 		Inventory.remove(inventoryItem._id)
 	},
-
+  
 	addJob(invoice, complete, date, customer, jobTypeCode,
 			estimateCost, estimateEmployee,
 			installCost, installations, installEmployee,

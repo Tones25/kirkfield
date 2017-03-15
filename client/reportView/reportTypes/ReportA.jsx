@@ -131,6 +131,8 @@ export default class ReportA extends TrackerReact(React.Component) {
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
+				startDate={this.state.startDate}
+				endDate={this.state.endDate}
 			/>
 			<div className="panel-body">
 				<ul className="resolutions">

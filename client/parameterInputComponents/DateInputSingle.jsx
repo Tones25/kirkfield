@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+
+
 export default class DateInput extends Component {
 	
 	constructor(props) {
@@ -24,6 +26,7 @@ export default class DateInput extends Component {
 					className="form-control"
 					id="date"
 					ref="date"
+					defaultValue={this.props.date.toISOString().substring(0, 10)}
 					onChange={this.handleDateChange}/>
 				
 				End Date:
@@ -33,5 +36,8 @@ export default class DateInput extends Component {
 
 		)
 	}					
+}
 
+DateInput.defaultProps = {
+	date: new Date()
 }

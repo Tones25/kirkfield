@@ -39,7 +39,7 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 			endDate: today,
 			jobTypes: jobTypes,
 			selectedJobTypes: [],
-			employee: '1',
+			employee: 1,
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -53,7 +53,8 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	}
 	
 	handleEmployeeChange(employee) {
-		this.setState({employee: employee.value})
+		let employeeId = parseInt(employee.value);
+		this.setState({employee: employeeId});
 	}
 
 	handleStartDateChange(startDate) {
@@ -95,17 +96,25 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	
 	employeeEstimateJobs() {
 		let selectedJobTypes = this.state.selectedJobTypes;
-		console.log(this.state.employee);
-		console.log(this.state.startDate);
-		console.log(this.state.endDate);
-		console.log(Jobs.find({'installEmployee': this.state.employee}).fetch());
+		let employee = this.state.employee;
 		return Jobs.find({
-			'estimateEmployee': parseInt(this.state.employee),
-			'date': {
+			estimateEmployee: employee,
+			date: {
 				$gte: this.state.startDate,
 				$lte: this.state.endDate
 			}
 		}).fetch();
+	}
+
+	employeeInstallJobs() {
+		let employee = this.state.employee;
+		return Jobs.find({
+			installEmployee: employee,
+			date: {
+				$gte: this.state.startDate,
+				$lte: this.state.endDate
+			}
+		})
 	}
 
 	mapJobItems(jobItems) {
@@ -180,7 +189,13 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 						onEndDateChange={this.handleEndDateChange}
 				/>
 				
-				<BarChart data={this.mapJobItems(this.employeeEstimateJobs())} width={640} height={480}/>
+				<div className="col-md-6">
+					<BarChart id="estimateJobs" data={this.mapJobItems(this.employeeEstimateJobs())} height={480}/>
+				</div>
+				
+				<div className="col-md-6">
+					<BarChart id="installJobs" data={this.mapJobItems(this.employeeInstallJobs())} height={480}/>
+				</div>
 				
 				<CheckboxGroup
 					onSelectionChange={this.handleJobTypesChange}

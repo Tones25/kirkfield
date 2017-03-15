@@ -36,7 +36,6 @@ export default class DateRangeInput extends Component {
 					onChange={this.handleStartDateChange}/>
 				</div>
 				
-<<<<<<< HEAD
 				<label className="control-label col-sm-2">
 					End Date:
 				</label>
@@ -46,21 +45,9 @@ export default class DateRangeInput extends Component {
 						className="form-control"
 						id="endDate"
 						ref="endDate"
-						defaultValue={today}
+						defaultValue={this.props.endDate.toISOString().substring(0, 10)}
 						onChange={this.handleEndDateChange}/>
 				</div>
-=======
-				End Date:
-				
-				<input 
-					type="Date" 
-					className="form-control"
-					id="endDate"
-					ref="endDate"
-					defaultValue={this.props.endDate.toISOString().substring(0, 10)}
-					onChange={this.handleEndDateChange}/>
-			
->>>>>>> refs/remotes/origin/master
 			</div>
 
 		)

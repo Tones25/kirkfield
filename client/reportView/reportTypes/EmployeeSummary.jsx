@@ -30,9 +30,13 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		super(props);
 		
 		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
+		let today = new Date();
+		let lastWeek = new Date();
+		lastWeek.setDate(today.getDate() - 7);
+		
 		this.state = {
-			startDate: new Date(),
-			endDate: new Date(),
+			startDate: lastWeek,
+			endDate: today,
 			jobTypes: jobTypes,
 			selectedJobTypes: [],
 			employee: '1',
@@ -111,7 +115,7 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		
 		if(endDate.getMonth() - startDate.getMonth() < 1) {
 			let data = [];
-			for (let i = 0; i < 31; i++) {
+			for (let i = 1; i <= 31; i++) {
 				data.push({qty: 0, xLabel: i});
 			}
 			jobItems.map( (d) => {
@@ -170,6 +174,8 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 				</div>
 				
 				<DateInputRange 
+						startDate={this.state.startDate}
+						endDate={this.state.endDate}
 						onStartDateChange={this.handleStartDateChange}
 						onEndDateChange={this.handleEndDateChange}
 				/>

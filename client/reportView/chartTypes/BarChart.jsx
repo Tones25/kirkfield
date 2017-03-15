@@ -93,7 +93,6 @@ export default class BarChart extends Component {
 
 	render() {
 		
-
         return (
         	<svg width={this.props.width} height={this.props.height}>
 

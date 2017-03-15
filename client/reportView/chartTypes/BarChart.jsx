@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import Dimensions from 'react-dimensions';
 
-export default class BarChart extends Component {
+class BarChart extends Component {
 
 	componentDidMount() {		
 	  	
@@ -24,9 +25,9 @@ export default class BarChart extends Component {
  
 	    var xScale = d3.scale.ordinal()
 	      .domain(d3.range(data.length))
-	      .rangeRoundBands([0, props.width], 0.05);
+	      .rangeRoundBands([0, props.containerWidth], 0.05);
  
-	    var svg = d3.select("svg");
+	    var svg = d3.select("#" + this.props.id);
  
     	var bars = svg.selectAll("rect").data(data);
     	bars.enter()
@@ -94,9 +95,30 @@ export default class BarChart extends Component {
 	render() {
 		
         return (
-        	<svg width={this.props.width} height={this.props.height}>
+        	<svg id={this.props.id} width={this.props.containerWidth} height={this.props.height}>
 
         	</svg>           
         );
     }
 }
+
+export default Dimensions({
+	getWidth: function(element) {
+		let parent = element.parentElement;
+		let parentStyle = window.getComputedStyle(parent, null);
+		let parentLeftPadding = parentStyle.getPropertyValue("padding-left");
+		let parentRightPadding = parentStyle.getPropertyValue("padding-right");
+		
+		parentLeftPadding = parentLeftPadding.substring(0, parentLeftPadding.length - 2);
+		parentRightPadding = parentRightPadding.substring(0, parentRightPadding.length - 2);
+		
+		parentLeftPadding = parseInt(parentLeftPadding);
+		parentRightPadding = parseInt(parentRightPadding);
+		
+		return parent.getBoundingClientRect().width - (parentLeftPadding + parentRightPadding);
+	},
+	getHeight: function(element) {
+		//return window.innerHeight;
+		return 400;
+	}
+})(BarChart)

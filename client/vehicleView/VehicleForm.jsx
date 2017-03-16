@@ -1,7 +1,25 @@
 import React, {Component} from 'react';
 import {Vehicles} from './VehicleInputWrapper';
-export default class VehicleForm extends Component {
+import {Employees} from './../employeeView/EmployeeInputWrapper';
 
+export default class VehicleForm extends Component {
+	constructor() {
+		super();
+		this.state = {
+			subscription: {
+				employees: Meteor.subscribe("allEmployees")
+			}
+		};
+	}
+	
+	componentWillUnmount() {
+		this.state.subscription.employees.stop();
+	}
+
+
+	employees() {
+		return Employees.find().fetch();
+	}
 
 	addVehicle(event) {
 		event.preventDefault();
@@ -12,6 +30,7 @@ export default class VehicleForm extends Component {
 		console.log(this.refs.licensePlate.value.trim());
 		let licensePlate = this.refs.licensePlate.value.trim();
 		let color = this.refs.vehicleColor.value.trim();
+		let driver = this.refs.driver.value.trim();
 		let initialMileage = this.refs.initialMileage.value.trim();
 		let repairHist = this.refs.repairHist.value.trim();
 		let description = this.refs.description.value.trim();
@@ -31,18 +50,21 @@ export default class VehicleForm extends Component {
 			}
 		if (validInput) {
 			Meteor.call('addVehicle', vehicleId, vehicleMake,
-				vehicleModel, vehicleModelYear, licensePlate, color, initialMileage, 
+				vehicleModel, vehicleModelYear, licensePlate, 
+				color, driver, initialMileage, 
 				repairHist, description, lastOil, nextOil, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
 				Bert.alert('Successfully added Item: ' + vehicleModelYear + " " + vehicleMake + " " + vehicleModel, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.vehicleId.value = "";
+
+			this.refs.vehicleId.value = parseInt(vehicleId) + 1;
 			this.refs.vehicleMake.value = "";
 			this.refs.vehicleModel.value = "";
 			this.refs.vehicleModelYear.value = "";
 			this.refs.licensePlate.value = "";
 			this.refs.color.value = "";
+			this.refs.driver.value = "";
 			this.refs.initialMileage.value = 50000;
 			this.refs.licensePlate.value = "";
 			this.refs.description.value = "";
@@ -140,6 +162,24 @@ export default class VehicleForm extends Component {
 						ref="vehicleColor"
 						placeholder="Color"
 					/>
+					</div>
+
+					<label className="control-label col-sm-1" htmlFor="driver">Driver:</label>
+					<div className="col-sm-3">
+					<select
+						className="form-control"
+						id="driver"
+						ref="driver"
+					>
+						{this.employees().map( (employee) => {
+							return <option
+										key={employee._id}
+										value={employee.employeeId}
+									>
+									{employee.employeeFirstName}
+									</option>
+						})}
+					</select>
 					</div>
 					
 					<label className="control-label col-sm-2" htmlFor="initialMileage">Mileage:</label>

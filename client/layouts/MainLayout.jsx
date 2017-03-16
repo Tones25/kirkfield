@@ -28,6 +28,7 @@ export const MainLayout = ({content}) => (
 				<div className="navbar-header">
 				<a className="navbar-brand" href="/">Kirkfield</a>
 				</div>
+
 				<AppHeader />
 			</div>
 		</nav>

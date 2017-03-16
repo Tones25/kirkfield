@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
 
-export default class EmployeeForm extends Component {
+export default class EmployeeDetail extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -13,60 +13,45 @@ export default class EmployeeForm extends Component {
 
 	componentWillUnmount() {
 		this.state.subscription.employees.stop();
+	}	
+
+	employee() {
+		return Employees.findOne(this.props.id);
 	}
-	addEmployee(event) {
+
+	date() {
+		let employee = this.employee();
+		//console.log(employee);
+		newDate = new Date(parseInt(employee.employeeStartDate.getFullYear()), parseInt(employee.employeeStartDate.getMonth()), parseInt(employee.employeeStartDate.getDate()));
+		return newDate.toISOString().substr(0,10);
+	}
+
+	editEmployee(event) {
 		event.preventDefault();
-		let employeeId = this.refs.employeeId.value.trim();
 		let employeeFirstName = this.refs.employeeFirstName.value.trim();
 		let employeeLastName = this.refs.employeeLastName.value.trim();
 		let employeeStartDate = this.refs.employeeStartDate.value.trim();
 		let employeeExperience = this.refs.employeeExperience.value.trim();
 		let employeeHourlyRate = this.refs.employeeHourlyRate.value.trim();
-		
-		if(employeeId) {
-			Meteor.call('addEmployee', employeeId, employeeFirstName, 
+		Meteor.call('editEmployee', this.employee(), employeeFirstName, 
 				employeeLastName, employeeStartDate, employeeExperience, 
 				employeeHourlyRate, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			Bert.alert('Successfully added ' + employeeFirstName + ' ' + employeeLastName + ' to Employees.', 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.employeeId.value = parseInt(employeeId) + 1; 
-			this.refs.employeeFirstName.value = "";
-			this.refs.employeeLastName.value = "";
-			this.refs.employeeStartDate.value = "";
-			this.refs.employeeExperience.value = "";
-			this.refs.employeeHourlyRate.value = "";
+			Bert.alert('Successfully updated Employee#' + this.employee().employeeId + '.', 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
-		}
 	}
 	
 	render() {
-		newId = Employees.findOne(
-			{},
-			{sort: {employeeId: -1},
-			limit: 1}
-		);
-		if (!newId) {
+		employee = this.employee();
+		if (!this.employee()) {
 			return (<div>Loading...</div>);
 		}
 		return(
 			
-			<form className="form-horizontal" onSubmit={this.addEmployee.bind(this)}>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="employeeId">Employee Id:</label>
-					<div className="col-sm-10">
-					<input 
-						className="form-control"
-						id="employeeId"
-						type="number"
-						ref="employeeId"
-						defaultValue={parseInt(newId.employeeId) + 1}
-						placeholder="Employee Id"
-					/>
-					</div>
-					</div>
+			<form className="form-horizontal" onSubmit={this.editEmployee.bind(this)}>
 					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="employeeFirstName">First Name:</label>
@@ -77,6 +62,7 @@ export default class EmployeeForm extends Component {
 						type="text" 
 						ref="employeeFirstName"
 						placeholder="First Name"
+						defaultValue={employee.employeeFirstName}
 					/>
 					</div>
 					<label className="control-label col-sm-2" htmlFor="employeeLastName">Last Name:</label>
@@ -87,6 +73,7 @@ export default class EmployeeForm extends Component {
 						type="text" 
 						ref="employeeLastName"
 						placeholder="Last Name"
+						defaultValue={employee.employeeLastName}
 					/>
 					</div>
 					</div>
@@ -100,6 +87,7 @@ export default class EmployeeForm extends Component {
 						type="date"
 						ref="employeeStartDate"
 						placeholder="Start Date"
+						defaultValue={this.date()}
 					/>
 					</div>
 					<label className="control-label col-sm-2" htmlFor="employeeExperience">Experience (Years):</label>
@@ -113,6 +101,7 @@ export default class EmployeeForm extends Component {
 						min="0"
 						max="100"
 						step="1"
+						defaultValue={employee.employeeExperience}
 					/>
 					</div>
 					<label className="control-label col-sm-2" htmlFor="employeeHourlyRate">Hourly Rate ($):</label>
@@ -126,12 +115,13 @@ export default class EmployeeForm extends Component {
 						min="10.00"
 						max="1000.00"
 						step="0.01"
+						defaultValue={employee.employeeHourlyRate}
 					/>
 					</div>
 					
 					</div>
 					
-					<input type="submit" className="btn btn-primary pull-right"/>
+					<input type="submit" className="btn btn-primary pull-right" value="Save Changes"/>
 				</form>
 			)
 	}

@@ -2,21 +2,27 @@ import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import {Vehicles} from './VehicleInputWrapper.jsx';
+import {Employees} from './../employeeView/EmployeeInputWrapper';
 
 export default class VehicleDetail extends TrackerReact(Component) {
 
 	constructor() {
 		super();
-
-	this.state = {
+		this.state = {
 			subscription: {
-				vehicles: Meteor.subscribe("allVehicles")
+				vehicles: Meteor.subscribe("allVehicles"),
+				employees: Meteor.subscribe("allEmployees")
 			}
 		}
 	}
 
 	componentWillUnmount() {
 		this.state.subscription.vehicles.stop();
+		this.state.subscription.employees.stop();
+	}
+
+	employees() {
+		return Employees.find().fetch();
 	}
 
 	vehicle() {
@@ -40,6 +46,7 @@ export default class VehicleDetail extends TrackerReact(Component) {
 		let vehicleModelYear = this.refs.vehicleModelYear.value.trim();
 		let licensePlate = this.refs.licensePlate.value.trim();
 		let color = this.refs.vehicleColor.value.trim();
+		let driver = this.refs.driver.value.trim();
 		let initialMileage = this.refs.initialMileage.value.trim();
 		let repairHist = this.refs.repairHist.value.trim();
 		let description = this.refs.description.value.trim();
@@ -54,23 +61,13 @@ export default class VehicleDetail extends TrackerReact(Component) {
 		}
 		if (validInput) {
 			Meteor.call('editVehicle', this.vehicle(), vehicleMake,
-				vehicleModel, vehicleModelYear, licensePlate, color, initialMileage, 
-				repairHist, description, lastOil, nextOil, (error, data) => {
+				vehicleModel, vehicleModelYear, licensePlate, color,
+				driver, initialMileage, repairHist, description,
+				lastOil, nextOil, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
 				Bert.alert('Successfully updated Item: ' + vehicleModelYear + " " + vehicleMake + " " + vehicleModel, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.vehicleMake.value = "";
-			this.refs.vehicleModel.value = "";
-			this.refs.vehicleModelYear.value = "";
-			this.refs.licensePlate.value = "";
-			this.refs.color.value = "";
-			this.refs.initialMileage.value = 50000;
-			this.refs.licensePlate.value = "";
-			this.refs.description.value = "";
-			this.refs.repairHist.value = "";
-			this.refs.lastOil.value = "";
-			this.refs.nextOil.value = "";
 			}
 		});
 		}
@@ -157,6 +154,25 @@ export default class VehicleDetail extends TrackerReact(Component) {
 						ref="vehicleColor"
 						defaultValue={vehicle.color}
 					/>
+					</div>
+
+					<label className="control-label col-sm-1" htmlFor="driver">Driver:</label>
+					<div className="col-sm-3">
+					<select
+						className="form-control"
+						id="driver"
+						ref="driver"
+						defaultValue={vehicle.driver}
+					>
+						{this.employees().map( (employee) => {
+							return <option
+										key={employee._id}
+										value={employee.employeeId}
+									>
+									{employee.employeeFirstName}
+									</option>
+						})}
+					</select>
 					</div>
 					
 					<label className="control-label col-sm-2" htmlFor="initialMileage">Mileage:</label>

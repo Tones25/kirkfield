@@ -71,6 +71,9 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 	}
 	
 	render() {
+		if (!Meteor.userId()) {
+			return (<h1>You must be logged in.</h1>)
+		}
 		this.state.recent = this.customers();
 		let tableRowHeight = 50;
 		return(

@@ -53,6 +53,9 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 	}
 	
 	render() {
+		if (!Meteor.userId()) {
+			return (<h1>You must be logged in.</h1>)
+		}
 		this.state.recent = this.inventoryItems();
 		let tableRowHeight = 50;
 		return(

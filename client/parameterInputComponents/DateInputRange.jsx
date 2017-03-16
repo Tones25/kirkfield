@@ -22,10 +22,11 @@ export default class DateRangeInput extends Component {
 	render() {
 		console.log(this.props.startDate);
 		return (
-			<div>
-				
-				Start Date:
-				
+			<div className="form-group">
+				<label className="control-label col-sm-2">
+					Start Date:
+				</label>
+				<div className="col-sm-4">
 				<input 
 					type="Date" 
 					className="form-control"
@@ -33,17 +34,20 @@ export default class DateRangeInput extends Component {
 					ref="startDate"
 					defaultValue={this.props.startDate.toISOString().substring(0, 10)}
 					onChange={this.handleStartDateChange}/>
+				</div>
 				
-				End Date:
-				
-				<input 
-					type="Date" 
-					className="form-control"
-					id="endDate"
-					ref="endDate"
-					defaultValue={this.props.endDate.toISOString().substring(0, 10)}
-					onChange={this.handleEndDateChange}/>
-			
+				<label className="control-label col-sm-2">
+					End Date:
+				</label>
+				<div className="col-sm-4">
+					<input 
+						type="Date" 
+						className="form-control"
+						id="endDate"
+						ref="endDate"
+						defaultValue={this.props.endDate.toISOString().substring(0, 10)}
+						onChange={this.handleEndDateChange}/>
+				</div>
 			</div>
 
 		)

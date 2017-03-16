@@ -22,6 +22,7 @@ import ReportWrapper from './reportView/ReportWrapper.jsx';
 
 import EmployeeInputWrapper from './employeeView/EmployeeInputWrapper.jsx';
 
+import AdminWrapper from './adminView/AdminWrapper.jsx';
 
 import HomePage from './HomePage.jsx';
 
@@ -130,6 +131,14 @@ FlowRouter.route('/employees', {
 	action() {
 		mount(MainLayout, {
 			content: (<EmployeeInputWrapper />),
+		})
+	}
+})
+
+FlowRouter.route('/admin', {
+	action() {
+		mount(MainLayout, {
+			content: (<AdminWrapper />),
 		})
 	}
 })

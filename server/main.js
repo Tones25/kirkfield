@@ -1,26 +1,78 @@
 import { Meteor } from 'meteor/meteor';
 
 Meteor.startup(() => {
-  if(Employees.find().count() === 0) {
-	
-	let yearRandom = Math.floor((Math.random() * 17) + 2000)
-	let monthRandom = Math.floor(Math.random() * 12);
-	let dayRandom = Math.floor((Math.random() * 32) + 1);
-	let firstNameArray = ['Ted', 'Eddie', 'Bill', 'John', 'Tomas', 'Bobby'];
-	let lastNameArray = ['Johnson', 'Adams', 'Martinez', 'Smith', 'Jones', 'Taylor'];
-	
-	for (i = 0; i < firstNameArray.length; ++i) {
-		Employees.insert({
-			employeeId: i + 1,
-			employeeFirstName: firstNameArray[i],
-			employeeLastName: lastNameArray[i],
-			employeeStartDate: new Date(yearRandom, monthRandom, dayRandom),
-			employeeExperience: (2017 - yearRandom) + Math.floor((Math.random() * 20)),
-			employeeHourlyRate: Math.floor((Math.random() * 3)  * 5) + 15,
-			createdAt: new Date()
+
+	if(Meteor.users.find().count() === 0) {
+		let id = Accounts.createUser({
+			password: 'admin',
+			username: 'admin'
 		});
+		Roles.setUserRoles(id, ['admin']);
 	}
 	
+	if(Employees.find().count() === 0) {
+		
+		let yearRandom = Math.floor((Math.random() * 17) + 2000)
+		let monthRandom = Math.floor(Math.random() * 12);
+		let dayRandom = Math.floor((Math.random() * 32) + 1);
+		let firstNameArray = ['Ted', 'Eddie', 'Bill', 'John', 'Tomas', 'Bobby'];
+		let lastNameArray = ['Johnson', 'Adams', 'Martinez', 'Smith', 'Jones', 'Taylor'];
+		
+		for (i = 0; i < firstNameArray.length; ++i) {
+			Employees.insert({
+				employeeId: i + 1,
+				employeeFirstName: firstNameArray[i],
+				employeeLastName: lastNameArray[i],
+				employeeStartDate: new Date(yearRandom, monthRandom, dayRandom),
+				employeeExperience: (2017 - yearRandom) + Math.floor((Math.random() * 20)),
+				employeeHourlyRate: Math.floor((Math.random() * 3)  * 5) + 15,
+				createdAt: new Date()
+			});
+		}
+		
+		}
+
+	if(Jobs.find().count() === 0) {
+		let jobTypeArray = ['a', 'b', 'c'];
+		let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
+
+		for (i = 1; i < 1000; i++) {
+			let jobTypeRandom = Math.floor(Math.random() * 3);
+			let monthRandom = Math.floor(Math.random() * 12);
+			let dayRandom = Math.floor((Math.random() * 32) + 1);
+			let estimateRandom = parseFloat(parseFloat(Math.random() * 10000).toFixed(2));
+			let costRandom = parseFloat(parseFloat(Math.max(100 , (estimateRandom + ((Math.random() * 1000) - 500)))).toFixed(2));
+			let employeeRandom = Math.floor((Math.random() * 6) + 1);
+			let vehicleIdRandom = Math.floor(Math.random() * 4);
+			let milageRandom = Math.floor((Math.random() * 50) + 1);
+			let randomIds = [Math.floor(Math.random() * 40), Math.floor(Math.random() * 40), Math.floor(Math.random() * 40)];
+			let randomCust = Math.floor(Math.random() * 40);
+			let randomQts = [Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1), Math.floor((Math.random() * 3) + 1)];
+
+			Jobs.insert({
+				invoice: i,
+				date: new Date(2017, monthRandom, dayRandom),
+				customer: randomCust,
+				jobTypeCode: jobTypeArray[jobTypeRandom],
+				estimateCost: estimateRandom,
+				estimateParts: {},
+				estimateEmployee: employeeRandom,
+				installCost: costRandom,
+				installParts: {},
+				installations: [{key: 'installItem0', item: randomIds[0], quantity: randomQts[0]},
+						{key: 'installItem1', item: randomIds[1], quantity: randomQts[1]},
+						{key: 'installItem2', item: randomIds[2], quantity: randomQts[2]}],
+				installEmployee: employeeRandom,
+				vehicleId: vehicleIdArray[vehicleIdRandom],
+				mileage: milageRandom,
+				complete: false,
+				createdAt: new Date()
+				
+			});
+
+		}
+
+		
 	}
 
 	if(Inventory.find().count() === 0) {

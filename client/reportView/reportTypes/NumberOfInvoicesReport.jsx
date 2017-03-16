@@ -155,8 +155,31 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
+				startDate={this.state.startDate}
+				endDate={this.state.endDate}
 			/>
-			<BarChart data={this.mapJobItems()} width={width} height={height}/>
+
+			<div className="row">
+			<div className="col-sm-6">
+			<BarChart id="chartTwo" data={this.mapJobItems()} height={height}/>
+			
+			</div>
+			<div className="col-sm-6">
+			<BarChart id="chartOne" data={this.mapJobItems()} height={height}/>
+			</div>
+		
+			</div>
+			<div className="row">
+			<div className="col-sm-6">
+			<BarChart id="chartTwot" data={this.mapJobItems()} height={height}/>
+			
+			</div>
+			<div className="col-sm-6">
+			<BarChart id="chartOnet" data={this.mapJobItems()} height={height}/>
+			</div>
+		
+			</div>
+			
 			<div className="panel-body">
 				<ul className="resolutions">
 					{this.jobItems().map( (jobItems) => {

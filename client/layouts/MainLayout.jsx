@@ -1,7 +1,6 @@
 import React from 'react';
 import AccountsUI from '../AccountsUI.jsx';
 
-const isAdmin = Roles.userIsInRole(Meteor.user(), 'admin');
 export const MainLayout = ({content}) => (
 	
 	<div>
@@ -46,11 +45,8 @@ export const MainLayout = ({content}) => (
 					<li><a href="/employees">Employees</a></li>
 					<li><a href="/customers">Customers</a></li>
 					<li><a href="/reporting">Reporting</a></li>
-					{isAdmin ? (
-							<li><a href="/admin">Admin</a></li>
-						) : (
-							<li></li>
-						)}
+					<li><a href="/admin">Admin</a></li>
+
 					
 					<li><AccountsUI /></li>
 				</ul>

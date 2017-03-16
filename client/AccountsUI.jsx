@@ -9,6 +9,11 @@ export default class AccountsUI extends Component {
 		Accounts.ui.config({
 			passwordSignupFields: 'USERNAME_ONLY',
 		});
+
+		Accounts.config({
+			forbidClientAccountCreation: true,
+		
+		});
 	}
 
 	componentWillUnmount() {

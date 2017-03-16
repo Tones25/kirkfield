@@ -9,6 +9,11 @@ Meteor.startup(() => {
 		});
 		Roles.setUserRoles(id, ['admin']);
 	}
+
+	Accounts.config({
+			forbidClientAccountCreation: true,
+		
+		});
 	
 	if(Employees.find().count() === 0) {
 		

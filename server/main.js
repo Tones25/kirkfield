@@ -15,7 +15,7 @@ Meteor.startup(() => {
 		
 		});
 
-	
+
 	
 	if(Employees.find().count() === 0) {
 		
@@ -44,6 +44,9 @@ Meteor.startup(() => {
 		let vehicleIdArray = ['aaa123', 'bbb234', 'ccc345', 'ddd456'];
 
 		for (i = 1; i < 1000; i++) {
+			let addressRandom = Math.floor(Math.random() * 550);
+			let phoneRnd = Math.floor((Math.random() * 899) + 100) + '-' + Math.floor((Math.random() * 8999) + 1000);
+			let firstNameArray = ['Ted', 'Eddie', 'Bill', 'John', 'Tomas', 'Bobby'];
 			let jobTypeRandom = Math.floor(Math.random() * 3);
 			let monthRandom = Math.floor(Math.random() * 12);
 			let dayRandom = Math.floor((Math.random() * 32) + 1);
@@ -60,6 +63,10 @@ Meteor.startup(() => {
 				invoice: i,
 				date: new Date(2017, monthRandom, dayRandom),
 				customer: randomCust,
+				cName: 'McDonnel Miller #' + i,
+				cAddr: addressRandom + ' Ez Street',
+				cPhn1: '(204)-' + phoneRnd,
+				cPhn2: '',
 				jobTypeCode: jobTypeArray[jobTypeRandom],
 				estimateCost: estimateRandom,
 				estimateParts: {},
@@ -70,6 +77,7 @@ Meteor.startup(() => {
 						{key: 'installItem1', item: randomIds[1], quantity: randomQts[1]},
 						{key: 'installItem2', item: randomIds[2], quantity: randomQts[2]}],
 				installEmployee: employeeRandom,
+				empName: firstNameArray[employeeRandom - 1],
 				vehicleId: vehicleIdArray[vehicleIdRandom],
 				mileage: milageRandom,
 				complete: false,

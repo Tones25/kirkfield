@@ -41,7 +41,13 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 			{vehicleMake:{
 			$regex: this.state.search, "$options": "i",
 			}},
-			{vehicleModel:{
+			{vehicleMake:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{licensePlate:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{driverName:{
 			$regex: this.state.search, "$options": "i"
 			}}]}
 		).fetch();
@@ -50,6 +56,9 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 	render() {
 		this.state.vehicles = this.vehicles();
 		let tableRowHeight = 50;
+		if (!Meteor.userId()) {
+			return (<h1>You must be logged in.</h1>)
+		}
 		return(
 			<div className="row">
 				<div className="panel panel-primary">
@@ -76,8 +85,8 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 					/>
 					<DataTable 
 						rowHeight={tableRowHeight}
-						columns={['vehicleModelYear', 'vehicleMake', 'vehicleModel', 'licensePlate']}
-						columnNames={['Model Year', 'Make', 'Model', 'License Plate']}
+						columns={['vehicleModelYear', 'vehicleMake', 'vehicleModel', 'licensePlate', 'driverName']}
+						columnNames={['Model Year', 'Make', 'Model', 'License Plate', 'Driver']}
 						deleteButtons={true}
 						deleteFunction={'deleteVehicle'}
 						editButtons={true}

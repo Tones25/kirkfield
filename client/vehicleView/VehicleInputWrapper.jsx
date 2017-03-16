@@ -41,7 +41,7 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 			{vehicleMake:{
 			$regex: this.state.search, "$options": "i",
 			}},
-			{vehicleMake:{
+			{vehicleModel:{
 			$regex: this.state.search, "$options": "i",
 			}},
 			{licensePlate:{

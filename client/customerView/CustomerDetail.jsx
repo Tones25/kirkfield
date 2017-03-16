@@ -164,10 +164,10 @@ export default class CustomerDetail extends TrackerReact(Component) {
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
 					<div className="col-sm-10">
-					<input 
+					<textarea
 						className="form-control"
 						id="comments"
-						type="textbox"
+						cols="40" rows="5" 
 						ref="comments"
 						defaultValue={customer.comments}
 					/>

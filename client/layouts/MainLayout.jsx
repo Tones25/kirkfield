@@ -13,7 +13,7 @@ export const MainLayout = ({content}) => (
 		<div className="row">
 		
 		<nav className="navbar navbar-default text-center">
-			<div>v
+			<div>
 				<div className="navbar-header">
 				<a className="navbar-brand" href="/">Kirkfield</a>
 				</div>

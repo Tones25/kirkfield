@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 
 export default class EmployeeSingle extends Component {
 
+	editEmployee() {
+		FlowRouter.go('/employee/' + this.props.employee._id);
+	}
+
 	deleteEmployee() {
 		Meteor.call('deleteEmployee', this.props.employee);
 	}
@@ -34,7 +38,8 @@ export default class EmployeeSingle extends Component {
 				</ul>
 					
 				<div className="btn-group pull-right">
-					<button className="btn btn-warning">
+					<button className="btn btn-warning"
+						onClick={this.editEmployee.bind(this)}>
 						<span className="glyphicon glyphicon-pencil"></span> Edit
 					</button>
 

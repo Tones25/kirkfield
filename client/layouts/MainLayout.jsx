@@ -1,7 +1,16 @@
 import React from 'react';
 import AccountsUI from '../AccountsUI.jsx';
+import AppHeader from './AppHeader.jsx';
 
-const isAdmin = Roles.userIsInRole(Meteor.user(), 'admin');
+Accounts.ui.config({
+			passwordSignupFields: 'USERNAME_ONLY',
+		});
+
+		Accounts.config({
+			forbidClientAccountCreation: true,
+		
+		});
+
 export const MainLayout = ({content}) => (
 	
 	<div>
@@ -19,21 +28,8 @@ export const MainLayout = ({content}) => (
 				<div className="navbar-header">
 				<a className="navbar-brand" href="/">Kirkfield</a>
 				</div>
-				<ul className="nav navbar-nav">
-					<li><a href="/inventoryInput">Inventory</a></li>
-					<li><a href="/jobInput">Jobs</a></li>
-					<li><a href="/vehicleInput">Vehicles</a></li>
-					<li><a href="/employees">Employees</a></li>
-					<li><a href="/customers">Customers</a></li>
-					<li><a href="/reporting">Reporting</a></li>
-					{isAdmin ? (
-							<li><a href="/admin">Admin</a></li>
-						) : (
-							<li></li>
-						)}
-					
-					<li><AccountsUI /></li>
-				</ul>
+
+				<AppHeader />
 			</div>
 		</nav>
 		</div>

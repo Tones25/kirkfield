@@ -14,6 +14,8 @@ Meteor.startup(() => {
 			forbidClientAccountCreation: true,
 		
 		});
+
+	
 	
 	if(Employees.find().count() === 0) {
 		

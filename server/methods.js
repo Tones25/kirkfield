@@ -1,5 +1,20 @@
 Meteor.methods({
 
+	addUser(username, password) {
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			if(Meteor.users.findOne({username: username})) {
+				throw new Meteor.Error('Username already in use.')
+			} else {
+				let id = Accounts.createUser({
+					username: username,
+					password: password,
+				});
+
+				Roles.setUserRoles(id, ['user']);
+			}
+		}
+	},
+
 	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')

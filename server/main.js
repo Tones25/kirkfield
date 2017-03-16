@@ -1,27 +1,36 @@
 import { Meteor } from 'meteor/meteor';
 
 Meteor.startup(() => {
-  if(Employees.find().count() === 0) {
-	
-	let yearRandom = Math.floor((Math.random() * 17) + 2000)
-	let monthRandom = Math.floor(Math.random() * 12);
-	let dayRandom = Math.floor((Math.random() * 32) + 1);
-	let firstNameArray = ['Ted', 'Eddie', 'Bill', 'John', 'Tomas', 'Bobby'];
-	let lastNameArray = ['Johnson', 'Adams', 'Martinez', 'Smith', 'Jones', 'Taylor'];
-	
-	for (i = 0; i < firstNameArray.length; ++i) {
-		Employees.insert({
-			employeeId: i + 1,
-			employeeFirstName: firstNameArray[i],
-			employeeLastName: lastNameArray[i],
-			employeeStartDate: new Date(yearRandom, monthRandom, dayRandom),
-			employeeExperience: (2017 - yearRandom) + Math.floor((Math.random() * 20)),
-			employeeHourlyRate: Math.floor((Math.random() * 3)  * 5) + 15,
-			createdAt: new Date()
+
+	if(Meteor.users.find().count() === 0) {
+		let id = Accounts.createUser({
+			password: 'admin',
+			username: 'admin'
 		});
+		Roles.setUserRoles(id, ['admin']);
 	}
 	
-	}
+	if(Employees.find().count() === 0) {
+		
+		let yearRandom = Math.floor((Math.random() * 17) + 2000)
+		let monthRandom = Math.floor(Math.random() * 12);
+		let dayRandom = Math.floor((Math.random() * 32) + 1);
+		let firstNameArray = ['Ted', 'Eddie', 'Bill', 'John', 'Tomas', 'Bobby'];
+		let lastNameArray = ['Johnson', 'Adams', 'Martinez', 'Smith', 'Jones', 'Taylor'];
+		
+		for (i = 0; i < firstNameArray.length; ++i) {
+			Employees.insert({
+				employeeId: i + 1,
+				employeeFirstName: firstNameArray[i],
+				employeeLastName: lastNameArray[i],
+				employeeStartDate: new Date(yearRandom, monthRandom, dayRandom),
+				employeeExperience: (2017 - yearRandom) + Math.floor((Math.random() * 20)),
+				employeeHourlyRate: Math.floor((Math.random() * 3)  * 5) + 15,
+				createdAt: new Date()
+			});
+		}
+		
+		}
 
 	if(Jobs.find().count() === 0) {
 		let jobTypeArray = ['a', 'b', 'c'];

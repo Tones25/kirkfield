@@ -132,7 +132,7 @@ export default class JobForm extends Component {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
 			Bert.alert('Successfully added Job#' + invoice, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.invoice.value = "";
+			this.refs.invoice.value = parseInt(invoice) + 1;
 			this.refs.date.value = "";
 			document.getElementById("selCust").value == "";
 			this.refs.jobTypeCode.value = "";

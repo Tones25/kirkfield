@@ -4,6 +4,7 @@ Vehicles = new Mongo.Collection("vehicles");
 Employees = new Mongo.Collection("employees");
 Customers = new Mongo.Collection("customers");
 
+
 Meteor.publish("allInventory", function() {
 	return Inventory.find();
 })
@@ -35,4 +36,8 @@ Meteor.publish("dateRangeJobs", function(startDate, endDate) {
 			$lt: endDate
 		}
 	});
+})
+
+Meteor.publish("allUsers", function() {
+	return Meteor.users.find();
 })

@@ -186,6 +186,7 @@ export default class JobForm extends Component {
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
 					<div className="col-sm-8">
+
 					<input 
 						type="date" 
 						className="form-control"

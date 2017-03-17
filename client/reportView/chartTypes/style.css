@@ -8,11 +8,12 @@
   padding: 10px;
   position: absolute;
   text-align: center;
-  top: 200px;
+  top: 220px;
   width: 80px;
   z-index: 10;
 }
 
 #chart {
   position: relative;
+  top: 20px;
 }

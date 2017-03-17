@@ -1,5 +1,20 @@
 Meteor.methods({
 
+	addUser(username, password) {
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			if(Meteor.users.findOne({username: username})) {
+				throw new Meteor.Error('Username already in use.')
+			} else {
+				let id = Accounts.createUser({
+					username: username,
+					password: password,
+				});
+
+				Roles.setUserRoles(id, ['user']);
+			}
+		}
+	},
+
 	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
@@ -58,7 +73,7 @@ Meteor.methods({
 		}
 		Inventory.remove(inventoryItem._id)
 	},
-  
+
 	addJob(invoice, complete, date, customer, jobTypeCode,
 			estimateCost, estimateEmployee,
 			installCost, installations, installEmployee,
@@ -224,8 +239,8 @@ Meteor.methods({
 	
 	addVehicle(vehicleId, vehicleMake,
 		vehicleModel, vehicleModelYear, licensePlate,
-		color, initialMileage, repairHist, description, 
-		lastOil, nextOil) {
+		color, driver, initialMileage, repairHist,
+		description, lastOil, nextOil) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -233,6 +248,8 @@ Meteor.methods({
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
+			emp = Employees.findOne({employeeId: parseInt(driver)});
+			if (!emp) throw new Meteor.Error('Invalid Employee')
 			let dateTokens = lastOil.split("-");
 			let dateYear = parseInt(dateTokens[0]);
 			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
@@ -250,6 +267,8 @@ Meteor.methods({
 			vehicleModelYear: vehicleModelYear,
 			licensePlate: licensePlate,
 			color: color,
+			driver: parseInt(driver),
+			driverName: emp.employeeFirstName,
 			initialMileage: initialMileage,
 			description: description,
 			repairHist: repairHist,
@@ -262,13 +281,15 @@ Meteor.methods({
 
 		editVehicle(vehicle, vehicleMake,
 		vehicleModel, vehicleModelYear, licensePlate,
-		color, initialMileage, repairHist, description, 
-		lastOil, nextOil) {
+		color, driver, initialMileage, repairHist, 
+		description, lastOil, nextOil) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
 		entry = Vehicles.findOne({_id: vehicle._id})
 		if(entry) {
+			emp = Employees.findOne({employeeId: parseInt(driver)});
+			if (!emp) throw new Meteor.Error('Invalid Employee')
 			let dateTokens = lastOil.split("-");
 			let dateYear = parseInt(dateTokens[0]);
 			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
@@ -287,13 +308,13 @@ Meteor.methods({
 			vehicleModelYear: vehicleModelYear,
 			licensePlate: licensePlate,
 			color: color,
+			driver: parseInt(driver),
+			driverName: emp.employeeFirstName,
 			initialMileage: initialMileage,
 			description: description,
 			repairHist: repairHist,
 			lastOil:  lOil,
-			nextOil:  nOil,
-			createdAt: new Date(),
-			user: Meteor.userId()
+			nextOil:  nOil
 		}})
 	}},
 	
@@ -311,16 +332,22 @@ Meteor.methods({
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
-		entry = Employees.findOne({employeeId: parseInt(employeeId)})
+		entry = Employees.findOne({employeeId: employeeId})
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
+		if (employeeFirstName.length<1) throw new Meteor.Error('Name cannot be blank.')
+
+			let dateTokens = employeeStartDate.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
 
 		Employees.insert({
 			employeeId: employeeId,
 			employeeFirstName: employeeFirstName,
 			employeeLastName: employeeLastName,
-			employeeStartDate: employeeStartDate,
+			employeeStartDate: new Date(dateYear, dateMonth, dateDay),
 			employeeEndDate: null,
 			employeeExperience: employeeExperience,
 			employeeHourlyRate: employeeHourlyRate,
@@ -329,10 +356,35 @@ Meteor.methods({
 		})
 	},
 
+	editEmployee(employee, employeeFirstName, employeeLastName, 
+		employeeStartDate, employeeExperience, employeeHourlyRate) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Employees.findOne({_id: employee._id})
+		if(!entry) {
+			throw new Meteor.Error('Invalid id')
+		}
+		if (employeeFirstName.length<1) throw new Meteor.Error('Name cannot be blank.')
+
+			let dateTokens = employeeStartDate.split("-");
+			let dateYear = parseInt(dateTokens[0]);
+			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+			let dateDay = parseInt(dateTokens[2]);
+
+		Employees.update({_id: entry._id},
+			{$set: {
+			employeeFirstName: employeeFirstName,
+			employeeLastName: employeeLastName,
+			employeeStartDate: new Date(dateYear, dateMonth, dateDay),
+			employeeEndDate: null,
+			employeeExperience: employeeExperience,
+			employeeHourlyRate: employeeHourlyRate
+		}})
+	},
+
 	deleteEmployee(employee) {
-		//can only delete vehicles user inserted
-		//might have to change
-		if(Meteor.userId() !== employee.user) {
+		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
 		Employees.remove(employee._id)
@@ -367,7 +419,6 @@ Meteor.methods({
 				comments: comments,
 				nextService:  new Date(dateYear, dateMonth, dateDay),
 				createdAt: new Date()
-				
 			})
 	},
 

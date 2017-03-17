@@ -28,6 +28,9 @@ export default class EmployeeInputWrapper extends TrackerReact(React.Component) 
 	}
 
 	render() {
+		if (!Meteor.userId()) {
+			return (<h1>You must be logged in.</h1>)
+		}
 		
 		return(
 			<div className="row">

@@ -94,6 +94,8 @@ export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
+				startDate={this.state.startDate}
+				endDate={this.state.endDate}
 			/>
 			<PieChart data={this.mapJobItems()} width={width} height={height}/>
 			<div className="panel-body">

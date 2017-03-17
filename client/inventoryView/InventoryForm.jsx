@@ -30,7 +30,7 @@ export default class InventoryForm extends Component {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
 			Bert.alert('Successfully added Item: ' + inventoryItemName, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.inventoryItemId.value = "";
+			this.refs.inventoryItemId.value = parseInt(inventoryItemId) + 1;
 			this.refs.inventoryItemName.value = "";
 			this.refs.inventoryItemPrice.value = "";
 			this.refs.inventoryItemQuantity.value = "";

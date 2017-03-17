@@ -31,7 +31,7 @@ export default class CustomerForm extends Component {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
 			Bert.alert('Successfully added Customer: ' + contactName, 'success', 'fixed-top', 'fa-smile-o');
-			this.refs.customerId.value = "";
+			this.refs.customerId.value = parseInt(customerId) + 1;
 			this.refs.contactName.value = "";
 			this.refs.address.value = "";
 			this.refs.billableOwner.value = "";
@@ -170,10 +170,10 @@ export default class CustomerForm extends Component {
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
 					<div className="col-sm-10">
-					<input 
+					<textarea
 						className="form-control"
 						id="comments"
-						type="text"
+						cols="40" rows="5" 
 						ref="comments"
 						placeholder="Type additional information here."
 					/>

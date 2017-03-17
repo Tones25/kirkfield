@@ -155,6 +155,8 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 			<DateInputRange 
 				onStartDateChange={this.handleStartDateChange}
 				onEndDateChange={this.handleEndDateChange}
+				startDate={this.state.startDate}
+				endDate={this.state.endDate}
 			/>
 
 			<div className="row">

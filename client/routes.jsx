@@ -21,10 +21,11 @@ import VehicleDetail from './vehicleView/VehicleDetail.jsx';
 import ReportWrapper from './reportView/ReportWrapper.jsx';
 
 import EmployeeInputWrapper from './employeeView/EmployeeInputWrapper.jsx';
+import EmployeeDetailWrapper from './employeeView/EmployeeDetailWrapper.jsx';
 
+import AdminWrapper from './adminView/AdminWrapper.jsx';
 
 import HomePage from './HomePage.jsx';
-
 
 FlowRouter.route('/', {
 	action() {
@@ -130,6 +131,23 @@ FlowRouter.route('/employees', {
 	action() {
 		mount(MainLayout, {
 			content: (<EmployeeInputWrapper />),
+		})
+	}
+})
+
+FlowRouter.route('/employee/:id', {
+	action(params) {
+		mount(MainLayout, {
+			//this passes params.id as a prop into RosultionDetail instance
+			content: (<EmployeeDetailWrapper id={params.id} />),		
+    })
+	}
+})
+
+FlowRouter.route('/admin', {
+	action() {
+		mount(MainLayout, {
+			content: (<AdminWrapper />),
 		})
 	}
 })

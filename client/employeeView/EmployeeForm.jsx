@@ -1,7 +1,19 @@
 import React, {Component} from 'react';
+import {Employees} from './../employeeView/EmployeeInputWrapper.jsx';
 
 export default class EmployeeForm extends Component {
+	constructor() {
+		super();
+		this.state = {
+			subscription: {
+				employees: Meteor.subscribe("allEmployees")
+			}
+		};
+	}
 
+	componentWillUnmount() {
+		this.state.subscription.employees.stop();
+	}
 	addEmployee(event) {
 		event.preventDefault();
 		let employeeId = this.refs.employeeId.value.trim();
@@ -16,20 +28,29 @@ export default class EmployeeForm extends Component {
 				employeeLastName, employeeStartDate, employeeExperience, 
 				employeeHourlyRate, (error, data) => {
 			if(error) {
-				Bert.alert('Please login before submitting', 'danger', 'fixed-top', 'fa-frown-o');
+				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			this.refs.employeeId.value = "";
+			Bert.alert('Successfully added ' + employeeFirstName + ' ' + employeeLastName + ' to Employees.', 'success', 'fixed-top', 'fa-smile-o');
+			this.refs.employeeId.value = parseInt(employeeId) + 1; 
 			this.refs.employeeFirstName.value = "";
-			this.refs.employeeLastName = ""
-			this.refs.employeeStartDate = ""
-			this.refs.employeeExperience = ""
-			this.refs.employeeHourlyRate = ""
+			this.refs.employeeLastName.value = "";
+			this.refs.employeeStartDate.value = "";
+			this.refs.employeeExperience.value = "";
+			this.refs.employeeHourlyRate.value = "";
 			}
 		});
 		}
 	}
 	
 	render() {
+		newId = Employees.findOne(
+			{},
+			{sort: {employeeId: -1},
+			limit: 1}
+		);
+		if (!newId) {
+			return (<div>Loading...</div>);
+		}
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addEmployee.bind(this)}>
@@ -39,8 +60,9 @@ export default class EmployeeForm extends Component {
 					<input 
 						className="form-control"
 						id="employeeId"
-						type="text" 
+						type="number"
 						ref="employeeId"
+						defaultValue={parseInt(newId.employeeId) + 1}
 						placeholder="Employee Id"
 					/>
 					</div>
@@ -71,7 +93,7 @@ export default class EmployeeForm extends Component {
 					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="employeeStartDate">Start Date:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input
 						className="form-control"
 						id="employeeStartDate"

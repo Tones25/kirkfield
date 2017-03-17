@@ -62,6 +62,9 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 
 	render() {
 		
+		if (!Meteor.userId()) {
+			return (<h1>You must be logged in.</h1>)
+		}
 		let tableRowHeight = 50;
 		return(
 		<div className="row">

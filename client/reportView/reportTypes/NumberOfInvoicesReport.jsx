@@ -11,9 +11,13 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 
 	constructor(props) {
 		super(props);
+		let today = new Date();
+		let lastWeek = new Date();
+		lastWeek.setDate(today.getDate() - 7);
+
 		this.state = {
-			startDate: new Date(),
-			endDate: new Date(),
+			startDate: lastWeek,
+			endDate: today,
 			
 		}
 
@@ -147,6 +151,17 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 		return trimmedData;
 	}
 
+	chartTitle() {
+		let monthNames = ["January", "February", "March", "April", "May", "June",
+  			"July", "August", "September", "October", "November", "December"];
+
+  		if(this.state.endDate.getMonth() - this.state.startDate.getMonth() < 1)
+  			return monthNames[this.state.startDate.getMonth()]
+  		else
+  			return monthNames[this.state.startDate.getMonth()] + ' - ' + monthNames[this.state.endDate.getMonth()]
+
+	}
+
 	render() {
 		const width = 640;
 		const height = 480;
@@ -160,25 +175,14 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 			/>
 
 			<div className="row">
-			<div className="col-sm-6">
-			<BarChart id="chartTwo" data={this.mapJobItems()} height={height}/>
+				<div className="col-sm-6">
+				<h1>Total Invoices Breakdown:</h1>
+				<h2>{this.chartTitle()}</h2>
+				<BarChart id="chartTwo" data={this.mapJobItems()} height={height}/>
+				</div>
+			</div>
+
 			
-			</div>
-			<div className="col-sm-6">
-			<BarChart id="chartOne" data={this.mapJobItems()} height={height}/>
-			</div>
-		
-			</div>
-			<div className="row">
-			<div className="col-sm-6">
-			<BarChart id="chartTwot" data={this.mapJobItems()} height={height}/>
-			
-			</div>
-			<div className="col-sm-6">
-			<BarChart id="chartOnet" data={this.mapJobItems()} height={height}/>
-			</div>
-		
-			</div>
 			
 			<div className="panel-body">
 				<ul className="resolutions">

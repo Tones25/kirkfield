@@ -89,7 +89,18 @@ class DataTable extends TrackerReact(React.Component) {
 }
 export default Dimensions({
 	getWidth: function(element) {
-		return element.parentElement.getBoundingClientRect().width * .8;
+		let parent = element.parentElement;
+		let parentStyle = window.getComputedStyle(parent, null);
+		let parentLeftPadding = parentStyle.getPropertyValue("padding-left");
+		let parentRightPadding = parentStyle.getPropertyValue("padding-right");
+		
+		parentLeftPadding = parentLeftPadding.substring(0, parentLeftPadding.length - 2);
+		parentRightPadding = parentRightPadding.substring(0, parentRightPadding.length - 2);
+		
+		parentLeftPadding = parseInt(parentLeftPadding);
+		parentRightPadding = parseInt(parentRightPadding);
+		
+		return parent.getBoundingClientRect().width - (parentLeftPadding + parentRightPadding);
 	},
 	getHeight: function(element) {
 		return window.innerHeight - 100;

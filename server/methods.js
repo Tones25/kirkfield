@@ -328,20 +328,37 @@ Meteor.methods({
 	},
 
 	addEmployee(employeeId, employeeFirstName, employeeLastName, 
-		employeeStartDate, employeeExperience, employeeHourlyRate) {
+		employeeStartDate, employeeExperience, employeeHourlyRate,
+		userName, password) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
+
 		entry = Employees.findOne({employeeId: employeeId})
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
-		if (employeeFirstName.length<1) throw new Meteor.Error('Name cannot be blank.')
 
-			let dateTokens = employeeStartDate.split("-");
-			let dateYear = parseInt(dateTokens[0]);
-			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
-			let dateDay = parseInt(dateTokens[2]);
+		if (employeeFirstName.length<1) 
+			throw new Meteor.Error('Name cannot be blank.')
+
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			if(Meteor.users.findOne({username: userName})) {
+				throw new Meteor.Error('Username already in use.')
+			} else {
+				let id = Accounts.createUser({
+					username: userName,
+					password: password,
+				});
+
+				Roles.setUserRoles(id, ['user']);
+			}
+		}
+
+		let dateTokens = employeeStartDate.split("-");
+		let dateYear = parseInt(dateTokens[0]);
+		let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
+		let dateDay = parseInt(dateTokens[2]);
 
 		Employees.insert({
 			employeeId: employeeId,
@@ -351,13 +368,15 @@ Meteor.methods({
 			employeeEndDate: null,
 			employeeExperience: employeeExperience,
 			employeeHourlyRate: employeeHourlyRate,
+			userName: userName,
 			createdAt: new Date(),
 			user: Meteor.userId()
 		})
 	},
 
 	editEmployee(employee, employeeFirstName, employeeLastName, 
-		employeeStartDate, employeeExperience, employeeHourlyRate) {
+		employeeStartDate, employeeExperience, employeeHourlyRate,
+		userName, password) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -374,13 +393,22 @@ Meteor.methods({
 
 		Employees.update({_id: entry._id},
 			{$set: {
-			employeeFirstName: employeeFirstName,
-			employeeLastName: employeeLastName,
-			employeeStartDate: new Date(dateYear, dateMonth, dateDay),
-			employeeEndDate: null,
-			employeeExperience: employeeExperience,
-			employeeHourlyRate: employeeHourlyRate
+				employeeFirstName: employeeFirstName,
+				employeeLastName: employeeLastName,
+				employeeStartDate: new Date(dateYear, dateMonth, dateDay),
+				employeeEndDate: null,
+				employeeExperience: employeeExperience,
+				employeeHourlyRate: employeeHourlyRate
 		}})
+
+		
+
+		Meteor.users.update({username: employee.userName},
+			{$set: {
+				username: userName,
+				password: password,
+		}}
+			)
 	},
 
 	deleteEmployee(employee) {

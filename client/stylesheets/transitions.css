@@ -1,0 +1,49 @@
+
+.inventoryButton-appear {
+  transform: translateX(-1000px);
+}
+
+.inventoryButton-appear.inventoryButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+}
+
+.jobsButton-appear {
+  transform: translateX(1000px);
+}
+
+.jobsButton-appear.jobsButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 250ms;
+}
+
+.vehiclesButton-appear {
+  transform: translateX(-1000px);
+}
+
+.vehiclesButton-appear.vehiclesButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 500ms;
+}
+
+.employeesButton-appear {
+  transform: translateX(1000px);
+}
+
+.employeesButton-appear.employeesButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 750ms;
+}
+
+.reportsButton-appear {
+  transform: translateY(1000px);
+}
+
+.reportsButton-appear.reportsButton-appear-active {
+  transform: translateY(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 1000ms;
+}

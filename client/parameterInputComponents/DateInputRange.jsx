@@ -20,7 +20,7 @@ export default class DateRangeInput extends Component {
 	}
 	
 	render() {
-		console.log(this.props.startDate);
+		//console.log(this.props.startDate);
 		return (
 			<div className="form-group">
 				<label className="control-label col-sm-2">

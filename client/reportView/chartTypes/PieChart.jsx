@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import d3 from 'd3';
-import styles from './style.css';
+import styles from './styles.css';
 
 export default class BarChart extends Component {
 

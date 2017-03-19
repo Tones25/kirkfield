@@ -4,7 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import NumberOfInvoicesReport from './reportTypes/NumberOfInvoicesReport';
 import ReportA from './reportTypes/ReportA';
-import JobsByEmployee from './reportTypes/JobsByEmployee.jsx';
+import JobCostVarienceByEmployee from './reportTypes/JobCostVarienceByEmployee.jsx';
 import EmployeeSummary from './reportTypes/EmployeeSummary.jsx';
 import TotalInvoicesByType from './reportTypes/TotalInvoicesByType.jsx';
 
@@ -49,10 +49,8 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 
 		if(reportType == 'NumberOfInvoicesReport')
 			return(<NumberOfInvoicesReport />)
-		if(reportType == 'ReportA')
-			return(<ReportA />)
-		if(reportType == 'JobsByEmployee')
-			return(<JobsByEmployee/>)
+		if(reportType == 'JobCostVarienceByEmployee')
+			return(<JobCostVarienceByEmployee/>)
 		if(reportType == 'EmployeeSummary')
 			return(<EmployeeSummary/>)
 		if(reportType == 'TotalInvoicesByType')
@@ -83,10 +81,8 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 						value={this.state.value} 
 						onChange={this.handleChange}>
 							<option value="EmployeeSummary">Employee Summary</option>
-							<option value="ReportA">Report A</option>
 							<option value="NumberOfInvoicesReport">Number Of Inovices</option>
-							<option value="JobsByEmployee">Jobs By Employee</option>
-							<option value="report3">Report 3</option>
+							<option value="JobCostVarienceByEmployee">Job Cost Varience By Employee</option>
 							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
 					</select>	
 					</div>

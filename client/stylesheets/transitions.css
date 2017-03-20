@@ -47,3 +47,21 @@
   transition: transform 500ms ease-in-out;
   transition-delay: 1000ms;
 }
+
+.panelHeading-appear {
+  transform: translateX(200px);
+}
+
+.panelHeading-appear.panelHeading-appear-active {
+  transform: translateX(0px);
+  transition: transform 750ms ease-in-out;
+}
+
+.panelHeading-leave {
+  transform: translateX(200px);
+}
+
+.panelHeading-leave.panelHeading-leave-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+}

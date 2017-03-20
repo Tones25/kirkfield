@@ -30,12 +30,12 @@ class DataTable extends TrackerReact(React.Component) {
 			deleteButtonColumn = 
 				<Column
 					key={"deleteButtons"}
-					header={<Cell>Delete</Cell>}
+					header={<Cell className="text-center">Delete</Cell>}
 					cell={props => (
 						<Cell {...props}>
-							<button className="btn btn-danger"
+							<button className="btn btn-danger btn-block"
 								onClick={() => {this.deleteButton(props.rowIndex)}}>
-								<span className="glyphicon glyphicon-trash"></span> Delete
+								Delete <span className="glyphicon glyphicon-trash"></span> 
 							</button>
 						</Cell>
 						)}
@@ -48,12 +48,12 @@ class DataTable extends TrackerReact(React.Component) {
 			editButtonColumn = 
 				<Column
 					key={"editButtons"}
-					header={<Cell>Edit</Cell>}
+					header={<Cell className="text-center">Edit</Cell>}
 					cell={props => (
 						<Cell {...props}>
-							<button className="btn btn-warning"
+							<button className="btn btn-warning btn-block"
 								onClick={() => {this.editButton(props.rowIndex)}}>
-								<span className="glyphicon glyphicon-pencil"></span> Edit
+								Edit <span className="glyphicon glyphicon-pencil"></span> 
 							</button>
 						</Cell>
 						)}
@@ -70,11 +70,13 @@ class DataTable extends TrackerReact(React.Component) {
 						>
 						{this.props.columns.map( (col) => {
 							
-							return <Column
+							return <Column 
 									key={col}
-									header={<Cell>{this.props.columnNames[this.props.columns.indexOf(col)]}</Cell>}
+									header={<Cell className="text-center">
+												{this.props.columnNames[this.props.columns.indexOf(col)]}
+											</Cell>}
 									cell={props => (
-									<Cell {...props}>
+									<Cell className="text-center"{...props}>
 										{this.props.data[props.rowIndex][col]}
 									</Cell>
 									)}
@@ -89,7 +91,18 @@ class DataTable extends TrackerReact(React.Component) {
 }
 export default Dimensions({
 	getWidth: function(element) {
-		return element.parentElement.getBoundingClientRect().width * .8;
+		let parent = element.parentElement;
+		let parentStyle = window.getComputedStyle(parent, null);
+		let parentLeftPadding = parentStyle.getPropertyValue("padding-left");
+		let parentRightPadding = parentStyle.getPropertyValue("padding-right");
+		
+		parentLeftPadding = parentLeftPadding.substring(0, parentLeftPadding.length - 2);
+		parentRightPadding = parentRightPadding.substring(0, parentRightPadding.length - 2);
+		
+		parentLeftPadding = parseInt(parentLeftPadding);
+		parentRightPadding = parseInt(parentRightPadding);
+		
+		return parent.getBoundingClientRect().width - (parentLeftPadding + parentRightPadding);
 	},
 	getHeight: function(element) {
 		return window.innerHeight - 100;

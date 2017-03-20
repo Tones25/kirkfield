@@ -102,10 +102,11 @@ export default class EmployeeForm extends Component {
 						type="date"
 						ref="employeeStartDate"
 						placeholder="Start Date"
+						defaultValue={new Date().toISOString().substring(0,10)}
 					/>
 					</div>
-					<label className="control-label col-sm-2" htmlFor="employeeExperience">Experience (Years):</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="employeeExperience">Experience (Years):</label>
+					<div className="col-sm-3">
 					<input
 						className="form-control"
 						id="employeeExperience"
@@ -117,8 +118,11 @@ export default class EmployeeForm extends Component {
 						step="1"
 					/>
 					</div>
+					</div>
+					
+					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="employeeHourlyRate">Hourly Rate ($):</label>
-					<div className="col-sm-2">
+					<div className="col-sm-4">
 					<input
 						className="form-control"
 						id="employeeHourlyRate"
@@ -130,18 +134,21 @@ export default class EmployeeForm extends Component {
 						step="0.01"
 					/>
 					</div>
-					<label className="control-label col-sm-2" htmlFor="userName">User Name:</label>
-					<div className="col-sm-2">
+					</div>
+					
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="userName">Username:</label>
+					<div className="col-sm-4">
 					<input
 						className="form-control"
 						id="userName"
 						type="text"
 						ref="userName"
-						placeholder="User Name"
+						placeholder="Username"
 					/>
 					</div>
 					<label className="control-label col-sm-2" htmlFor="password">Password:</label>
-					<div className="col-sm-2">
+					<div className="col-sm-4">
 					<input
 						className="form-control"
 						id="password"
@@ -150,7 +157,6 @@ export default class EmployeeForm extends Component {
 						placeholder="Password"
 					/>
 					</div>
-					
 					</div>
 					
 					<input type="submit" className="btn btn-primary pull-right"/>

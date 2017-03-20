@@ -73,7 +73,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 				<div className="panel-heading">
 					<h1>Inventory Listing</h1>
 				</div>
-				<div className="panel-body">		
+				<div className="panel-body">
 					<input 
 						type="text" 
 						className="form-control"
@@ -82,6 +82,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
+
 					<DataTable 
 						rowHeight={tableRowHeight}
 						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
@@ -92,6 +93,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
 						data={this.inventoryItems()}
 					/>
+
 				</div>
 				</div>
 			</div>

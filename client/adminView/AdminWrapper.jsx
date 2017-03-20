@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import DataTable from './../DataTable.jsx';
 
 
@@ -46,41 +46,54 @@ export default class AdminWrapper extends TrackerReact(React.Component) {
 	render() {
 		
 		return(
-				<div className="panel-body">
-					<h1>Add New User</h1>
-					<form className="form-horizontal" onSubmit={this.addUser.bind(this)}>
-						<div className="form-group">
-							<label className="control-label col-sm-2" htmlFor="invoiceNumber">User Name:</label>
-							<div className="col-sm-10">
-							<input 
-								type="text" 
-								className="form-control"
-								id="username"
-								ref="username"
-								placeholder="User Name"
-							/>
+			<div className="row">
+				<div className="panel panel-primary">
+					<div className="panel panel-heading">
+						<ReactCSSTransitionGroup
+							transitionName="panelHeading"
+							transitionEnterTimeout={500}
+							transitionLeaveTimeout={500}
+							transitionAppear={true}
+							transitionAppearTimeout={750}>
+							<h1>Add New User</h1>
+						</ReactCSSTransitionGroup>
+					</div>
+					<div className="panel-body">
+						<form className="form-horizontal" onSubmit={this.addUser.bind(this)}>
+							<div className="form-group">
+								<label className="control-label col-sm-2" htmlFor="invoiceNumber">User Name:</label>
+								<div className="col-sm-10">
+								<input 
+									type="text" 
+									className="form-control"
+									id="username"
+									ref="username"
+									placeholder="User Name"
+								/>
+								</div>
 							</div>
-						</div>
-						<div className="form-group">
-							<label className="control-label col-sm-2" htmlFor="invoiceNumber">Password:</label>
-							<div className="col-sm-10">
-							<input 
-								type="text" 
-								className="form-control"
-								id="password"
-								ref="password"
-								placeholder="Password"
-							/>
+							<div className="form-group">
+								<label className="control-label col-sm-2" htmlFor="invoiceNumber">Password:</label>
+								<div className="col-sm-10">
+								<input 
+									type="text" 
+									className="form-control"
+									id="password"
+									ref="password"
+									placeholder="Password"
+								/>
+								</div>
 							</div>
-						</div>
-						<input type="submit" className="btn btn-primary pull-right"/>
+							<input type="submit" className="btn btn-primary pull-right"/>
 					</form>
 					<ul className="resolutions">
 						{this.users().map( (users) => {
 							return <h1 key={users._id}> username = {users.username} role ={users.roles} </h1>
 						})}
 					</ul>
+					</div>
 				</div>
+			</div>
 			)
 	}
 }

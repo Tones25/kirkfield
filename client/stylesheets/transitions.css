@@ -1,0 +1,86 @@
+
+.inventoryButton-appear {
+  transform: translateX(-200px);
+}
+
+.inventoryButton-appear.inventoryButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+}
+
+.jobsButton-appear {
+  transform: translateX(200px);
+}
+
+.jobsButton-appear.jobsButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  
+}
+
+.vehiclesButton-appear {
+  transform: translateX(-200px);
+}
+
+.vehiclesButton-appear.vehiclesButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 100ms;
+}
+
+.employeesButton-appear {
+  transform: translateX(200px);
+}
+
+.employeesButton-appear.employeesButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 100ms;
+}
+
+.customersButton-appear {
+  transform: translateX(-200px);
+}
+
+.customersButton-appear.customersButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 200ms;
+}
+
+.reportsButton-appear {
+  transform: translateX(200px);
+}
+
+.reportsButton-appear.reportsButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 200ms;
+}
+
+.panelHeading-appear {
+  transform: translateX(200px);
+}
+
+.panelHeading-appear.panelHeading-appear-active {
+  transform: translateX(0px);
+  transition: transform 750ms ease-in-out;
+}
+
+.panelHeading-leave {
+  transform: translateX(200px);
+}
+
+.panelHeading-leave.panelHeading-leave-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+}
+
+.appHeader-appear {
+  transform: translateX(200px);
+}
+
+.appHeader-appear.appHeader-appear-active {
+  transform: translateX(0px);
+  transition: transform 750ms ease-in-out;
+}

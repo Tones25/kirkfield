@@ -30,7 +30,7 @@ class DataTable extends TrackerReact(React.Component) {
 			deleteButtonColumn = 
 				<Column
 					key={"deleteButtons"}
-					header={<Cell>Delete</Cell>}
+					header={<Cell className="text-center">Delete</Cell>}
 					cell={props => (
 						<Cell {...props}>
 							<button className="btn btn-danger btn-block"
@@ -48,7 +48,7 @@ class DataTable extends TrackerReact(React.Component) {
 			editButtonColumn = 
 				<Column
 					key={"editButtons"}
-					header={<Cell>Edit</Cell>}
+					header={<Cell className="text-center">Edit</Cell>}
 					cell={props => (
 						<Cell {...props}>
 							<button className="btn btn-warning btn-block"

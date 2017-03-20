@@ -74,7 +74,6 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 					<h1>Inventory Listing</h1>
 				</div>
 				<div className="panel-body">
-					<div className="row mb-1">
 					<input 
 						type="text" 
 						className="form-control"
@@ -83,7 +82,6 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
-					</div>
 
 					<DataTable 
 						rowHeight={tableRowHeight}

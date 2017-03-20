@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import d3 from 'd3';
 import styles from './styles.css';
+import Dimensions from 'react-dimensions';
 
-export default class BarChart extends Component {
+class PieChart extends Component {
 
 	componentDidMount() {		  		
 	  	//this.updateChart(this.props);
@@ -16,7 +17,8 @@ export default class BarChart extends Component {
 
 	updateChart(props) {
 	    var dataSet = props.data;
-	    var width = this.props.width;
+		console.log(dataSet);
+	    var width = this.props.containerWidth;
 	    var height = this.props.height;
  
 	    
@@ -27,14 +29,16 @@ export default class BarChart extends Component {
 
         var color = d3.scaleOrdinal(d3.schemeCategory20b);
 
-        d3.select('svg').remove();
-
-        var svg = d3.select('#chart')
+        d3.select("#" + this.props.id).selectAll("div").remove();
+		d3.select("#" + this.props.id).selectAll("svg").remove();
+		d3.select("#" + this.props.id).selectAll("g").remove();
+		
+        var svg = d3.select("#" + this.props.id)
           .append('svg')
           .attr('width', width)
           .attr('height', height)
           .append('g')
-          .attr('id', 'pieChart')
+          .attr('id', "#" + this.props.id)
           .attr('transform', 'translate(' + (width / 2) +
             ',' + (height / 2) + ')');
 
@@ -47,7 +51,7 @@ export default class BarChart extends Component {
           .value(function(d) { return d.count; })
           .sort(null);
 
-        var tooltip = d3.select('#chart')                               // NEW
+        var tooltip = d3.select("#" + this.props.id)                              // NEW
           .append('div')                                                // NEW
           .attr('className', 'tooltip')
           .attr('id', 'chartStyle');                                    // NEW
@@ -119,9 +123,30 @@ export default class BarChart extends Component {
 		
 
         return (
-        	<div id="chart">
+        	<div id={this.props.id} width={this.props.containerWidth} height={this.props.height}>
 
         	</div>           
         );
     }
 }
+
+export default Dimensions({
+	getWidth: function(element) {
+		let parent = element.parentElement;
+		let parentStyle = window.getComputedStyle(parent, null);
+		let parentLeftPadding = parentStyle.getPropertyValue("padding-left");
+		let parentRightPadding = parentStyle.getPropertyValue("padding-right");
+		
+		parentLeftPadding = parentLeftPadding.substring(0, parentLeftPadding.length - 2);
+		parentRightPadding = parentRightPadding.substring(0, parentRightPadding.length - 2);
+		
+		parentLeftPadding = parseInt(parentLeftPadding);
+		parentRightPadding = parseInt(parentRightPadding);
+		
+		return parent.getBoundingClientRect().width - (parentLeftPadding + parentRightPadding);
+	},
+	getHeight: function(element) {
+		//return window.innerHeight;
+		return 400;
+	}
+})(PieChart)

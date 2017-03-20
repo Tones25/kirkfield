@@ -7,7 +7,7 @@ import BarChart from '../chartTypes/BarChart.jsx';
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
-
+import PieChart from '../chartTypes/PieChart.jsx';
 import SearchBox from '../../parameterInputComponents/SearchBox.jsx';
 
 export default class EmployeeSummary extends TrackerReact(React.Component) {
@@ -29,7 +29,6 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	constructor(props) {
 		super(props);
 		
-		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode');
 		let today = new Date();
 		let lastWeek = new Date();
 		lastWeek.setDate(today.getDate() - 7);
@@ -37,15 +36,12 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		this.state = {
 			startDate: lastWeek,
 			endDate: today,
-			jobTypes: jobTypes,
-			selectedJobTypes: [],
 			employee: 1,
 		}
 
 		this.handleStartDateChange = this.handleStartDateChange.bind(this);
 		this.handleEndDateChange = this.handleEndDateChange.bind(this);
 		this.handleEmployeeChange = this.handleEmployeeChange.bind(this);
-		this.handleJobTypesChange = this.handleJobTypesChange.bind(this);
 	}
 
 	employees() {
@@ -88,14 +84,8 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		}
 		return alreadySelected;
 	}
-
-	handleJobTypesChange(jobType) {
-		let newSelectedJobTypes = this.toggleMembership(jobType, this.state.selectedJobTypes);
-		this.setState({selectedJobTypes: newSelectedJobTypes});
-	}
 	
 	employeeEstimateJobs() {
-		let selectedJobTypes = this.state.selectedJobTypes;
 		let employee = this.state.employee;
 		return Jobs.find({
 			estimateEmployee: employee,
@@ -114,7 +104,7 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 				$gte: this.state.startDate,
 				$lte: this.state.endDate
 			}
-		})
+		}).fetch();
 	}
 
 	mapJobItems(jobItems) {
@@ -159,7 +149,30 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 		return trimmedData;
 	}
 	
+	mapJobItemsForPie(jobItems) {
+		let jobTypes = this.findAllValuesOfCollectionAttribute(Jobs, 'jobTypeCode')
+		let data = [];
+		for (let i = 0; i < jobTypes.length; i++) {
+			data.push({label: jobTypes[i], count: 0});
+		}
+		
+		console.log(jobItems);
+		for(let i = 0; i < jobItems.length; i++) {
+			let j = 0;
+			while(data[j].label != jobItems[i].jobTypeCode) {
+				j++;
+			}
+			data[j].count += 1;
+		}
+
+		console.log(data);
+		return data;
+	}
+	
 	render() {
+		const chartHeight = 480;
+		let employeeEstimates = this.employeeEstimateJobs();
+		let employeeInstalls = this.employeeInstallJobs();
 		return (
 			<div>
 			<div className="well well-sm">
@@ -190,17 +203,36 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 				/>
 				
 				<div className="col-md-6">
-					<BarChart id="estimateJobs" data={this.mapJobItems(this.employeeEstimateJobs())} height={480}/>
+					<h3>Estimate Jobs</h3>
+					<BarChart 
+						id="estimateJobs" 
+						data={this.mapJobItems(employeeEstimates)} 
+						height={chartHeight}/>
 				</div>
 				
 				<div className="col-md-6">
-					<BarChart id="installJobs" data={this.mapJobItems(this.employeeInstallJobs())} height={480}/>
+					<h3>Install Jobs</h3>
+					<BarChart 
+						id="installJobs" 
+						data={this.mapJobItems(employeeInstalls)} 
+						height={chartHeight}/>
+				</div>
+
+				<div className="col-md-6">
+					<h3>Estimate Job Types</h3>
+					<PieChart 
+						id="estimateJobTypes" 
+						data={this.mapJobItemsForPie(employeeEstimates)} 
+						height={chartHeight}/>
 				</div>
 				
-				<CheckboxGroup
-					onSelectionChange={this.handleJobTypesChange}
-					options={this.state.jobTypes}
-				/>
+				<div className="col-md-6">
+					<h3>Install Job Types</h3>
+					<PieChart 
+						id="installJobTypes" 
+						data={this.mapJobItemsForPie(employeeInstalls)} 
+						height={chartHeight}/>
+				</div>
 					
 			</form>
 

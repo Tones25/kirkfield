@@ -73,13 +73,12 @@ export default class HomePage extends TrackerReact(React.Component) {
 				</button>
 			</div>
 		</ReactCSSTransitionGroup>
-		
 		<ReactCSSTransitionGroup
 					transitionName="jobsButton"
 					transitionEnterTimeout={500}
 					transitionLeaveTimeout={500}
 					transitionAppear={true}
-					transitionAppearTimeout={750}>
+					transitionAppearTimeout={500}>
 			<div className="col-sm-6">
 				<button onClick={this.job.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -94,7 +93,7 @@ export default class HomePage extends TrackerReact(React.Component) {
 					transitionEnterTimeout={500}
 					transitionLeaveTimeout={500}
 					transitionAppear={true}
-					transitionAppearTimeout={1000}>
+					transitionAppearTimeout={600}>
 			<div className="col-sm-6">
 				<button onClick={this.veh.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -108,7 +107,7 @@ export default class HomePage extends TrackerReact(React.Component) {
 					transitionEnterTimeout={500}
 					transitionLeaveTimeout={500}
 					transitionAppear={true}
-					transitionAppearTimeout={1250}>
+					transitionAppearTimeout={600}>
 			<div className="col-sm-6">
 				<button onClick={this.emp.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -116,14 +115,28 @@ export default class HomePage extends TrackerReact(React.Component) {
 				<span className="glyphicon glyphicon-user"></span> Employees
 				</button>
 			</div>
-		</ReactCSSTransitionGroup>	
+		</ReactCSSTransitionGroup>
+		<ReactCSSTransitionGroup
+					transitionName="customersButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={700}>	
+			<div className="col-sm-6">
+				<button onClick={this.rep.bind(this)}
+						className="btn btn-primary btn-lg btn-block homePageButtons"
+				>
+				<span className="glyphicon glyphicon-user"></span> Customers 
+				</button>
+			</div>
+		</ReactCSSTransitionGroup>
 		<ReactCSSTransitionGroup
 					transitionName="reportsButton"
 					transitionEnterTimeout={500}
 					transitionLeaveTimeout={500}
 					transitionAppear={true}
-					transitionAppearTimeout={1500}>	
-			<div className="col-sm-12">
+					transitionAppearTimeout={700}>	
+			<div className="col-sm-6">
 				<button onClick={this.rep.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>

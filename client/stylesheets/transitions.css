@@ -1,6 +1,6 @@
 
 .inventoryButton-appear {
-  transform: translateX(-1000px);
+  transform: translateX(-200px);
 }
 
 .inventoryButton-appear.inventoryButton-appear-active {
@@ -9,43 +9,53 @@
 }
 
 .jobsButton-appear {
-  transform: translateX(1000px);
+  transform: translateX(200px);
 }
 
 .jobsButton-appear.jobsButton-appear-active {
   transform: translateX(0px);
   transition: transform 500ms ease-in-out;
-  transition-delay: 250ms;
+  
 }
 
 .vehiclesButton-appear {
-  transform: translateX(-1000px);
+  transform: translateX(-200px);
 }
 
 .vehiclesButton-appear.vehiclesButton-appear-active {
   transform: translateX(0px);
   transition: transform 500ms ease-in-out;
-  transition-delay: 500ms;
+  transition-delay: 100ms;
 }
 
 .employeesButton-appear {
-  transform: translateX(1000px);
+  transform: translateX(200px);
 }
 
 .employeesButton-appear.employeesButton-appear-active {
   transform: translateX(0px);
   transition: transform 500ms ease-in-out;
-  transition-delay: 750ms;
+  transition-delay: 100ms;
+}
+
+.customersButton-appear {
+  transform: translateX(-200px);
+}
+
+.customersButton-appear.customersButton-appear-active {
+  transform: translateX(0px);
+  transition: transform 500ms ease-in-out;
+  transition-delay: 200ms;
 }
 
 .reportsButton-appear {
-  transform: translateY(1000px);
+  transform: translateX(200px);
 }
 
 .reportsButton-appear.reportsButton-appear-active {
-  transform: translateY(0px);
+  transform: translateX(0px);
   transition: transform 500ms ease-in-out;
-  transition-delay: 1000ms;
+  transition-delay: 200ms;
 }
 
 .panelHeading-appear {
@@ -64,4 +74,13 @@
 .panelHeading-leave.panelHeading-leave-active {
   transform: translateX(0px);
   transition: transform 500ms ease-in-out;
+}
+
+.appHeader-appear {
+  transform: translateX(200px);
+}
+
+.appHeader-appear.appHeader-appear-active {
+  transform: translateX(0px);
+  transition: transform 750ms ease-in-out;
 }

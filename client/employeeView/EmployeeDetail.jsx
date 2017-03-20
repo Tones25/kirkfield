@@ -33,9 +33,12 @@ export default class EmployeeDetail extends Component {
 		let employeeStartDate = this.refs.employeeStartDate.value.trim();
 		let employeeExperience = this.refs.employeeExperience.value.trim();
 		let employeeHourlyRate = this.refs.employeeHourlyRate.value.trim();
+		
+		let password = this.refs.password.value.trim();
+
 		Meteor.call('editEmployee', this.employee(), employeeFirstName, 
 				employeeLastName, employeeStartDate, employeeExperience, 
-				employeeHourlyRate, (error, data) => {
+				employeeHourlyRate, password, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -116,6 +119,20 @@ export default class EmployeeDetail extends Component {
 						max="1000.00"
 						step="0.01"
 						defaultValue={employee.employeeHourlyRate}
+					/>
+					</div>
+					<label className="control-label col-sm-2" htmlFor="userName">User Name:</label>
+					<div className="col-sm-2">
+					<p>{employee.userName}</p>
+					</div>
+					<label className="control-label col-sm-2" htmlFor="password">Password:</label>
+					<div className="col-sm-2">
+					<input
+						className="form-control"
+						id="password"
+						type="text"
+						ref="password"
+						placeholder="Password"
 					/>
 					</div>
 					

@@ -1,10 +1,26 @@
-import React, {Component} from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import LoginForm from './LoginForm.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-export default class HomePage extends Component {
 
-	setVar() {
-		Session.set('Meteor.loginButtons.dropdownVisible', true);
+export default class HomePage extends TrackerReact(React.Component) {
+	constructor() {
+		super();
+
 	}
+
+	loginUser(event) {
+		event.preventDevault();
+		let username = this.refs.username.value.trim();
+		let password = this.refs.password.value.trim();
+		console.log(username);
+		//Meteor.loginWithPassword(this.refs.user.value, this.refs.pass.value);
+	}
+
+	//setVar() {
+	//	Session.set('Meteor.loginButtons.dropdownVisible', true);
+	//}
 
 	inv(route) {
 		FlowRouter.go('/inventoryInput');
@@ -27,6 +43,19 @@ export default class HomePage extends Component {
 	}
 
 	render() {
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
+		}
+
 		return(
 		
 		<div className="row">

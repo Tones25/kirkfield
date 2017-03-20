@@ -97,7 +97,14 @@ export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 				startDate={this.state.startDate}
 				endDate={this.state.endDate}
 			/>
-			<PieChart data={this.mapJobItems()} width={width} height={height}/>
+			
+			<div className="row">
+				<div className="col-sm-6">
+					<h1>Total Invoices by Type:</h1>
+					<PieChart data={this.mapJobItems()} width={width} height={height}/>
+				</div>
+			</div>
+			
 			<div className="panel-body">
 				<ul className="resolutions">
 					{this.jobItems().map( (jobItems) => {

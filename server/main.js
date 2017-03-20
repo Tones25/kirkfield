@@ -33,8 +33,14 @@ Meteor.startup(() => {
 				employeeStartDate: new Date(yearRandom, monthRandom, dayRandom),
 				employeeExperience: (2017 - yearRandom) + Math.floor((Math.random() * 20)),
 				employeeHourlyRate: Math.floor((Math.random() * 3)  * 5) + 15,
+				userName: firstNameArray[i],
 				createdAt: new Date()
 			});
+			let id = Accounts.createUser({
+			password: '123456',
+			username: firstNameArray[i]
+		});
+			Roles.setUserRoles(id, ['user']);
 		}
 		
 		}

@@ -95,10 +95,10 @@ export default class EmployeeSummary extends TrackerReact(React.Component) {
 	
 	employeeEstimateJobs() {
 		let selectedJobTypes = this.state.selectedJobTypes;
-		console.log(this.state.employee);
-		console.log(this.state.startDate);
-		console.log(this.state.endDate);
-		console.log(Jobs.find({'installEmployee': this.state.employee}).fetch());
+		//console.log(this.state.employee);
+		//console.log(this.state.startDate);
+		//console.log(this.state.endDate);
+		//console.log(Jobs.find({'installEmployee': this.state.employee}).fetch());
 		return Jobs.find({
 			'estimateEmployee': parseInt(this.state.employee),
 			'date': {

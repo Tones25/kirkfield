@@ -17,9 +17,9 @@ export default class HomePage extends TrackerReact(React.Component) {
 		//Meteor.loginWithPassword(this.refs.user.value, this.refs.pass.value);
 	}
 
-	setVar() {
-		Session.set('Meteor.loginButtons.dropdownVisible', true);
-	}
+	//setVar() {
+	//	Session.set('Meteor.loginButtons.dropdownVisible', true);
+	//}
 
 	inv(route) {
 		FlowRouter.go('/inventoryInput');

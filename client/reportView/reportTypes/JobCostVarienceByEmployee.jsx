@@ -8,7 +8,12 @@ import JobSingle from '../../jobView/JobSingle.jsx';
 import {Employees} from './../../employeeView/EmployeeInputWrapper.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
 
-export default class JobsByEmployee extends TrackerReact(React.Component) {
+import SearchBox from '../../parameterInputComponents/SearchBox.jsx';
+import PositiveNegativeBarChart from '../chartTypes/positiveNegativeBarChart/PositiveNegativeBarChart.jsx';
+
+
+
+export default class JobCostVarienceByEmployee extends TrackerReact(React.Component) {
 
 	constructor(props) {
 		super(props);
@@ -23,10 +28,13 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 					this.push(j.jobTypeCode); },
 		jobTypes);
 
+		let today = new Date();
+		let oneMonthAgo = new Date();
+		oneMonthAgo.setDate(today.getDate() - 30);
 		this.state = {
-			startDate: new Date(),
-			endDate: new Date(),
-			employee: Employees.findOne()._id,
+			startDate: oneMonthAgo,
+			endDate: today,
+			employee: 1,
 			jobTypes: jobTypes,
 			selectedJobTypes: []
 		}
@@ -38,9 +46,7 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	}
 
 	handleEmployeeChange(employee) {
-		this.setState({
-			employee: employee,
-		});
+		this.setState({employee: parseInt(employee.value)})
 	}
 
 	handleStartDateChange(startDate) {
@@ -82,17 +88,61 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 	
 	jobItems() {
 		
-		let employeeNumber = Employees.findOne({"_id": this.state.employee}).employeeId;
+		let employeeNumber = Employees.findOne({"employeeId": this.state.employee}).employeeId;
 		let selectedJobTypes = this.state.selectedJobTypes;
 		
 		return Jobs.find({
-			"estimateEmployee": employeeNumber,
+			"installEmployee": employeeNumber,
 			"jobTypeCode": { $in: selectedJobTypes },
 			"date":{
 				$gte: this.state.startDate,
 				$lte: this.state.endDate
-			}
-		}).fetch();
+			}}, 
+			{sort: {date: 1}})
+		.fetch();
+	}
+
+
+
+
+
+	employees() {
+		return Employees.find().fetch();
+	}
+
+	currentEmployeeName() {
+		return Employees.findOne({employeeId: this.state.employee}).employeeFirstName;
+	}
+
+	mapData() {
+		let dataMap = [];
+
+
+		let jobs = Jobs.find({
+			"installEmployee": this.state.employee,
+			
+			"date":{
+				$gte: this.state.startDate,
+				$lte: this.state.endDate
+			}}, 
+			{sort: {date: 1}})
+		.fetch();
+
+
+		jobs.map( (d) => {
+				var date = d.date.getDate() + '/' + (d.date.getMonth() + 1)  + '/' + d.date.getFullYear();
+				var entry = {
+					date: date,
+					varience: d.installCost - d.estimateCost,
+					jobType: d.jobTypeCode,
+					invoice: d.invoice,
+					estimate: d.estimateCost,
+					actual: d.installCost
+				};
+				dataMap.push(entry);
+			});
+		console.log(dataMap);
+		return dataMap;
 	}
 
 	render() {
@@ -100,26 +150,35 @@ export default class JobsByEmployee extends TrackerReact(React.Component) {
 		let jobTypes = this.state.jobTypes;
 		return (
 			<div>
-			<Dropdown
-				onSelectionChange={this.handleEmployeeChange}
-				options={Employees.find().fetch()}
-			/>
-			<CheckboxGroup
-				onSelectionChange={this.handleJobTypesChange}
-				options={jobTypes}
-			/>
-			<DateInputRange 
-				onStartDateChange={this.handleStartDateChange}
-				onEndDateChange={this.handleEndDateChange}
-			/>
-			<div className="panel-body">
-				<ul className="resolutions">
-					{this.jobItems().map( (jobItems) => {
-						return <JobSingle key={jobItems._id} jobItem={jobItems} />
-					})}
-				</ul>
+			<div className="well well-sm">
+			<h2>Job Cost/Estimate Varience by Employee</h2>
+				<div className="form-group">
+						<label className="control-label col-sm-2">Employee: </label>
+						<div className="col-sm-4">
+						<SearchBox
+							options={this.employees()}
+							onSelectionChange={this.handleEmployeeChange}
+							inputElementListAttribute="selectEmployee"
+							inputElementRefAttribute="selectEmployee"
+							datalistElementIdAttribute="selectEmployee"
+							datalistElementKey="employeeId"
+							datalistElementValue="employeeFirstName"
+							placeholder="Employee"
+						/>
+						</div>
+					
+					<DateInputRange 
+						className="col-sm-4"
+						onStartDateChange={this.handleStartDateChange}
+						onEndDateChange={this.handleEndDateChange}
+					/>
+					
+					<PositiveNegativeBarChart  data={this.mapData()} currentEmployee={this.currentEmployeeName()}/>
+					</div>
+
+				
+				
 			</div>
-			
 			</div>
 			)
 	}

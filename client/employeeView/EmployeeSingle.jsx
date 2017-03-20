@@ -16,9 +16,7 @@ export default class EmployeeSingle extends Component {
 				
 				<ul className="list-group">
 					<li className="list-group-item">
-						<a href={`/employee/${this.props.employee._id}`}>
-							Employee Id: {this.props.employee.employeeId}
-						</a>
+						Employee Id: {this.props.employee.employeeId}
 					</li>
 					<li className="list-group-item">
 						First Name: {this.props.employee.employeeFirstName}
@@ -27,7 +25,7 @@ export default class EmployeeSingle extends Component {
 						Last Name: {this.props.employee.employeeLastName}
 					</li>
 					<li className="list-group-item">
-						Start Date: {this.props.employee.employeeStartDate.toString()}
+						Start Date: {this.props.employee.employeeStartDate.toDateString()}
 					</li>
 					<li className="list-group-item">
 						Experience: {this.props.employee.employeeExperience} Years

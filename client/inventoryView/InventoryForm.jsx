@@ -58,7 +58,7 @@ export default class InventoryForm extends Component {
 			<form className="form-horizontal" onSubmit={this.addInventoryItem.bind(this)}>
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="itemId">Item Id:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="itemId"
@@ -67,10 +67,9 @@ export default class InventoryForm extends Component {
 						defaultValue={parseInt(id.inventoryItemId)+1}
 					/>
 					</div>
-					</div>
-					<div className="form-group">
+					
 					<label className="control-label col-sm-2" htmlFor="itemName">Item Name:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="itemName"
@@ -80,34 +79,10 @@ export default class InventoryForm extends Component {
 					/>
 					</div>
 					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="itemPrice">Price: $</label>
-					<div className="col-sm-10">
-					<input 
-						className="form-control"
-						id="itemPrice"
-						type="number" 
-						ref="inventoryItemPrice"
-						step="0.01"
-						placeholder="Item Price"
-					/>
-					</div>
-					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="itemQuantity">Stock Quantity:</label>
-					<div className="col-sm-10">
-					<input 
-						className="form-control"
-						id="itemQuantity"
-						type="number" 
-						ref="inventoryItemQuantity"
-						placeholder="Item Quantity"
-					/>
-					</div>
-					</div>
+					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="itemMake">Make:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="itemMake"
@@ -116,10 +91,9 @@ export default class InventoryForm extends Component {
 						placeholder="Item Make"
 					/>
 					</div>
-					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="itemModel">Model#:</label>
-					<div className="col-sm-10">
+					
+					<label className="control-label col-sm-2" htmlFor="itemModel">Model Number:</label>
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="itemModel"
@@ -129,8 +103,22 @@ export default class InventoryForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="itemSerial">Serial#:</label>
+					<label className="control-label col-sm-2" htmlFor="itemModelName">Model Name:</label>
+					<div className="col-sm-10">
+					<input 
+						className="form-control"
+						id="itemModelName"
+						type="text" 
+						ref="inventoryItemModelName"
+						placeholder="Item Model Name"
+					/>
+					</div>
+					</div>
+					
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="itemSerial">Serial Number:</label>
 					<div className="col-sm-10">
 					<input 
 						className="form-control"
@@ -141,6 +129,46 @@ export default class InventoryForm extends Component {
 					/>
 					</div>
 					</div>
+					
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="itemCost">Cost ($):</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="itemCost"
+						type="number" 
+						ref="inventoryItemCost"
+						step="0.01"
+						placeholder="Item Cost"
+					/>
+					</div>
+					
+					<label className="control-label col-sm-2" htmlFor="itemPrice">Price ($):</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="itemPrice"
+						type="number" 
+						ref="inventoryItemPrice"
+						step="0.01"
+						placeholder="Item Price"
+					/>
+					</div>
+					</div>
+					
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="itemQuantity">Stock Quantity:</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="itemQuantity"
+						type="number" 
+						ref="inventoryItemQuantity"
+						placeholder="Item Quantity"
+					/>
+					</div>
+					</div>
+					
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>
 			)

@@ -33,9 +33,9 @@ class DataTable extends TrackerReact(React.Component) {
 					header={<Cell>Delete</Cell>}
 					cell={props => (
 						<Cell {...props}>
-							<button className="btn btn-danger"
+							<button className="btn btn-danger btn-block"
 								onClick={() => {this.deleteButton(props.rowIndex)}}>
-								<span className="glyphicon glyphicon-trash"></span> Delete
+								Delete <span className="glyphicon glyphicon-trash"></span> 
 							</button>
 						</Cell>
 						)}
@@ -51,9 +51,9 @@ class DataTable extends TrackerReact(React.Component) {
 					header={<Cell>Edit</Cell>}
 					cell={props => (
 						<Cell {...props}>
-							<button className="btn btn-warning"
+							<button className="btn btn-warning btn-block"
 								onClick={() => {this.editButton(props.rowIndex)}}>
-								<span className="glyphicon glyphicon-pencil"></span> Edit
+								Edit <span className="glyphicon glyphicon-pencil"></span> 
 							</button>
 						</Cell>
 						)}
@@ -70,11 +70,13 @@ class DataTable extends TrackerReact(React.Component) {
 						>
 						{this.props.columns.map( (col) => {
 							
-							return <Column
+							return <Column 
 									key={col}
-									header={<Cell>{this.props.columnNames[this.props.columns.indexOf(col)]}</Cell>}
+									header={<Cell className="text-center">
+												{this.props.columnNames[this.props.columns.indexOf(col)]}
+											</Cell>}
 									cell={props => (
-									<Cell {...props}>
+									<Cell className="text-center"{...props}>
 										{this.props.data[props.rowIndex][col]}
 									</Cell>
 									)}

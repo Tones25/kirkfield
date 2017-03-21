@@ -43,6 +43,16 @@ export default class EmployeeDetailWrapper extends TrackerReact(Component) {
 			</div>
 				)
 		}
+		if(!Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Access Denied</h1>
+				</div> 
+				
+			</div>
+				)
+		}
 		let employee = this.employee();
 
 		if(!employee) {

@@ -34,18 +34,20 @@ export default class EmployeeDetail extends Component {
 		let employeeExperience = this.refs.employeeExperience.value.trim();
 		let employeeHourlyRate = this.refs.employeeHourlyRate.value.trim();
 		
-		let password = this.refs.password.value.trim();
+		
 
 		Meteor.call('editEmployee', this.employee(), employeeFirstName, 
 				employeeLastName, employeeStartDate, employeeExperience, 
-				employeeHourlyRate, password, (error, data) => {
+				employeeHourlyRate, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			Bert.alert('Successfully updated Employee#' + this.employee().employeeId + '.', 'success', 'fixed-top', 'fa-smile-o');
+				Bert.alert('Successfully updated Employee#' + this.employee().employeeId + '.', 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
 	}
+
+	
 	
 	render() {
 		employee = this.employee();
@@ -53,7 +55,7 @@ export default class EmployeeDetail extends Component {
 			return (<div>Loading...</div>);
 		}
 		return(
-			
+			<div>
 			<form className="form-horizontal" onSubmit={this.editEmployee.bind(this)}>
 					
 					<div className="form-group">
@@ -125,21 +127,15 @@ export default class EmployeeDetail extends Component {
 					<div className="col-sm-2">
 					<p>{employee.userName}</p>
 					</div>
-					<label className="control-label col-sm-2" htmlFor="password">Password:</label>
-					<div className="col-sm-2">
-					<input
-						className="form-control"
-						id="password"
-						type="text"
-						ref="password"
-						placeholder="Password"
-					/>
-					</div>
+					
 					
 					</div>
+					
 					
 					<input type="submit" className="btn btn-primary pull-right" value="Save Changes"/>
 				</form>
+				
+					</div>
 			)
 	}
 }

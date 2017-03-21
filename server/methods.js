@@ -375,8 +375,7 @@ Meteor.methods({
 	},
 
 	editEmployee(employee, employeeFirstName, employeeLastName, 
-		employeeStartDate, employeeExperience, employeeHourlyRate,
-		userName, password) {
+		employeeStartDate, employeeExperience, employeeHourlyRate) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -400,15 +399,21 @@ Meteor.methods({
 				employeeExperience: employeeExperience,
 				employeeHourlyRate: employeeHourlyRate
 		}})
+	},
 
-		
-
-		Meteor.users.update({username: employee.userName},
-			{$set: {
-				username: userName,
-				password: password,
-		}}
-			)
+	resetEmployeePassword(employeeId) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Employees.findOne({_id: employeeId})
+		if(!entry) {
+			throw new Meteor.Error('Invalid id')
+		}
+		if(Meteor.isServer){
+			console.log(employeeId);
+			Accounts.setPassword(employeeId, 'password');
+			
+		}
 	},
 
 	deleteEmployee(employee) {

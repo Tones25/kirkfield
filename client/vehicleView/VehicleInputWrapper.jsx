@@ -69,6 +69,16 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 			</div>
 				)
 		}
+		if(!Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Access Denied</h1>
+				</div> 
+				
+			</div>
+				)
+		}
 		return(
 			<div className="row">
 				<div className="panel panel-primary">

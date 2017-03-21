@@ -49,9 +49,9 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 			{empName:{
 			$regex: this.state.search, "$options": "i",
 			}},
-			{invoice:{
-			$regex: this.state.search, "$options": "i",
-			}}]},
+			{invoice:
+			parseInt(this.state.search),
+			}]},
 			{sort: {complete: 1, date: 1}}
 		).fetch();
 	}

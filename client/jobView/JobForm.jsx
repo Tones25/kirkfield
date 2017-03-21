@@ -362,7 +362,7 @@ export default class JobForm extends Component {
 						{vehicles.map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
+										value={vehicles.vehicleId}
 										>
 										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>

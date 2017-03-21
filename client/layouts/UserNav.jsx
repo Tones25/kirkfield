@@ -14,8 +14,10 @@ export default class AdminNav extends Component {
 					<li><a href="/inventoryInput">Inventory</a></li>
 					<li><a href="/jobInput">Jobs</a></li>
 					<li><a href="/customers">Customers</a></li>
-					<li><AccountsUI /></li>
+					
+
 				</ul>
+
 				</div>
 				)
 	}

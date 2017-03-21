@@ -21,8 +21,9 @@ export default class AdminNav extends Component {
 					<li><a href="/admin">Admin</a></li>
 
 					
-					<li><AccountsUI /></li>
+					
 				</ul>
+				
 				</div>
 				)
 	}

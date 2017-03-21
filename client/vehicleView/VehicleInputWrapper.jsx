@@ -5,6 +5,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import VehicleForm from './VehicleForm.jsx';
 import VehicleSingle from './VehicleSingle.jsx';
 import DataTable from './../DataTable.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 export const Vehicles = new Mongo.Collection("vehicles");
 
@@ -56,8 +57,17 @@ export default class VehicleInputWrapper extends TrackerReact(React.Component) {
 	render() {
 		this.state.vehicles = this.vehicles();
 		let tableRowHeight = 50;
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
 		return(
 			<div className="row">

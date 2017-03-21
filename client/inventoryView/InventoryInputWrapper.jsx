@@ -6,6 +6,7 @@ import GetContainerDimensions from 'react-dimensions'
 import InventoryForm from './InventoryForm.jsx';
 import InventorySingle from './InventorySingle.jsx';
 import DataTable from './../DataTable.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 export const Inventory = new Mongo.Collection("inventory");
 
@@ -53,8 +54,17 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 	}
 	
 	render() {
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
 		this.state.recent = this.inventoryItems();
 		let tableRowHeight = 50;

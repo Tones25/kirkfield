@@ -5,6 +5,7 @@ import GetContainerDimensions from 'react-dimensions'
 
 import CustomerForm from './CustomerForm.jsx';
 import DataTable from './../DataTable.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 export const Customers = new Mongo.Collection("customers");
 
@@ -71,8 +72,17 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 	}
 	
 	render() {
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
 		this.state.recent = this.customers();
 		let tableRowHeight = 50;

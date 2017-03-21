@@ -4,6 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import EmployeeForm from './EmployeeForm.jsx';
 import EmployeeSingle from './EmployeeSingle.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 
 export const Employees = new Mongo.Collection("employees");
@@ -28,8 +29,17 @@ export default class EmployeeInputWrapper extends TrackerReact(React.Component) 
 	}
 
 	render() {
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
 		
 		return(

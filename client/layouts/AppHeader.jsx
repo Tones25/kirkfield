@@ -33,9 +33,10 @@ export default class AppHeader extends TrackerReact(React.Component) {
 			return(<UserNav />)
 		if(userRole == '')
 			return(
-				<ul className="nav navbar-nav">
-					<li><AccountsUI /></li>
-				</ul>
+				<div>
+				
+				
+				</div>
 				)
 		
 	}

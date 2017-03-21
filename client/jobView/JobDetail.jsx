@@ -225,13 +225,16 @@ export default class JobDetail extends TrackerReact(Component) {
 				
 					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
 					<div className="col-sm-3">
-					<input 
-						type="text"
+					<select
 						className="form-control"
 						id="jobTypeCode"
 						ref="jobTypeCode"
-						defaultValue={job.jobTypeCode}
-					/>
+						>
+							<option value="a">a</option>
+							<option value="b">b</option>
+							<option value="c">c</option>
+						
+					</select>
 					</div>
 			          <label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
 			          <div className="col-sm-1">

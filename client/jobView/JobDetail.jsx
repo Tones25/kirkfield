@@ -22,11 +22,17 @@ export default class JobDetail extends TrackerReact(Component) {
 				vehicles: Meteor.subscribe("allVehicles")
 			},
 			customer: 0,
+			estEmp: 0,
+			insEmp: 0,
+			vehId: 0,
 			installItems: []
 		};
 		this.changeCustomer = this.changeCustomer.bind(this);
 		this.changeInstallItem = this.changeInstallItem.bind(this);
 		this.changeInstallItemQuantity = this.changeInstallItemQuantity.bind(this);
+		this.changeEstEmp = this.changeEstEmp.bind(this);
+		this.changeInsEmp = this.changeInsEmp.bind(this);
+		this.changeVehicle = this.changeVehicle.bind(this);
 	}
 
 	componentWillMount() {
@@ -36,10 +42,16 @@ export default class JobDetail extends TrackerReact(Component) {
 			return;
 		}
 		let installations = job.installations;
-    let customer = job.customer;
+    	let customer = job.customer;
+    	let estEmp = job.estimateEmployee;
+    	let insEmp = job.installEmployee;
+    	let vehId = job.vehicleId;
 		if (installations.length > 0) {
 			this.setState({installItems: installations,
-                    customer: customer});
+                    customer: customer,
+                    estEmp: estEmp,
+                	insEmp: insEmp,
+                	vehId: vehId});
 			document.getElementById('installItem0').value=installations[0].item;
 		}
 	}
@@ -66,15 +78,7 @@ export default class JobDetail extends TrackerReact(Component) {
 
 	date() {
 		let job = this.job();
-		//console.log(job.date.getFullYear() + " " + job.date.getMonth() + " " + job.date.getDate());
-		/*let dateTokens = job.date.toString().split("-");
-
-		let dateYear = parseInt(dateTokens[0]);
-		let dateMonth = parseInt(dateTokens[1]) + 1; //BSON month is 0 based
-		let dateDay = parseInt(dateTokens[2]);
-		console.log(dateYear + " " + dateMonth + " " + dateDay);*/
 		newDate = new Date(parseInt(job.date.getFullYear()), parseInt(job.date.getMonth()), parseInt(job.date.getDate()));
-		//console.log(newDate);
 		return newDate.toISOString().substr(0,10);
 	}
 	
@@ -88,12 +92,9 @@ export default class JobDetail extends TrackerReact(Component) {
 	
 	addInstallItem() {
 
-		/*itemList += item._id + ",";
-		console.log(itemList);	*/
 		this.setState(function(prevState, props) {
 			let newInstallItems = prevState.installItems
 			newInstallItems.push({key: 'installItem' + newInstallItems.length});
-			//console.log(newInstallItems[0].value);
 			return {
 				installItems: newInstallItems
 			};
@@ -101,9 +102,20 @@ export default class JobDetail extends TrackerReact(Component) {
 	}
 
 	changeCustomer(customer) {
-		//console.output(document.getElementById("selCust").value);
 		this.setState({customer: customer.value});
 		console.log(this.state.customer);
+	}
+
+	changeEstEmp(employee) {
+		this.setState({estEmp: employee.value})		
+	}
+
+	changeInsEmp(employee) {
+		this.setState({insEmp: employee.value})	
+	}
+
+	changeVehicle(vehicle) {
+		this.setState({vehId: vehicle.value})	
 	}
 	
 	changeInstallItem(item) {
@@ -275,16 +287,19 @@ export default class JobDetail extends TrackerReact(Component) {
 					
 					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
 					<div className="col-sm-4">
+
 					<select
 						className="form-control"
 						id="estimateEmployee"
 						ref="estimateEmployee"
-						defaultValue={job.estimateEmployee}
+						value={this.state.estEmp}
+						onChange={this.changeEstEmp.bind(this)}
 					>
 						{this.employees().map( (employee) => {
 							return <option
 										key={employee._id}
 										value={employee.employeeId}
+
 									>
 									{employee.employeeFirstName}
 									</option>
@@ -316,7 +331,8 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="installEmployee"
 						ref="installEmployee"
-						defaultValue={job.installEmployee}
+						value={this.state.insEmp}
+						onChange={this.changeInsEmp.bind(this)}
 					>
 						{this.employees().map( (employee) => {
 							return <option
@@ -333,7 +349,7 @@ export default class JobDetail extends TrackerReact(Component) {
 					
 					{this.state.installItems.map( function(installItem) {
 						let formElementId = installItem.key;
-						console.log(formElementId.substr(11,12));
+						//console.log(formElementId.substr(11,12));
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
 									<div className="col-sm-3">
@@ -387,12 +403,13 @@ export default class JobDetail extends TrackerReact(Component) {
 						className="form-control"
 						id="vehicleId"
 						ref="vehicleId"
-						defaultValue={job.vehicleId}
+						value={this.state.vehId}
+						onChange={this.changeVehicle.bind(this)}
 					>
 						{this.vehicles().map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel} 
+										value={vehicles.vehicleId} 
 										>
 										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>

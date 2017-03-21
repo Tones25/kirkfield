@@ -95,7 +95,7 @@ export default class VehicleForm extends Component {
 					<input 
 						className="form-control"
 						id="vehicleId"
-						type="text" 
+						type="number" 
 						ref="vehicleId"
 						placeholder="Vehicle Id"
 						defaultValue={parseInt(id.vehicleId)+1}

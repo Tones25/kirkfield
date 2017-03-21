@@ -229,13 +229,16 @@ export default class JobForm extends Component {
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
 					<div className="col-sm-4">
-					<input 
-						type="text"
+					<select
 						className="form-control"
 						id="jobTypeCode"
 						ref="jobTypeCode"
-						placeholder="Job Type Code"
-					/>
+						>
+							<option value="a">a</option>
+							<option value="b">b</option>
+							<option value="c">c</option>
+						
+					</select>
 					</div>
 				</div>
 				

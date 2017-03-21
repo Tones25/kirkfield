@@ -184,13 +184,7 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 
 			
 			
-			<div className="panel-body">
-				<ul className="resolutions">
-					{this.jobItems().map( (jobItems) => {
-						return <JobSingle key={jobItems._id} jobItem={jobItems} />
-					})}
-				</ul>
-			</div>
+			
 			
 			</div>
 			)

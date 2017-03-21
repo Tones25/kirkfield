@@ -4,7 +4,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 import JobSingle from '../../jobView/JobSingle.jsx';
 import {Jobs} from './../../jobView/JobInputWrapper.jsx';
-import PieChart from '../chartTypes/PieChart.jsx';
+import PieChartVarient from '../chartTypes/PieChartVarient.jsx';
 
 
 export default class TotalInvoicesByType extends TrackerReact(React.Component) {
@@ -101,17 +101,11 @@ export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 			<div className="row">
 				<div className="col-sm-6">
 					<h1>Total Invoices by Type:</h1>
-					<PieChart data={this.mapJobItems()} width={width} height={height}/>
+					<PieChartVarient data={this.mapJobItems()} width={width} height={height}/>
 				</div>
 			</div>
 			
-			<div className="panel-body">
-				<ul className="resolutions">
-					{this.jobItems().map( (jobItems) => {
-						return <JobSingle key={jobItems._id} jobItem={jobItems} />
-					})}
-				</ul>
-			</div>
+			
 			
 			</div>
 			)

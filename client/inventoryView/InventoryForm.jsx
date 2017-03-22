@@ -9,6 +9,7 @@ export default class InventoryForm extends Component {
 		let inventoryItemId = this.refs.inventoryItemId.value.trim();
 		let inventoryItemName = this.refs.inventoryItemName.value.trim();
 		let unitPrice = this.refs.inventoryItemPrice.value.trim();
+		let cost = this.refs.inventoryItemCost.value.trim();
 		let inventoryItemQuantity = this.refs.inventoryItemQuantity.value.trim();
 		let make = this.refs.inventoryItemMake.value.trim();
 		let model = this.refs.inventoryItemModel.value.trim();
@@ -25,7 +26,8 @@ export default class InventoryForm extends Component {
 				validInput = false;
 			}
 		if (validInput) {
-			Meteor.call('addInventoryItem', inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum, (error, data) => {
+			Meteor.call('addInventoryItem', inventoryItemId, inventoryItemName,
+				cost, unitPrice, inventoryItemQuantity, make, model, serialNum, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -37,6 +39,7 @@ export default class InventoryForm extends Component {
 			this.refs.inventoryItemMake.value = "";
 			this.refs.inventoryItemModel.value = "";
 			this.refs.inventoryItemSerial.value = "";
+			this.refs.inventoryItemCost.value = "";
 			}
 		});
 		}}
@@ -62,7 +65,7 @@ export default class InventoryForm extends Component {
 					<input 
 						className="form-control"
 						id="itemId"
-						type="text" 
+						type="number" 
 						ref="inventoryItemId"
 						defaultValue={parseInt(id.inventoryItemId)+1}
 					/>
@@ -100,19 +103,6 @@ export default class InventoryForm extends Component {
 						type="text" 
 						ref="inventoryItemModel"
 						placeholder="Item Model"
-					/>
-					</div>
-					</div>
-					
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="itemModelName">Model Name:</label>
-					<div className="col-sm-10">
-					<input 
-						className="form-control"
-						id="itemModelName"
-						type="text" 
-						ref="inventoryItemModelName"
-						placeholder="Item Model Name"
 					/>
 					</div>
 					</div>

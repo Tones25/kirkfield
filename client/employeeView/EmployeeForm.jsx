@@ -39,6 +39,8 @@ export default class EmployeeForm extends Component {
 			this.refs.employeeStartDate.value = "";
 			this.refs.employeeExperience.value = "";
 			this.refs.employeeHourlyRate.value = "";
+			this.refs.userName.value = "";
+			this.refs.password.value = "";
 			}
 		});
 		}

@@ -107,6 +107,7 @@ Meteor.startup(() => {
 			Inventory.insert({
 				inventoryItemId: i,
 				inventoryItemName: 'Placeholder Item',
+				cost: costRandom,
 				unitPrice: costRandom,
 				inventoryItemQuantity: quantityRandom,
 				make: 'Plaecholder Make',

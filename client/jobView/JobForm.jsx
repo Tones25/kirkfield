@@ -155,6 +155,24 @@ export default class JobForm extends Component {
 		//document.getElementById("cForm").addCustomer();
 		
 	}
+
+	addVerified() {
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<div>
+				<label className="control-label col-sm-2" htmlFor="complete">Verified:</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="complete"
+						type="checkbox" 
+						ref="complete"
+					/>
+					</div>
+					</div>
+				)
+		}
+	}
 	
 	render() {
 		newId = Jobs.findOne(
@@ -210,16 +228,9 @@ export default class JobForm extends Component {
 						
 					</select>
 					</div>
+					{this.addVerified()}
 
-					<label className="control-label col-sm-2" htmlFor="complete">Completed:</label>
-					<div className="col-sm-4">
-					<input 
-						className="form-control"
-						id="complete"
-						type="checkbox" 
-						ref="complete"
-					/>
-					</div>
+					
 				</div>
 			</div>	
 				<div className="well">

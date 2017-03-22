@@ -9,7 +9,7 @@ import {Jobs} from './../jobView/JobInputWrapper.jsx';
 
 import SearchBox from './../parameterInputComponents/SearchBox.jsx';
 
-export default class JobDetail extends TrackerReact(Component) {
+export default class JobDetailForApproval extends TrackerReact(Component) {
 
 	constructor() {
 		super();
@@ -52,7 +52,7 @@ export default class JobDetail extends TrackerReact(Component) {
                     estEmp: estEmp,
                 	insEmp: insEmp,
                 	vehId: vehId});
-			document.getElementById('installItem0').value=installations[0].item;
+			//document.getElementById('installItem0').value=installations[0].item;
 		}
 	}
 	
@@ -448,7 +448,7 @@ export default class JobDetail extends TrackerReact(Component) {
 			          </div>
 					
 					<div className="col-sm-10">
-						<a className="btn btn-primary pull-right" href="/jobInput">
+						<a className="btn btn-primary pull-right" href="/reporting">
 							Back to Jobs<span className="glyphicon glyphicon-return"></span>
 						</a>
 					</div>

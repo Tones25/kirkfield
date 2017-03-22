@@ -30,6 +30,10 @@ export default class HomePage extends TrackerReact(React.Component) {
 		FlowRouter.go('/jobInput');
 	}
 
+	cus(route) {
+		FlowRouter.go('/customers');
+	}
+
 	veh(route) {
 		FlowRouter.go('/vehicleInput');
 	}
@@ -123,7 +127,7 @@ export default class HomePage extends TrackerReact(React.Component) {
 					transitionAppear={true}
 					transitionAppearTimeout={700}>	
 			<div className="col-sm-6">
-				<button onClick={this.rep.bind(this)}
+				<button onClick={this.cus.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-user"></span> Customers 

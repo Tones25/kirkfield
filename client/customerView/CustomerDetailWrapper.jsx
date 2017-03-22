@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import {Customers} from './CustomerInputWrapper';
 import CustomerDetail from './CustomerDetail';
+import LoginForm from '../LoginForm.jsx';
+
 
 
 export default class CustomerDetailWrapper extends TrackerReact(Component) {
@@ -29,6 +31,18 @@ export default class CustomerDetailWrapper extends TrackerReact(Component) {
 	}
 
 	render() {
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
+		}
 		let customer = this.customer();
 
 		if(!customer) {

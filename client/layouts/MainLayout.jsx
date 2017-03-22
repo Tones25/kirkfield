@@ -23,7 +23,7 @@ export const MainLayout = ({content}) => (
 	<div className="container">
 	<header>
 		<div className="row">
-		
+		<AccountsUI />
 		<nav className="navbar navbar-default text-center">
 			<div>
 				<div className="navbar-header">

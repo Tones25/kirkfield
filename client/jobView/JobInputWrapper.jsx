@@ -60,6 +60,38 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 		return Vehicles.find().fetch();
 	}
 
+	dataTableParams() {
+		let tableRowHeight = 50;
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
+						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
+						deleteButtons={true}
+						deleteFunction={'deleteJobItem'}
+						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/job/" + route._id);} }
+						data={this.jobItems()}
+					/>
+				)
+		}
+		if(Roles.userIsInRole(Meteor.user(), 'user')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
+						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
+						deleteButtons={false}
+						
+						editButtons={false}
+						
+						data={this.jobItems()}
+					/>
+				)
+		}
+	}
+
 	render() {
 		
 		if(!Meteor.userId()) {
@@ -74,7 +106,7 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 			</div>
 				)
 		}
-		let tableRowHeight = 50;
+		
 		return(
 		<div className="row">
 			<div className="panel panel-primary">
@@ -98,16 +130,7 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
-					<DataTable 
-						rowHeight={tableRowHeight}
-						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
-						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
-						deleteButtons={true}
-						deleteFunction={'deleteJobItem'}
-						editButtons={true}
-						editFunction={ function(route) {FlowRouter.go("/job/" + route._id);} }
-						data={this.jobItems()}
-					/>
+					{this.dataTableParams()}
 				</div>
 			</div>
 		</div>

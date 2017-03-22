@@ -52,6 +52,36 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 	recent() {
 		return Inventory.find();
 	}
+
+	dataTableParams() {
+		let tableRowHeight = 50;
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
+						deleteButtons={true}
+						deleteFunction={'deleteInventoryItem'}
+						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
+						data={this.inventoryItems()}
+					/>
+			)
+		}
+		if(Roles.userIsInRole(Meteor.user(), 'user')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
+						deleteButtons={false}
+						editButtons={false}
+						data={this.inventoryItems()}
+					/>
+			)
+		}
+	}
 	
 	render() {
 		if(!Meteor.userId()) {
@@ -93,16 +123,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 					onChange={this.handleSearchChange.bind(this)}
 					/>
 
-					<DataTable 
-						rowHeight={tableRowHeight}
-						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
-						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
-						deleteButtons={true}
-						deleteFunction={'deleteInventoryItem'}
-						editButtons={true}
-						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
-						data={this.inventoryItems()}
-					/>
+					{this.dataTableParams()}
 
 				</div>
 				</div>

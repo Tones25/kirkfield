@@ -35,15 +35,17 @@ export default class EmployeeSingle extends Component {
 					</li>
 				</ul>
 					
-				<div className="btn-group pull-right">
+				<div className="pull-right">
 					<button className="btn btn-warning"
+						style={{'marginRight': '5px'}}
 						onClick={this.editEmployee.bind(this)}>
-						<span className="glyphicon glyphicon-pencil"></span> Edit
+						Edit <span className="glyphicon glyphicon-pencil"></span> 
 					</button>
-
+					   
 					<button className="btn btn-danger"
+						style={{'marginLeft': '5px'}}
 						onClick={this.deleteEmployee.bind(this)}>
-						<span className="glyphicon glyphicon-trash"></span> Delete
+						Delete <span className="glyphicon glyphicon-trash"></span> 
 					</button>
 				</div>
 			</div>

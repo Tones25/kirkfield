@@ -200,19 +200,17 @@ export default class JobDetail extends TrackerReact(Component) {
 		}
 		return(
 			<div className="row">				
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
-						Back to Jobs<span className="glyphicon glyphicon-return"></span>
-				</button>
+				
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Invoice #{job.invoice}</h1>
+					<h1>Invoice Number {job.invoice}</h1>
 				</div>
 				<div className="panel-body">
 				<form className="form-horizontal" onSubmit={this.editJob.bind(this)}>
 				<div className="well well-sm">
 				<h3>Job</h3>
 				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
+					<label className="control-label col-sm-2" htmlFor="date">Date:</label>
 					<div className="col-sm-4">
 					<input 
 						type="date" 
@@ -236,8 +234,10 @@ export default class JobDetail extends TrackerReact(Component) {
 						
 					</select>
 					</div>
-			          <label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
-			          <div className="col-sm-1">
+					</div>
+					<div className="form-group">
+			          <label className="control-label col-sm-2" htmlFor="complete">Completed:</label>
+			          <div className="col-sm-4">
 			          <input 
 			            className="form-control"
 			            id="complete"
@@ -249,7 +249,7 @@ export default class JobDetail extends TrackerReact(Component) {
 			        </div>
 				</div>
 				
-				<div className="well well-sm">
+				<div className="well">
 				<h3>Customer</h3>
 				<div className="form-group" key="selCust">
 					<label className="control-label col-sm-2" htmlFor="selCust">Select Customer:</label>
@@ -270,7 +270,7 @@ export default class JobDetail extends TrackerReact(Component) {
 					</div>
 				</div>
 				
-				<div className="well well-sm">
+				<div className="well">
 				<h3>Estimate</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
@@ -396,6 +396,8 @@ export default class JobDetail extends TrackerReact(Component) {
 
 				</div>
 				
+				<div className="well">
+				<h3>Vehicle</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="vehicleId">Vehicle Id:</label>
 					<div className="col-sm-4">
@@ -429,11 +431,13 @@ export default class JobDetail extends TrackerReact(Component) {
 					/>
 					</div>
 				</div>
+				</div>
 			          <div className="form-group">
 			          <label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
 			          <div className="col-sm-5">
 			          <textarea 
 			            className="form-control"
+						style={{resize: 'none'}}
 			            id="comments"
 			            cols="40" rows="5" 
 			            ref="comments"
@@ -442,7 +446,15 @@ export default class JobDetail extends TrackerReact(Component) {
 			          
 			          </div>
 			          </div>
-					<input type="submit" className="btn btn-primary pull-right" value="Save changes"/>
+					
+					<div className="col-sm-10">
+						<button className="btn btn-primary pull-right" onClick={this.back.bind(this)}>
+							Back to Jobs<span className="glyphicon glyphicon-return"></span>
+						</button>
+					</div>
+					<div className="col-sm-2">
+					<input type="submit" className="btn btn-primary" value="Save changes"/>
+					</div>
 				</form>
 				</div>
 			</div>

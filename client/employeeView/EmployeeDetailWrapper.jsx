@@ -26,10 +26,6 @@ export default class EmployeeDetailWrapper extends TrackerReact(Component) {
 		return Employees.findOne(this.props.id);
 	}
 
-	back() {
-		FlowRouter.go("/employees");
-	}
-
 	render() {
 		if(!Meteor.userId()) {
 			return (
@@ -59,13 +55,10 @@ export default class EmployeeDetailWrapper extends TrackerReact(Component) {
 			return(<div>Loading...</div>)
 		}
 		return(
-			<div>			
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
-						Back to Employees<span className="glyphicon glyphicon-return"></span>
-				</button>
+			<div className="row">			
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>{employee.employeeFirstName} {employee.employeeLastName}&emsp;(Employee#{employee.employeeId})</h1>
+					<h1>Employee Id {employee.employeeId}</h1>
 				</div>
 				<div className="panel-body">
 					<EmployeeDetail  id={this.props.id}/>

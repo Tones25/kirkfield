@@ -15,43 +15,11 @@ export default class QualityServicePlans extends TrackerReact(React.Component) {
 
 	constructor(props) {
 		super(props);
-		
-		let today = new Date();
-		let lastWeek = new Date();
-		lastWeek.setDate(today.getDate() - 7);
-		
 		this.state = {
-			startDate: lastWeek,
-			endDate: today,
 			subscription: {
 				customers: Meteor.subscribe("allCustomers")
 			}
 		}
-
-		this.handleStartDateChange = this.handleStartDateChange.bind(this);
-		this.handleEndDateChange = this.handleEndDateChange.bind(this);
-	}
-	
-	handleStartDateChange(startDate) {
-		let dateTokens = startDate.split("-");
-		let dateYear = parseInt(dateTokens[0]);
-		let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
-		let dateDay = parseInt(dateTokens[2]);
-		let parsedDate = new Date(dateYear, dateMonth, dateDay);
-		this.setState({
-			startDate: parsedDate,
-		});
-	}
-
-	handleEndDateChange(endDate) {
-		let dateTokens = endDate.split("-");
-		let dateYear = parseInt(dateTokens[0]);
-		let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
-		let dateDay = parseInt(dateTokens[2]);
-		let parsedDate = new Date(dateYear, dateMonth, dateDay);
-		this.setState({
-			endDate: parsedDate,
-		});
 	}
 	
 	customersWithQsp() {

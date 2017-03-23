@@ -24,6 +24,7 @@ export default class InventoryDetail extends TrackerReact(Component) {
 		let item = this.inventory();
 		let inventoryItemName = this.refs.inventoryItemName.value.trim();
 		let unitPrice = this.refs.inventoryItemPrice.value.trim();
+		let cost = this.refs.inventoryItemCost.value.trim();
 		let inventoryItemQuantity = this.refs.inventoryItemQuantity.value.trim();
 		let make = this.refs.inventoryItemMake.value.trim();
 		let model = this.refs.inventoryItemModel.value.trim();
@@ -35,7 +36,8 @@ export default class InventoryDetail extends TrackerReact(Component) {
 			validInput = false;
 		}
 		if (validInput) {
-			Meteor.call('editInventoryItem', item, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum, (error, data) => {
+			Meteor.call('editInventoryItem', item, inventoryItemName, cost, unitPrice,
+				inventoryItemQuantity, make, model, serialNum, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
@@ -63,9 +65,9 @@ export default class InventoryDetail extends TrackerReact(Component) {
 		}
 		return(
 			<div>				
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
+				<a className="btn btn-primary" href="/inventoryInput">
 						Back to Inventory<span className="glyphicon glyphicon-return"></span>
-				</button>
+				</a>
 			<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>{item.inventoryItemName}&emsp;(Item#{item.inventoryItemId})</h1>
@@ -81,6 +83,19 @@ export default class InventoryDetail extends TrackerReact(Component) {
 						type="text" 
 						ref="inventoryItemName"
 						defaultValue={item.inventoryItemName}
+					/>
+					</div>
+					</div>
+					<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="inventoryItemCost">Cost: $</label>
+					<div className="col-sm-10">
+					<input 
+						className="form-control"
+						id="inventoryItemCost"
+						type="number" 
+						ref="inventoryItemCost"
+						step="0.01"
+						defaultValue={item.cost}
 					/>
 					</div>
 					</div>

@@ -25,7 +25,11 @@ export default class EmployeeDetail extends Component {
 		newDate = new Date(parseInt(employee.employeeStartDate.getFullYear()), parseInt(employee.employeeStartDate.getMonth()), parseInt(employee.employeeStartDate.getDate()));
 		return newDate.toISOString().substr(0,10);
 	}
-
+	
+	back() {
+		FlowRouter.go("/employees");
+	}
+	
 	editEmployee(event) {
 		event.preventDefault();
 		let employeeFirstName = this.refs.employeeFirstName.value.trim();
@@ -34,18 +38,20 @@ export default class EmployeeDetail extends Component {
 		let employeeExperience = this.refs.employeeExperience.value.trim();
 		let employeeHourlyRate = this.refs.employeeHourlyRate.value.trim();
 		
-		let password = this.refs.password.value.trim();
+		
 
 		Meteor.call('editEmployee', this.employee(), employeeFirstName, 
 				employeeLastName, employeeStartDate, employeeExperience, 
-				employeeHourlyRate, password, (error, data) => {
+				employeeHourlyRate, (error, data) => {
 			if(error) {
 				Bert.alert(error.error, 'danger', 'fixed-top', 'fa-frown-o');
 			} else {
-			Bert.alert('Successfully updated Employee#' + this.employee().employeeId + '.', 'success', 'fixed-top', 'fa-smile-o');
+				Bert.alert('Successfully updated Employee#' + this.employee().employeeId + '.', 'success', 'fixed-top', 'fa-smile-o');
 			}
 		});
 	}
+
+	
 	
 	render() {
 		employee = this.employee();
@@ -53,7 +59,6 @@ export default class EmployeeDetail extends Component {
 			return (<div>Loading...</div>);
 		}
 		return(
-			
 			<form className="form-horizontal" onSubmit={this.editEmployee.bind(this)}>
 					
 					<div className="form-group">
@@ -93,8 +98,8 @@ export default class EmployeeDetail extends Component {
 						defaultValue={this.date()}
 					/>
 					</div>
-					<label className="control-label col-sm-2" htmlFor="employeeExperience">Experience (Years):</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-3" htmlFor="employeeExperience">Experience (Years):</label>
+					<div className="col-sm-3">
 					<input
 						className="form-control"
 						id="employeeExperience"
@@ -107,8 +112,11 @@ export default class EmployeeDetail extends Component {
 						defaultValue={employee.employeeExperience}
 					/>
 					</div>
+					</div>
+					
+					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="employeeHourlyRate">Hourly Rate ($):</label>
-					<div className="col-sm-2">
+					<div className="col-sm-3">
 					<input
 						className="form-control"
 						id="employeeHourlyRate"
@@ -121,24 +129,20 @@ export default class EmployeeDetail extends Component {
 						defaultValue={employee.employeeHourlyRate}
 					/>
 					</div>
-					<label className="control-label col-sm-2" htmlFor="userName">User Name:</label>
-					<div className="col-sm-2">
-					<p>{employee.userName}</p>
-					</div>
-					<label className="control-label col-sm-2" htmlFor="password">Password:</label>
-					<div className="col-sm-2">
-					<input
-						className="form-control"
-						id="password"
-						type="text"
-						ref="password"
-						placeholder="Password"
-					/>
+
+					<label className="control-label col-sm-3" htmlFor="userName">
+						Username: {employee.userName}
+					</label>
 					</div>
 					
+					<div className="col-sm-10">
+						<button className="btn btn-primary pull-right" onClick={this.back.bind(this)}>
+							Back to Employees<span className="glyphicon glyphicon-return"></span>
+						</button>
 					</div>
-					
-					<input type="submit" className="btn btn-primary pull-right" value="Save Changes"/>
+					<div className="col-sm-2">
+						<input type="submit" className="btn btn-primary" value="Save Changes"/>
+					</div>
 				</form>
 			)
 	}

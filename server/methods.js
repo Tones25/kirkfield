@@ -15,35 +15,33 @@ Meteor.methods({
 		}
 	},
 
-	addInventoryItem(inventoryItemId, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
+	addInventoryItem(inventoryItemId, inventoryItemName, cost,
+		unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
 
 		entry = Inventory.findOne({inventoryItemId: inventoryItemId})
 		//update quantity if item exists, add new listing if not
-		if(entry) {
-			newQuantity = parseInt(entry.inventoryItemQuantity) + parseInt(inventoryItemQuantity)
-			Inventory.update(
-				{_id: entry._id},
-				{$set: {inventoryItemQuantity: newQuantity}}
-				)
-		} else {
-			Inventory.insert({
-				inventoryItemId: inventoryItemId,
-				inventoryItemName: inventoryItemName,
-				unitPrice: parseFloat(unitPrice),
-				inventoryItemQuantity: parseInt(inventoryItemQuantity),
-				make: make,
-				model: model,
-				serialNum: serialNum,
-				createdAt: new Date(),
-				user: Meteor.userId()
-			})
-		}
+		
+		if (entry) throw new Meteor.Error('Duplicate Item Id.');
+		if (!inventoryItemName) throw new Meteor.Error('Name required.');
+		Inventory.insert({
+			inventoryItemId: parseInt(inventoryItemId),
+			inventoryItemName: inventoryItemName,
+			cost: parseFloat(cost),
+			unitPrice: parseFloat(unitPrice),
+			inventoryItemQuantity: parseInt(inventoryItemQuantity),
+			make: make,
+			model: model,
+			serialNum: serialNum,
+			createdAt: new Date(),
+			user: Meteor.userId()
+		})
 	},
 
-	editInventoryItem(inventoryItem, inventoryItemName, unitPrice, inventoryItemQuantity, make, model, serialNum) {
+	editInventoryItem(inventoryItem, inventoryItemName, cost, 
+		unitPrice, inventoryItemQuantity, make, model, serialNum) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -53,8 +51,9 @@ Meteor.methods({
 				{_id: entry._id},
 				{$set: {
 					inventoryItemName: inventoryItemName,
-					unitPrice: unitPrice,
-					inventoryItemQuantity: inventoryItemQuantity,
+					cost: parseFloat(cost),
+					unitPrice: parseFloat(unitPrice),
+					inventoryItemQuantity: parseInt(inventoryItemQuantity),
 					make: make,
 					model: model,
 					serialNum: serialNum
@@ -82,11 +81,10 @@ Meteor.methods({
 			throw new Meteor.Error('You must be logged in.')
 		}
 			entry = Jobs.findOne({invoice: parseInt(invoice)})
-		if(entry) {
-			throw new Meteor.Error('Duplicate invoice')
-		}
+			if(entry) throw new Meteor.Error('Duplicate invoice');
 			cust = Customers.findOne({customerId: parseInt(customer)});
-			if (!cust) throw new Meteor.Error('Invalid Customer')
+			if (!date) throw new Meteor.Error('Date required.');
+			if (!cust) throw new Meteor.Error('Invalid Customer');
 			emp = Employees.findOne({employeeId: parseInt(installEmployee)});
 			if (!emp) throw new Meteor.Error('Invalid Employee')
 			let dateTokens = date.split("-");
@@ -244,10 +242,11 @@ Meteor.methods({
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
-		entry = Vehicles.findOne({vehicleId: parseInt(vehicleId)})
-		if(entry) {
-			throw new Meteor.Error('Duplicate id')
-		}
+			entry = Vehicles.findOne({vehicleId: vehicleId})
+			if(entry) throw new Meteor.Error('Duplicate id');
+			if (!licensePlate) throw new Meteor.Error('License plate required.');
+			if (!vehicleMake) throw new Meteor.Error('Make required.');
+			if (!vehicleModel) throw new Meteor.Error('Model required.');
 			emp = Employees.findOne({employeeId: parseInt(driver)});
 			if (!emp) throw new Meteor.Error('Invalid Employee')
 			let dateTokens = lastOil.split("-");
@@ -261,7 +260,7 @@ Meteor.methods({
 			let dateDay2 = parseInt(dateTokens2[2]);
 			let nOil =  new Date(dateYear2, dateMonth2, dateDay2);
 		Vehicles.insert({
-			vehicleId: vehicleId,
+			vehicleId: parseInt(vehicleId),
 			vehicleMake: vehicleMake,
 			vehicleModel: vehicleModel,
 			vehicleModelYear: vehicleModelYear,
@@ -341,6 +340,8 @@ Meteor.methods({
 
 		if (employeeFirstName.length<1) 
 			throw new Meteor.Error('Name cannot be blank.')
+		if (!userName) throw new Meteor.Error('Username required.')
+		if (!password) throw new Meteor.Error('Password required.')
 
 		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
 			if(Meteor.users.findOne({username: userName})) {
@@ -361,13 +362,13 @@ Meteor.methods({
 		let dateDay = parseInt(dateTokens[2]);
 
 		Employees.insert({
-			employeeId: employeeId,
+			employeeId: parseInt(employeeId),
 			employeeFirstName: employeeFirstName,
 			employeeLastName: employeeLastName,
 			employeeStartDate: new Date(dateYear, dateMonth, dateDay),
 			employeeEndDate: null,
-			employeeExperience: employeeExperience,
-			employeeHourlyRate: employeeHourlyRate,
+			employeeExperience: parseInt(employeeExperience),
+			employeeHourlyRate: parseFloat(employeeHourlyRate),
 			userName: userName,
 			createdAt: new Date(),
 			user: Meteor.userId()
@@ -375,8 +376,7 @@ Meteor.methods({
 	},
 
 	editEmployee(employee, employeeFirstName, employeeLastName, 
-		employeeStartDate, employeeExperience, employeeHourlyRate,
-		userName, password) {
+		employeeStartDate, employeeExperience, employeeHourlyRate) {
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
@@ -397,18 +397,24 @@ Meteor.methods({
 				employeeLastName: employeeLastName,
 				employeeStartDate: new Date(dateYear, dateMonth, dateDay),
 				employeeEndDate: null,
-				employeeExperience: employeeExperience,
-				employeeHourlyRate: employeeHourlyRate
+				employeeExperience: parseInt(employeeExperience),
+				employeeHourlyRate: parseFloat(employeeHourlyRate)
 		}})
+	},
 
-		
-
-		Meteor.users.update({username: employee.userName},
-			{$set: {
-				username: userName,
-				password: password,
-		}}
-			)
+	resetEmployeePassword(employeeId) {
+		if(!Meteor.userId()) {
+			throw new Meteor.Error('You must be logged in.')
+		}
+		entry = Employees.findOne({_id: employeeId})
+		if(!entry) {
+			throw new Meteor.Error('Invalid id')
+		}
+		if(Meteor.isServer){
+			console.log(employeeId);
+			Accounts.setPassword(employeeId, 'password');
+			
+		}
 	},
 
 	deleteEmployee(employee) {
@@ -428,6 +434,10 @@ Meteor.methods({
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
+		if (!contactName) throw new Meteor.Error('Name cannot be blank.');
+		if (!address) throw new Meteor.Error('Address cannot be blank.');
+		if (!(phone1 || phone2)) throw new Meteor.Error('Phone number required.');
+		if (!email) throw new Meteor.Error('E-mail required.');
 			let dateTokens = nextService.split("-");
 			let dateYear = parseInt(dateTokens[0]);
 			let dateMonth = parseInt(dateTokens[1]) - 1; //BSON month is 0 based
@@ -435,7 +445,7 @@ Meteor.methods({
 
 
 		Customers.insert({
-				customerId: customerId,
+				customerId: parseInt(customerId),
 				contactName: contactName,
 				address: address,
 				billableOwner: billableOwner,

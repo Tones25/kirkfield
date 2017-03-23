@@ -155,6 +155,24 @@ export default class JobForm extends Component {
 		//document.getElementById("cForm").addCustomer();
 		
 	}
+
+	addVerified() {
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<div>
+				<label className="control-label col-sm-2" htmlFor="complete">Verified:</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="complete"
+						type="checkbox" 
+						ref="complete"
+					/>
+					</div>
+					</div>
+				)
+		}
+	}
 	
 	render() {
 		newId = Jobs.findOne(
@@ -169,9 +187,11 @@ export default class JobForm extends Component {
 		}
 		return(
 			<form className="form-horizontal" onSubmit={this.addJob.bind(this)}>
+			<div className="well">
+				<h3>Job</h3>
 				<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Invoice Number:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						type="number" 
 						className="form-control"
@@ -181,11 +201,9 @@ export default class JobForm extends Component {
 						placeholder="Invoice"
 					/>
 					</div>
-				</div>
-
-				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="invoiceNumber">Date:</label>
-					<div className="col-sm-8">
+				
+					<label className="control-label col-sm-2" htmlFor="date">Date:</label>
+					<div className="col-sm-4">
 
 					<input 
 						type="date" 
@@ -195,18 +213,27 @@ export default class JobForm extends Component {
 						placeholder="Date"
 					/>
 					</div>
-					<label className="control-label col-sm-1" htmlFor="complete">Completed:</label>
-					<div className="col-sm-1">
-					<input 
-						className="form-control"
-						id="complete"
-						type="checkbox" 
-						ref="complete"
-					/>
-					</div>
 				</div>
-				
-				<div className="well well-sm">
+				<div className="form-group">
+					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
+					<div className="col-sm-4">
+					<select
+						className="form-control"
+						id="jobTypeCode"
+						ref="jobTypeCode"
+						>
+							<option value="a">a</option>
+							<option value="b">b</option>
+							<option value="c">c</option>
+						
+					</select>
+					</div>
+					{this.addVerified()}
+
+					
+				</div>
+			</div>	
+				<div className="well">
 				<h3>Customer</h3>
 				<div className="form-group" key="selCust">
 					<label className="control-label col-sm-2" htmlFor="selCust">Select Customer:</label>
@@ -219,29 +246,16 @@ export default class JobForm extends Component {
 							datalistElementIdAttribute="selCust"
 							datalistElementKey={'customerId'}
 							datalistElementValue={'contactName'}
-							placeholder={"Customer ID#"}
+							placeholder={"Customer Id Number"}
 						/>
 						
 					</div>
 					</div>
 				</div>
-				
+			<div className="well">
+				<h3>Estimate</h3>
 				<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="jobTypeCode">Job Type Code:</label>
-					<div className="col-sm-4">
-					<input 
-						type="text"
-						className="form-control"
-						id="jobTypeCode"
-						ref="jobTypeCode"
-						placeholder="Job Type Code"
-					/>
-					</div>
-				</div>
-				
-				
-				<div className="form-group">
-					<label className="control-label col-sm-3" htmlFor="estimateCost">Estimate Cost:</label>
+					<label className="control-label col-sm-2" htmlFor="estimateCost">Estimate Cost:</label>
 					<div className="col-sm-3">
 					<input 
 						type="number"
@@ -254,7 +268,7 @@ export default class JobForm extends Component {
 					</div>
 					
 					<label className="control-label col-sm-3" htmlFor="estimateEmployee">Estimate Employee:</label>
-					<div className="col-sm-3">
+					<div className="col-sm-4">
 					<select
 						className="form-control"
 						id="estimateEmployee"
@@ -271,12 +285,12 @@ export default class JobForm extends Component {
 					</select>
 					</div>
 				</div>
-				
+			</div>	
 				<div className="well">
 				<h3>Install</h3>
 				
 					<div className="form-group">
-					<label className="control-label col-sm-3" htmlFor="installCost">Install Cost:</label>
+					<label className="control-label col-sm-2" htmlFor="installCost">Install Cost:</label>
 					<div className="col-sm-3">
 					<input 
 						type="number"
@@ -311,7 +325,7 @@ export default class JobForm extends Component {
 						let formElementId = installItem.key;
 						return 	<div className="form-group" key={formElementId}>
 									<label className="control-label col-sm-2" htmlFor={formElementId + 'name'}>Install Item:</label>
-									<div className="col-sm-4">
+									<div className="col-sm-3">
 										<SearchBox
 											options={this.inventoryItems()}
 											onSelectionChange={this.changeInstallItem}
@@ -326,7 +340,7 @@ export default class JobForm extends Component {
 									</div>
 									
 									<label 
-										className="control-label col-sm-2"
+										className="control-label col-sm-3"
 										htmlFor={formElementId + 'quantity'}>
 										Install Item Quantity:
 									</label>
@@ -362,7 +376,7 @@ export default class JobForm extends Component {
 						{vehicles.map( (vehicles) => {
 							return <option 
 										key={vehicles._id} 
-										value={vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
+										value={vehicles.vehicleId}
 										>
 										{vehicles.vehicleModelYear + ' ' + vehicles.vehicleMake + ' ' + vehicles.vehicleModel}
 									</option>
@@ -387,6 +401,7 @@ export default class JobForm extends Component {
 					<div className="col-sm-5">
 					<textarea 
 						className="form-control"
+						style={{resize: 'none'}}
 						id="comments"
 						cols="40" rows="5" 
 						ref="comments"

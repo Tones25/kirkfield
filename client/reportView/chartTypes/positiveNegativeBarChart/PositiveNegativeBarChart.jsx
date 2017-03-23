@@ -6,7 +6,6 @@ import styles from './styles.css';
 export default class PositiveNegativeBarChart extends Component {
 
 	componentDidMount() {		
-	  	
 	  		  		
 	  	this.updateChart(this.props);
   	}
@@ -17,15 +16,13 @@ export default class PositiveNegativeBarChart extends Component {
 
   	}
 
-  	
-
 	updateChart(props) {	
-		console.log(props.data);
+		
 		var dataset = props.data;
 		
 		//Set width and height as fixed variables
-		var w = 520;
-		var h = 500;
+		var w = 780;
+		var h = 750;
 		var padding = 25;
 
 		//Scale function for axes and radius
@@ -120,8 +117,6 @@ export default class PositiveNegativeBarChart extends Component {
 						.text("Varience: $" + d.varience.toFixed(2));
 
 
-
-
 						})
         				.on('mouseout', function(d){
         					d3.select(this)
@@ -132,21 +127,12 @@ export default class PositiveNegativeBarChart extends Component {
 	    						.style("opacity", 0);
         				});
 
-
-        
-
-
         
 		//Add y-axis
 		svg.append("g")
 				.attr("class", "y axis")
 				.attr("transform", "translate(40,0)")
 				.call(yAxis);
-
-		
-		
-
-		
 		
 	}
 	
@@ -158,6 +144,7 @@ export default class PositiveNegativeBarChart extends Component {
         return (
         	<div>
         		<h1>Job Cost Differences For {this.props.currentEmployee}</h1>
+        		<h3></h3>
 	        	<div id="chart-container" >
 
 	        	</div>           

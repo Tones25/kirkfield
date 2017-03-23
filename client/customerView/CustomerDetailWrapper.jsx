@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import {Customers} from './CustomerInputWrapper';
 import CustomerDetail from './CustomerDetail';
+import LoginForm from '../LoginForm.jsx';
+
 
 
 export default class CustomerDetailWrapper extends TrackerReact(Component) {
@@ -24,30 +26,37 @@ export default class CustomerDetailWrapper extends TrackerReact(Component) {
 		return Customers.findOne(this.props.id);
 	}
 
-	back() {
-		FlowRouter.go("/customers");
-	}
+	
 
 	render() {
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
+		}
 		let customer = this.customer();
 
 		if(!customer) {
 			return(<div>Loading...</div>)
 		}
 		return(
-			<div>			
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
-						Back to Customers<span className="glyphicon glyphicon-return"></span>
-				</button>
+		<div className="row">
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>{customer.contactName}&emsp;(Customer#{customer.customerId})</h1>
+					<h1>Customer Id {customer.customerId}</h1>
 				</div>
 				<div className="panel-body">
 					<CustomerDetail  id={this.props.id}/>
 				</div>
 			</div>
-			</div>
+		</div>
 			)
 	}
 }

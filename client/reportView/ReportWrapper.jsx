@@ -7,6 +7,8 @@ import ReportA from './reportTypes/ReportA';
 import JobCostVarienceByEmployee from './reportTypes/JobCostVarienceByEmployee.jsx';
 import EmployeeSummary from './reportTypes/EmployeeSummary.jsx';
 import TotalInvoicesByType from './reportTypes/TotalInvoicesByType.jsx';
+import JobsPendingApproval from './reportTypes/JobsPendingApproval.jsx'
+import LoginForm from '../LoginForm.jsx';
 
 
 
@@ -16,7 +18,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		super();
 
 		this.state = {
-			value: 'EmployeeSummary',
+			value: 'JobsPendingApproval',
 			subscription: {
 				jobs: Meteor.subscribe("allJobs"),
 				employees: Meteor.subscribe("allEmployees")
@@ -55,6 +57,8 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 			return(<EmployeeSummary/>)
 		if(reportType == 'TotalInvoicesByType')
 			return(<TotalInvoicesByType/>)
+		if(reportType == 'JobsPendingApproval')
+			return(<JobsPendingApproval/>)
 		
 	}
 
@@ -62,8 +66,27 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 
 	render() {
 		
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
+		}
+		if(!Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Access Denied</h1>
+				</div> 
+				
+			</div>
+				)
 		}
 		return(
 			<div className="row">
@@ -80,10 +103,13 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 						id="chooseReport" 
 						value={this.state.value} 
 						onChange={this.handleChange}>
+							<option value="JobsPendingApproval"> Jobs Pending Approval</option>
 							<option value="EmployeeSummary">Employee Summary</option>
 							<option value="NumberOfInvoicesReport">Number Of Inovices</option>
 							<option value="JobCostVarienceByEmployee">Job Cost Varience By Employee</option>
 							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
+							
+							
 					</select>	
 					</div>
 					</h3>

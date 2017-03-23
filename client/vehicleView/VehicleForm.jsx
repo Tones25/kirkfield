@@ -88,22 +88,33 @@ export default class VehicleForm extends Component {
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addVehicle.bind(this)}>
+			
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="vehicleId">Vehicle Id:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="vehicleId"
-						type="text" 
+						type="number" 
 						ref="vehicleId"
 						placeholder="Vehicle Id"
 						defaultValue={parseInt(id.vehicleId)+1}
 					/>
 					</div>
+					
+					<label className="control-label col-sm-2" htmlFor="licensePlate">License Plate:</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="licensePlate"
+						type="text" 
+						ref="licensePlate"
+						placeholder="License Plate"
+					/>
+					</div>
 					</div>
 					
 					<div className="form-group">
-					
 					<label className="control-label col-sm-2" htmlFor="vehicleMake">Make:</label>
 					<div className="col-sm-2">
 					<input 
@@ -115,8 +126,8 @@ export default class VehicleForm extends Component {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="vehicleModel">Model:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-1" htmlFor="vehicleModel">Model:</label>
+					<div className="col-sm-3">
 					<input 
 						className="form-control"
 						id="vehicleModel"
@@ -137,22 +148,9 @@ export default class VehicleForm extends Component {
 						defaultValue={new Date().getFullYear()}
 					/>
 					</div>
-					
 					</div>
 					
 					<div className="form-group">
-					
-					<label className="control-label col-sm-2" htmlFor="licensePlate">License Plate:</label>
-					<div className="col-sm-2">
-					<input 
-						className="form-control"
-						id="licensePlate"
-						type="text" 
-						ref="licensePlate"
-						placeholder="License Plate"
-					/>
-					</div>
-					
 					<label className="control-label col-sm-2" htmlFor="vehicleColor">Color:</label>
 					<div className="col-sm-2">
 					<input
@@ -219,6 +217,7 @@ export default class VehicleForm extends Component {
 					<div className="col-sm-5">
 					<textarea 
 						className="form-control"
+						style={{resize: 'none'}}
 						id="repairHist"
 						cols="40" rows="5" 
 						ref="repairHist"

@@ -8,6 +8,7 @@ import JobSingle from './JobSingle.jsx';
 import {Vehicles} from './../vehicleView/VehicleInputWrapper.jsx';
 import {Customers} from './../customerView/CustomerInputWrapper.jsx';
 import DataTable from './../DataTable.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 export const Jobs = new Mongo.Collection("jobs");
 
@@ -49,9 +50,8 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 			{empName:{
 			$regex: this.state.search, "$options": "i",
 			}},
-			{invoice:{
-			$regex: this.state.search, "$options": "i",
-			}}]},
+			{invoice:parseInt(this.state.search)
+			}]},
 			{sort: {complete: 1, date: 1}}
 		).fetch();
 	}
@@ -60,12 +60,53 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 		return Vehicles.find().fetch();
 	}
 
+	dataTableParams() {
+		let tableRowHeight = 50;
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
+						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
+						deleteButtons={true}
+						deleteFunction={'deleteJobItem'}
+						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/job/" + route._id);} }
+						data={this.jobItems()}
+					/>
+				)
+		}
+		if(Roles.userIsInRole(Meteor.user(), 'user')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
+						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
+						deleteButtons={false}
+						
+						editButtons={false}
+						
+						data={this.jobItems()}
+					/>
+				)
+		}
+	}
+
 	render() {
 		
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
-		let tableRowHeight = 50;
+		
 		return(
 		<div className="row">
 			<div className="panel panel-primary">
@@ -89,16 +130,7 @@ export default class JobInputWrapper extends TrackerReact(React.Component) {
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
-					<DataTable 
-						rowHeight={tableRowHeight}
-						columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}
-						columnNames={['Invoice#', 'Customer', 'Address', 'Charge ($)', 'Employee']}
-						deleteButtons={true}
-						deleteFunction={'deleteJobItem'}
-						editButtons={true}
-						editFunction={ function(route) {FlowRouter.go("/job/" + route._id);} }
-						data={this.jobItems()}
-					/>
+					{this.dataTableParams()}
 				</div>
 			</div>
 		</div>

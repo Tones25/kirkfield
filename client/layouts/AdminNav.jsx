@@ -18,11 +18,12 @@ export default class AdminNav extends Component {
 					<li><a href="/employees">Employees</a></li>
 					<li><a href="/customers">Customers</a></li>
 					<li><a href="/reporting">Reporting</a></li>
-					<li><a href="/admin">Admin</a></li>
+					
 
 					
-					<li><AccountsUI /></li>
+					
 				</ul>
+				
 				</div>
 				)
 	}

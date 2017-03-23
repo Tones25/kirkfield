@@ -60,9 +60,10 @@ export default class CustomerForm extends Component {
 		return(
 			
 			<form className="form-horizontal" onSubmit={this.addCustomer.bind(this)}>
+			
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="customerId">Customer Id#:</label>
-					<div className="col-sm-10">
+					<label className="control-label col-sm-2" htmlFor="customerId">Customer Id:</label>
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="itemId"
@@ -72,9 +73,10 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="contactName">Contact Name:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="contactName"
@@ -82,11 +84,10 @@ export default class CustomerForm extends Component {
 						ref="contactName"
 						placeholder="Name"
 					/>
-					</div>
-					</div>
-					<div className="form-group">
+					</div>				
+					
 					<label className="control-label col-sm-2" htmlFor="address">Address:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="address"
@@ -96,9 +97,10 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="billableOwner">Billable Owner:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="billableOwner"
@@ -107,10 +109,8 @@ export default class CustomerForm extends Component {
 						placeholder="Owner Name"
 					/>
 					</div>
-					</div>
-					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="billableAddress">Billable Address:</label>
-					<div className="col-sm-10">
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="billableAddress"
@@ -120,9 +120,10 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="phone1">Home Phone#:</label>
-					<div className="col-sm-10">
+					<label className="control-label col-sm-2" htmlFor="phone1">Home Phone Number:</label>
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="phone1"
@@ -131,10 +132,9 @@ export default class CustomerForm extends Component {
 						placeholder="Phone Number"
 					/>
 					</div>
-					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="phone2">Work Phone#:</label>
-					<div className="col-sm-10">
+					
+					<label className="control-label col-sm-2" htmlFor="phone2">Work Phone Number:</label>
+					<div className="col-sm-4">
 					<input 
 						className="form-control"
 						id="phone2"
@@ -144,6 +144,7 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="phone2">Email Address:</label>
 					<div className="col-sm-10">
@@ -156,8 +157,19 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="qsp">Has Quality Service Plan:</label>
+					<label className="control-label col-sm-2" htmlFor="nextService">Next Service:</label>
+					<div className="col-sm-4">
+					<input 
+						type="date" 
+						className="form-control"
+						id="nextService"
+						ref="nextService"
+					/>
+					</div>
+					
+					<label className="control-label col-sm-3" htmlFor="qsp">Has Quality Service Plan:</label>
 					<div className="col-sm-1">
 					<input 
 						className="form-control"
@@ -167,11 +179,13 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
+					
 					<div className="form-group">
 					<label className="control-label col-sm-2" htmlFor="comments">Additional Comments:</label>
 					<div className="col-sm-10">
 					<textarea
 						className="form-control"
+						style={{resize: 'none'}}
 						id="comments"
 						cols="40" rows="5" 
 						ref="comments"
@@ -179,17 +193,7 @@ export default class CustomerForm extends Component {
 					/>
 					</div>
 					</div>
-					<div className="form-group">
-					<label className="control-label col-sm-2" htmlFor="nextService">Next Service:</label>
-					<div className="col-sm-10">
-					<input 
-						type="date" 
-						className="form-control"
-						id="nextService"
-						ref="nextService"
-					/>
-					</div>
-					</div>
+					
 					<input type="submit" className="btn btn-primary pull-right"/>
 				</form>
 			)			

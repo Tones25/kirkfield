@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import LoginForm from './LoginForm.jsx';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 export default class HomePage extends TrackerReact(React.Component) {
 	constructor() {
@@ -27,6 +28,10 @@ export default class HomePage extends TrackerReact(React.Component) {
 
 	job(route) {
 		FlowRouter.go('/jobInput');
+	}
+
+	cus(route) {
+		FlowRouter.go('/customers');
 	}
 
 	veh(route) {
@@ -56,8 +61,14 @@ export default class HomePage extends TrackerReact(React.Component) {
 		}
 
 		return(
+		
 		<div className="row">
-
+		<ReactCSSTransitionGroup
+					transitionName="inventoryButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={500}>
 			<div className="col-sm-6">
 				<button onClick={this.inv.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -65,6 +76,13 @@ export default class HomePage extends TrackerReact(React.Component) {
 				<span className="glyphicon glyphicon-shopping-cart"></span> Inventory
 				</button>
 			</div>
+		</ReactCSSTransitionGroup>
+		<ReactCSSTransitionGroup
+					transitionName="jobsButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={500}>
 			<div className="col-sm-6">
 				<button onClick={this.job.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -72,7 +90,14 @@ export default class HomePage extends TrackerReact(React.Component) {
 				<span className="glyphicon glyphicon-briefcase"></span> Jobs
 				</button>
 			</div>
-			
+		</ReactCSSTransitionGroup>
+		
+		<ReactCSSTransitionGroup
+					transitionName="vehiclesButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={600}>
 			<div className="col-sm-6">
 				<button onClick={this.veh.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -80,6 +105,13 @@ export default class HomePage extends TrackerReact(React.Component) {
 				<span className="glyphicon glyphicon-road"></span> Vehicles
 				</button>
 			</div>
+		</ReactCSSTransitionGroup>
+		<ReactCSSTransitionGroup
+					transitionName="employeesButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={600}>
 			<div className="col-sm-6">
 				<button onClick={this.emp.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
@@ -87,15 +119,35 @@ export default class HomePage extends TrackerReact(React.Component) {
 				<span className="glyphicon glyphicon-user"></span> Employees
 				</button>
 			</div>
-			
-			<div className="col-sm-12">
+		</ReactCSSTransitionGroup>
+		<ReactCSSTransitionGroup
+					transitionName="customersButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={700}>	
+			<div className="col-sm-6">
+				<button onClick={this.cus.bind(this)}
+						className="btn btn-primary btn-lg btn-block homePageButtons"
+				>
+				<span className="glyphicon glyphicon-user"></span> Customers 
+				</button>
+			</div>
+		</ReactCSSTransitionGroup>
+		<ReactCSSTransitionGroup
+					transitionName="reportsButton"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+					transitionAppear={true}
+					transitionAppearTimeout={700}>	
+			<div className="col-sm-6">
 				<button onClick={this.rep.bind(this)}
 						className="btn btn-primary btn-lg btn-block homePageButtons"
 				>
 				<span className="glyphicon glyphicon-th-list"></span> Reports 
 				</button>
 			</div>
-
+		</ReactCSSTransitionGroup>
 		</div>
 		)
 	}

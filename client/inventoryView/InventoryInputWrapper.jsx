@@ -6,6 +6,7 @@ import GetContainerDimensions from 'react-dimensions'
 import InventoryForm from './InventoryForm.jsx';
 import InventorySingle from './InventorySingle.jsx';
 import DataTable from './../DataTable.jsx';
+import LoginForm from '../LoginForm.jsx';
 
 export const Inventory = new Mongo.Collection("inventory");
 
@@ -51,10 +52,49 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 	recent() {
 		return Inventory.find();
 	}
+
+	dataTableParams() {
+		let tableRowHeight = 50;
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
+						deleteButtons={true}
+						deleteFunction={'deleteInventoryItem'}
+						editButtons={true}
+						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
+						data={this.inventoryItems()}
+					/>
+			)
+		}
+		if(Roles.userIsInRole(Meteor.user(), 'user')) {
+			return (
+				<DataTable 
+						rowHeight={tableRowHeight}
+						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
+						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
+						deleteButtons={false}
+						editButtons={false}
+						data={this.inventoryItems()}
+					/>
+			)
+		}
+	}
 	
 	render() {
-		if (!Meteor.userId()) {
-			return (<h1>You must be logged in.</h1>)
+		if(!Meteor.userId()) {
+			return (
+			<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Please Log In</h1>
+				</div> 
+				<div className="panel-body">
+					<LoginForm/>
+				</div>
+			</div>
+				)
 		}
 		this.state.recent = this.inventoryItems();
 		let tableRowHeight = 50;
@@ -73,7 +113,7 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 				<div className="panel-heading">
 					<h1>Inventory Listing</h1>
 				</div>
-				<div className="panel-body">		
+				<div className="panel-body">
 					<input 
 						type="text" 
 						className="form-control"
@@ -82,16 +122,9 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
-					<DataTable 
-						rowHeight={tableRowHeight}
-						columns={['inventoryItemId', 'inventoryItemName', 'unitPrice', 'inventoryItemQuantity', 'serialNum']}
-						columnNames={['Item Id', 'Item Name', 'Price', 'Quantity', 'Serial#']}
-						deleteButtons={true}
-						deleteFunction={'deleteInventoryItem'}
-						editButtons={true}
-						editFunction={ function(route) {FlowRouter.go("/inventory/" + route._id);} }
-						data={this.inventoryItems()}
-					/>
+
+					{this.dataTableParams()}
+
 				</div>
 				</div>
 			</div>

@@ -4,14 +4,14 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import Dimensions from 'react-dimensions'
 import {Table, Column, Cell} from 'fixed-data-table';
 
-class DataTable extends TrackerReact(React.Component) {
+class DataTableForverify extends TrackerReact(React.Component) {
 	
 	deleteButton(rowIndex) {
 		Meteor.call(this.props.deleteFunction, this.props.data[rowIndex]);
 	}
 	
-	editButton(rowIndex) {
-		this.props.editFunction(this.props.data[rowIndex]);
+	verifyButton(rowIndex) {
+		this.props.verifyFunction(this.props.data[rowIndex]);
 	}
 	
 	render() {
@@ -19,7 +19,7 @@ class DataTable extends TrackerReact(React.Component) {
 		if (this.props.deleteButtons) {
 			columnCount++;
 		}
-		if (this.props.editButtons) {
+		if (this.props.verifyButtons) {
 			columnCount++;
 		}
 		
@@ -43,17 +43,17 @@ class DataTable extends TrackerReact(React.Component) {
 				/>;
 		}
 		
-		let editButtonColumn = null;
-		if (this.props.editButtons) {
-			editButtonColumn = 
+		let verifyButtonColumn = null;
+		if (this.props.verifyButtons) {
+			verifyButtonColumn = 
 				<Column
-					key={"editButtons"}
-					header={<Cell className="text-center">Edit</Cell>}
+					key={"verifyButtons"}
+					header={<Cell className="text-center">Verify</Cell>}
 					cell={props => (
 						<Cell {...props}>
 							<button className="btn btn-warning btn-block"
-								onClick={() => {this.editButton(props.rowIndex)}}>
-								Edit <span className="glyphicon glyphicon-pencil"></span> 
+								onClick={() => {this.verifyButton(props.rowIndex)}}>
+								Verify <span className="glyphicon glyphicon-pencil"></span> 
 							</button>
 						</Cell>
 						)}
@@ -84,7 +84,7 @@ class DataTable extends TrackerReact(React.Component) {
 								width={columnWidth}/>
 							}
 						)}
-						{editButtonColumn}
+						{verifyButtonColumn}
 						{deleteButtonColumn}
 					</Table>)
 	}
@@ -107,4 +107,4 @@ export default Dimensions({
 	getHeight: function(element) {
 		return window.innerHeight - 100;
 	}
-})(DataTable)
+})(DataTableForverify)

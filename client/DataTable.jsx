@@ -66,7 +66,7 @@ class DataTable extends TrackerReact(React.Component) {
 						rowHeight={this.props.rowHeight}
 						headerHeight={this.props.rowHeight}
 						width={this.props.containerWidth}
-						maxHeight={this.props.rowHeight * 10}
+						maxHeight={this.props.rowHeight * this.props.numberOfRows}
 						>
 						{this.props.columns.map( (col) => {
 							
@@ -108,3 +108,7 @@ export default Dimensions({
 		return window.innerHeight - 100;
 	}
 })(DataTable)
+
+DataTable.defaultProps = {
+  numberOfRows: 10
+};

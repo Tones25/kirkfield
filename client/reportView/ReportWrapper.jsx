@@ -8,6 +8,8 @@ import JobCostVarienceByEmployee from './reportTypes/JobCostVarienceByEmployee.j
 import EmployeeSummary from './reportTypes/EmployeeSummary.jsx';
 import TotalInvoicesByType from './reportTypes/TotalInvoicesByType.jsx';
 import JobsPendingApproval from './reportTypes/JobsPendingApproval.jsx'
+import QualityServicePlans from './reportTypes/QualityServicePlans.jsx';
+import Estimates from './reportTypes/Estimates.jsx';
 import LoginForm from '../LoginForm.jsx';
 
 
@@ -59,7 +61,10 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 			return(<TotalInvoicesByType/>)
 		if(reportType == 'JobsPendingApproval')
 			return(<JobsPendingApproval/>)
-		
+		if(reportType == 'QualityServicePlans')
+			return(<QualityServicePlans/>)
+		if(reportType == 'Estimates')
+			return(<Estimates/>)
 	}
 
 	
@@ -90,6 +95,11 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 		}
 		return(
 			<div className="row">
+				<div className="panel panel-primary">
+				<div className="panel-heading">
+					<h1>Reporting</h1>
+				</div>
+				<div className="panel-body">
 				<form className="form-horizontal">
 				<div className="well well-sm">
 				<div className="form-group">
@@ -103,10 +113,12 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 						id="chooseReport" 
 						value={this.state.value} 
 						onChange={this.handleChange}>
-							<option value="JobsPendingApproval"> Jobs Pending Approval</option>
+							<option value="JobsPendingApproval">Jobs Pending Approval</option>
+							<option value="QualityServicePlans">Quality Service Plans</option>
+							<option value="Estimates">Estimates</option>
 							<option value="EmployeeSummary">Employee Summary</option>
-							<option value="NumberOfInvoicesReport">Number Of Inovices</option>
-							<option value="JobCostVarienceByEmployee">Job Cost Varience By Employee</option>
+							<option value="NumberOfInvoicesReport">Number Of Invoices</option>
+							<option value="JobCostVarienceByEmployee">Job Cost Variance By Employee</option>
 							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
 							
 							
@@ -117,6 +129,8 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 				</div>
 				</form>
 				{this.reportInputs()}
+				</div>
+				</div>
 			</div>
 
 		)

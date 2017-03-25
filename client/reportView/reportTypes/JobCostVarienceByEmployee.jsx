@@ -141,7 +141,7 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 				};
 				dataMap.push(entry);
 			});
-		console.log(dataMap);
+		
 		return dataMap;
 	}
 
@@ -151,33 +151,38 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 		return (
 			<div>
 			<div className="well well-sm">
-			<h2>Job Cost/Estimate Varience by Employee</h2>
+				<h2>Employee Summary</h2>
+
+			<form className="form-horizontal">
 				<div className="form-group">
-						<label className="control-label col-sm-2">Employee: </label>
-						<div className="col-sm-4">
-						<SearchBox
-							options={this.employees()}
-							onSelectionChange={this.handleEmployeeChange}
-							inputElementListAttribute="selectEmployee"
-							inputElementRefAttribute="selectEmployee"
-							datalistElementIdAttribute="selectEmployee"
-							datalistElementKey="employeeId"
-							datalistElementValue="employeeFirstName"
-							placeholder="Employee"
-						/>
-						</div>
-					
-					<DateInputRange 
-						className="col-sm-4"
+					<label className="control-label col-sm-2">Employee: </label>
+					<div className="col-sm-4">
+					<SearchBox
+						options={this.employees()}
+						onSelectionChange={this.handleEmployeeChange}
+						inputElementListAttribute="selectEmployee"
+						inputElementRefAttribute="selectEmployee"
+						datalistElementIdAttribute="selectEmployee"
+						datalistElementKey="employeeId"
+						datalistElementValue="employeeFirstName"
+						placeholder="Employee"
+					/>
+					</div>
+				</div>
+				
+				<DateInputRange 
+						startDate={this.state.startDate}
+						endDate={this.state.endDate}
 						onStartDateChange={this.handleStartDateChange}
 						onEndDateChange={this.handleEndDateChange}
-					/>
+				/>
+				
+				<PositiveNegativeBarChart  data={this.mapData()} currentEmployee={this.currentEmployeeName()}/>
+				
+				
 					
-					<PositiveNegativeBarChart  data={this.mapData()} currentEmployee={this.currentEmployeeName()}/>
-					</div>
+			</form>
 
-				
-				
 			</div>
 			</div>
 			)

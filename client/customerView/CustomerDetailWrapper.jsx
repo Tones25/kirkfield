@@ -26,9 +26,7 @@ export default class CustomerDetailWrapper extends TrackerReact(Component) {
 		return Customers.findOne(this.props.id);
 	}
 
-	back() {
-		FlowRouter.go("/customers");
-	}
+	
 
 	render() {
 		if(!Meteor.userId()) {
@@ -49,19 +47,16 @@ export default class CustomerDetailWrapper extends TrackerReact(Component) {
 			return(<div>Loading...</div>)
 		}
 		return(
-			<div>			
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
-						Back to Customers<span className="glyphicon glyphicon-return"></span>
-				</button>
+		<div className="row">
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>{customer.contactName}&emsp;(Customer#{customer.customerId})</h1>
+					<h1>Customer Id {customer.customerId}</h1>
 				</div>
 				<div className="panel-body">
 					<CustomerDetail  id={this.props.id}/>
 				</div>
 			</div>
-			</div>
+		</div>
 			)
 	}
 }

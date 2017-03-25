@@ -71,6 +71,37 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 		//return 16;
 	}
 	
+	dataTableParams() {
+		let tableRowHeight = 50;
+		if(Roles.userIsInRole(Meteor.user(), 'admin')) {
+			return (
+				<DataTable 
+									rowHeight={tableRowHeight}
+									columns={['customerId', 'contactName', 'address', 'phone1']}
+									columnNames={['Customer Id#', 'Name', 'Address', 'Phone#']}
+									deleteButtons={true}
+									deleteFunction={'deleteCustomer'}
+									editButtons={true}
+									editFunction={ function(route) {FlowRouter.go("/customer/" + route._id);} }
+									data={this.customers()}
+								/>
+			)
+		}
+		if(Roles.userIsInRole(Meteor.user(), 'user')) {
+			return (
+				<DataTable 
+									rowHeight={tableRowHeight}
+									columns={['customerId', 'contactName', 'address', 'phone1']}
+									columnNames={['Customer Id#', 'Name', 'Address', 'Phone#']}
+									deleteButtons={false}
+									
+									editButtons={false}
+									
+									data={this.customers()}
+								/>
+			)
+		}
+	}
 	render() {
 		if(!Meteor.userId()) {
 			return (
@@ -85,7 +116,7 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 				)
 		}
 		this.state.recent = this.customers();
-		let tableRowHeight = 50;
+		
 		return(
 			<div className="row">
 				<div className="panel panel-primary">
@@ -113,16 +144,7 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 						placeholder="Search"
 					onChange={this.handleSearchChange.bind(this)}
 					/>
-					<DataTable 
-						rowHeight={tableRowHeight}
-						columns={['customerId', 'contactName', 'address', 'phone1']}
-						columnNames={['Customer Id#', 'Name', 'Address', 'Phone#']}
-						deleteButtons={true}
-						deleteFunction={'deleteCustomer'}
-						editButtons={true}
-						editFunction={ function(route) {FlowRouter.go("/customer/" + route._id);} }
-						data={this.customers()}
-					/>
+					{this.dataTableParams()}
 				</div>
 				</div>
 			</div>

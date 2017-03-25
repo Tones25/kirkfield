@@ -65,9 +65,9 @@ export default class InventoryDetail extends TrackerReact(Component) {
 		}
 		return(
 			<div>				
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
+				<a className="btn btn-primary" href="/inventoryInput">
 						Back to Inventory<span className="glyphicon glyphicon-return"></span>
-				</button>
+				</a>
 			<div className="panel panel-primary">
 				<div className="panel-heading">
 					<h1>{item.inventoryItemName}&emsp;(Item#{item.inventoryItemId})</h1>

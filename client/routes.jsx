@@ -9,6 +9,7 @@ import InventoryDetail from './inventoryView/InventoryDetail.jsx';
 
 import JobInputWrapper from './jobView/JobInputWrapper.jsx';
 import JobDetail from './jobView/JobDetail.jsx';
+import JobDetailForApproval from './jobView/JobDetailForApproval.jsx';
 
 import CustomerInputWrapper from './customerView/CustomerInputWrapper.jsx';
 import CustomerDetail from './customerView/CustomerDetail.jsx';
@@ -123,6 +124,15 @@ FlowRouter.route('/job/:id', {
 		mount(MainLayout, {
 			//this passes params.id as a prop into RosultionDetail instance
 			content: (<JobDetail id={params.id} />),
+		})
+	}
+})
+
+FlowRouter.route('/jobApproval/:id', {
+	action(params) {
+		mount(MainLayout, {
+			//this passes params.id as a prop into RosultionDetail instance
+			content: (<JobDetailForApproval id={params.id} />),
 		})
 	}
 })

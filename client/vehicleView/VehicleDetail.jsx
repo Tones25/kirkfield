@@ -85,15 +85,27 @@ export default class VehicleDetail extends TrackerReact(Component) {
 		}
 		return(
 			<div className="row">				
-				<button className="btn btn-primary" onClick={this.back.bind(this)}>
-						Back to Vehicles<span className="glyphicon glyphicon-return"></span>
-				</button>
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<h1>Vehicle #{vehicle.vehicleId}</h1>
+					<h1>Vehicle Id {vehicle.vehicleId}</h1>
 				</div>
 				<div className="panel-body">
 					<form className="form-horizontal" onSubmit={this.editVehicle.bind(this)}>
+					
+					<div className="form-group">
+					
+					<label className="control-label col-sm-2" htmlFor="licensePlate">License Plate:</label>
+					<div className="col-sm-4">
+					<input 
+						className="form-control"
+						id="licensePlate"
+						type="text" 
+						ref="licensePlate"
+						defaultValue={vehicle.licensePlate}
+					/>
+					</div>
+					</div>
+					
 					<div className="form-group">
 					
 					<label className="control-label col-sm-2" htmlFor="vehicleMake">Make:</label>
@@ -107,8 +119,8 @@ export default class VehicleDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					
-					<label className="control-label col-sm-2" htmlFor="vehicleModel">Model:</label>
-					<div className="col-sm-2">
+					<label className="control-label col-sm-1" htmlFor="vehicleModel">Model:</label>
+					<div className="col-sm-3">
 					<input 
 						className="form-control"
 						id="vehicleModel"
@@ -132,19 +144,8 @@ export default class VehicleDetail extends TrackerReact(Component) {
 					
 					</div>
 					
+					
 					<div className="form-group">
-					
-					<label className="control-label col-sm-2" htmlFor="licensePlate">License Plate:</label>
-					<div className="col-sm-2">
-					<input 
-						className="form-control"
-						id="licensePlate"
-						type="text" 
-						ref="licensePlate"
-						defaultValue={vehicle.licensePlate}
-					/>
-					</div>
-					
 					<label className="control-label col-sm-2" htmlFor="vehicleColor">Color:</label>
 					<div className="col-sm-2">
 					<input
@@ -213,6 +214,7 @@ export default class VehicleDetail extends TrackerReact(Component) {
 					<div className="col-sm-5">
 					<textarea 
 						className="form-control"
+						style={{resize: 'none'}}
 						id="repairHist"
 						cols="40" rows="5" 
 						ref="repairHist"
@@ -231,7 +233,16 @@ export default class VehicleDetail extends TrackerReact(Component) {
 					/>
 					</div>
 					</div>
-					<input type="submit" className="btn btn-primary pull-right"/>
+					
+					<div className="col-sm-10">
+						<button className="btn btn-primary pull-right" onClick={this.back.bind(this)}>
+							Back to Vehicles<span className="glyphicon glyphicon-return"></span>
+						</button>
+					</div>
+					
+					<div className="col-sm-2">
+					<input type="submit" className="btn btn-primary" value="Save Changes"/>
+					</div>
 				</form>
 				</div>
 			</div>

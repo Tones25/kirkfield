@@ -3,10 +3,8 @@ import Dimensions from 'react-dimensions';
 
 class BarChart extends Component {
 
-	componentDidMount() {		
-	  	
-	  		  		
-	  	this.updateChart(this.props);
+	componentDidMount() {				  		
+	  	//this.updateChart(this.props);
   	}
 
   	componentWillUpdate(nextProps) {  		

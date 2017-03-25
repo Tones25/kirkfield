@@ -91,22 +91,25 @@ export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 		const height = 480;
 		return (
 			<div>
-			<DateInputRange 
-				onStartDateChange={this.handleStartDateChange}
-				onEndDateChange={this.handleEndDateChange}
-				startDate={this.state.startDate}
-				endDate={this.state.endDate}
-			/>
-			
-			<div className="row">
-				<div className="col-sm-6">
-					<h1>Total Invoices by Type:</h1>
-					<PieChartVarient data={this.mapJobItems()} width={width} height={height}/>
+				<div className="well well-sm">
+				<h2>Total Invoices by Type:</h2>
+					<form className="form-horizontal">
+					<DateInputRange 
+						onStartDateChange={this.handleStartDateChange}
+						onEndDateChange={this.handleEndDateChange}
+						startDate={this.state.startDate}
+						endDate={this.state.endDate}
+					/>
+					
+					<div className="row">
+						<div className="col-sm-6">
+							
+							<PieChartVarient data={this.mapJobItems()} width={width} height={height}/>
+						</div>
+					</div>
+					
+					</form>
 				</div>
-			</div>
-			
-			
-			
 			</div>
 			)
 	}

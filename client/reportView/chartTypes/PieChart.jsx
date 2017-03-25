@@ -6,7 +6,7 @@ import Dimensions from 'react-dimensions';
 class PieChart extends Component {
 
 	componentDidMount() {		  		
-	  	this.updateChart(this.props);
+	  	//this.updateChart(this.props);
   	}
 
   	componentWillUpdate(nextProps) {  		

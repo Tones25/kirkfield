@@ -16,8 +16,8 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 		lastWeek.setDate(today.getDate() - 7);
 
 		this.state = {
-			startDate: lastWeek,
-			endDate: today,
+			startDate: new Date(),
+			endDate: new Date(),
 			
 		}
 

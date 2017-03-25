@@ -152,7 +152,7 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 		return (
 			<div>
 			<div className="well well-sm">
-				<h2>Employee Summary</h2>
+				<h2>Install vs Estimate Cost Varience</h2>
 
 			<form className="form-horizontal">
 				<div className="form-group">

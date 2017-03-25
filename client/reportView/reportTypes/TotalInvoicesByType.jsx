@@ -101,15 +101,16 @@ export default class TotalInvoicesByType extends TrackerReact(React.Component) {
 						endDate={this.state.endDate}
 					/>
 					
-					<div className="row">
+					
+					
+					</form>
+				</div>
+				<div className="row">
 						<div className="col-sm-6">
 							
 							<PieChartVarient data={this.mapJobItems()} width={width} height={height}/>
 						</div>
 					</div>
-					
-					</form>
-				</div>
 			</div>
 			)
 	}

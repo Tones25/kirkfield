@@ -118,7 +118,7 @@ export default class ReportWrapper extends TrackerReact(React.Component) {
 							<option value="Estimates">Estimates</option>
 							<option value="EmployeeSummary">Employee Summary</option>
 							<option value="NumberOfInvoicesReport">Number Of Invoices</option>
-							<option value="JobCostVarienceByEmployee">Job Cost Variance By Employee</option>
+							<option value="JobCostVarienceByEmployee">Install vs Estimate Cost Varience</option>
 							<option value="TotalInvoicesByType"> Total Invoices By Type</option>
 							
 							

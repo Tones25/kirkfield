@@ -45,7 +45,12 @@ export default class InventoryInputWrapper extends TrackerReact(React.Component)
 			}},
 			{model:{
 			$regex: this.state.search, "$options": "i",
-			}}]}
+			}},
+			{serialNum:{
+			$regex: this.state.search, "$options": "i",
+			}},
+			{inventoryItemId:parseInt(this.state.search)
+			}]}
 		).fetch();
 	}
 	

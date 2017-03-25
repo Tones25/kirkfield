@@ -47,7 +47,9 @@ export default class CustomerInputWrapper extends TrackerReact(React.Component) 
 			}},
 			{billableAddress:{
 			$regex: this.state.search, "$options": "i",
-			}}]},
+			}},
+			{customerId:parseInt(this.state.search)
+			}]},
 			{sort: {nextService: 1}}
 		).fetch();
 	}

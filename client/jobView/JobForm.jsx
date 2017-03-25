@@ -105,7 +105,10 @@ export default class JobForm extends Component {
 	addJob(event) {
 		event.preventDefault();
 		let invoice = this.refs.invoice.value.trim();
-		let complete = this.refs.complete.checked;
+		let complete = false;
+		if (this.refs.complete) {
+			complete = this.refs.complete.checked
+		}
 		let date = this.refs.date.value.trim();
 		let customer = this.state.customer;
 		let jobTypeCode = this.refs.jobTypeCode.value.trim();

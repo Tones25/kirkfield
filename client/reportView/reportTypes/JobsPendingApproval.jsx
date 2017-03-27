@@ -45,7 +45,7 @@ export default class JobPendingApproval extends TrackerReact(React.Component) {
 		let tableRowHeight = 50;
 		return (
 			<div className="well well-sm">
-				<h1>Jobs Pending Approval</h1>
+				<h2>Jobs Pending Approval</h2>
 				<DataTableForApproval 
 							rowHeight={tableRowHeight}
 							columns={['invoice', 'cName', 'cAddr', 'installCost', 'empName']}

@@ -7,7 +7,7 @@ export default class PositiveNegativeBarChart extends Component {
 
 	componentDidMount() {		
 	  		  		
-	  	this.updateChart(this.props);
+	  	//this.updateChart(this.props);
   	}
 
   	componentWillUpdate(nextProps) {  		
@@ -143,8 +143,8 @@ export default class PositiveNegativeBarChart extends Component {
 		
         return (
         	<div>
-        		<h1>Job Cost Differences For {this.props.currentEmployee}</h1>
-        		<h3></h3>
+        		
+        		<h3>Job Cost Differences For {this.props.currentEmployee}</h3>
 	        	<div id="chart-container" >
 
 	        	</div>           

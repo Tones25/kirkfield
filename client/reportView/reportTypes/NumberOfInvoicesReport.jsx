@@ -16,8 +16,8 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 		lastWeek.setDate(today.getDate() - 7);
 
 		this.state = {
-			startDate: lastWeek,
-			endDate: today,
+			startDate: new Date(),
+			endDate: new Date(),
 			
 		}
 
@@ -180,18 +180,19 @@ export default class NumberOfInvoicesReport extends TrackerReact(React.Component
 						onEndDateChange={this.handleEndDateChange}
 				/>
 				
-				<div >
-					<div >
-					<h2>{this.chartTitle()}</h2>
-					<BarChart id="chartTwo" data={this.mapJobItems()} height={height}/>
-					</div>
-				</div>
+				
 				
 				
 					
 			</form>
 
 			</div>
+			<div >
+					<div >
+					<h3>{this.chartTitle()}</h3>
+					<BarChart id="chartTwo" data={this.mapJobItems()} height={height}/>
+					</div>
+				</div>
 			</div>
 			)
 	}

@@ -94,6 +94,7 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 		return Jobs.find({
 			"installEmployee": employeeNumber,
 			"jobTypeCode": { $in: selectedJobTypes },
+			"installCost": { $ne: 0 },
 			"date":{
 				$gte: this.state.startDate,
 				$lte: this.state.endDate
@@ -120,7 +121,7 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 
 		let jobs = Jobs.find({
 			"installEmployee": this.state.employee,
-			
+			"installCost": { $ne: 0 },
 			"date":{
 				$gte: this.state.startDate,
 				$lte: this.state.endDate
@@ -151,7 +152,7 @@ export default class JobCostVarienceByEmployee extends TrackerReact(React.Compon
 		return (
 			<div>
 			<div className="well well-sm">
-				<h2>Employee Summary</h2>
+				<h2>Install vs Estimate Cost Varience</h2>
 
 			<form className="form-horizontal">
 				<div className="form-group">

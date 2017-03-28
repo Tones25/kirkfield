@@ -124,6 +124,8 @@ Meteor.startup(() => {
 			licensePlate: 'ABC123',
 			color: 'Black',
 			initialMileage: 76230,
+			lastOil: new Date(2007, 04, 12),
+			nextOil: new Date(2007, 04, 12),
 			createdAt: new Date()
 		});
 		Vehicles.insert({
@@ -135,6 +137,8 @@ Meteor.startup(() => {
 			licensePlate: 'ABC456',
 			color: 'Blue',
 			initialMileage: 52553,
+			lastOil: new Date(2007, 04, 12),
+			nextOil: new Date(2007, 04, 12),
 			createdAt: new Date()
 		});
 		Vehicles.insert({
@@ -146,6 +150,8 @@ Meteor.startup(() => {
 			licensePlate: 'XYZ123',
 			color: 'Blue',
 			initialMileage: 60439,
+			lastOil: new Date(2007, 04, 12),
+			nextOil: new Date(2007, 04, 12),
 			createdAt: new Date()
 		});
 		Vehicles.insert({
@@ -157,6 +163,8 @@ Meteor.startup(() => {
 			licensePlate: 'XYZ456',
 			color: 'White',
 			initialMileage: 14325,
+			lastOil: new Date(2007, 04, 12),
+			nextOil: new Date(2007, 04, 12),
 			createdAt: new Date()
 		});
 	}

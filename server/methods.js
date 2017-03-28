@@ -21,7 +21,7 @@ Meteor.methods({
 			throw new Meteor.Error('You must be logged in.')
 		}
 
-		entry = Inventory.findOne({inventoryItemId: inventoryItemId})
+		entry = Inventory.findOne({inventoryItemId: parseInt(inventoryItemId)})
 		//update quantity if item exists, add new listing if not
 		
 		if (entry) throw new Meteor.Error('Duplicate Item Id.');
@@ -242,7 +242,7 @@ Meteor.methods({
 		if(!Meteor.userId()) {
 			throw new Meteor.Error('You must be logged in.')
 		}
-			entry = Vehicles.findOne({vehicleId: vehicleId})
+			entry = Vehicles.findOne({vehicleId: parseInt(vehicleId)})
 			if(entry) throw new Meteor.Error('Duplicate id');
 			if (!licensePlate) throw new Meteor.Error('License plate required.');
 			if (!vehicleMake) throw new Meteor.Error('Make required.');
@@ -333,7 +333,7 @@ Meteor.methods({
 			throw new Meteor.Error('You must be logged in.')
 		}
 
-		entry = Employees.findOne({employeeId: employeeId})
+		entry = Employees.findOne({employeeId: parseInt(employeeId)})
 		if(entry) {
 			throw new Meteor.Error('Duplicate id')
 		}
